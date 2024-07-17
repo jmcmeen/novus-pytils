@@ -1,16 +1,15 @@
 import os
 import shutil
-import hashlib
 
 def get_file_list(directory):
     file_list = []
-    for root, dirs, files in os.walk(directory):
+    for root, _, files in os.walk(directory):
         for file in files:
             files.append(os.path.join(root, file))
 
     return file_list
 
-def get_dir_list(directory, relative=True):
+def get_dir_list(directory, relative=False):
     dir_list = []
     for root, dirs, files in os.walk(directory):
         for dir in dirs:
@@ -22,7 +21,7 @@ def get_dir_list(directory, relative=True):
     return dir_list
 
 
-def get_files_by_extension(directory, extensions, relative=True):
+def get_files_by_extension(directory, extensions, relative=False):
     file_list = []
     
     for root, dirs, files in os.walk(directory):
@@ -49,7 +48,7 @@ def get_files_containing_string(directory, string):
     return file_list
 
 
-def get_dirs_containing_string(directory, string, relative=True):
+def get_dirs_containing_string(directory, string, relative=False):
     dir_list = []
     for root, dirs, files in os.walk(directory):
         for dir in dirs:
@@ -117,15 +116,6 @@ def delete_directory(directory_path):
 
 def get_file_extension(file_path):
     return os.path.splitext(file_path)[1].lower()
-
-def print_list(list):
-    for item in list:
-        print(item)
-
-def get_md5_hash(file_path):
-    with open(file_path, 'rb') as file:
-        md5_hash = hashlib.md5(file.read()).hexdigest()
-    return md5_hash
 
 def get_file_name(file_path):
     return os.path.basename(file_path)
