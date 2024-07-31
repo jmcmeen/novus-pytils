@@ -2,10 +2,9 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-
 [project]
 name = "novus-pytils"
-version = "0.0.12"
+version = "0.0.16"
 authors = [
   { name="John McMeen", email="johnmcmeen@gmail.com" },
 ]
@@ -18,12 +17,17 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-  "numpy"
+  "numpy",
+  "opencv-python",
+  "scikit-image"
 ]
 
 [project.optional-dependencies]
 keras = [
     "tensorflow[and-cuda]==2.15.*"
+]
+clip = [
+    "open_clip_torch"
 ]
 
 
