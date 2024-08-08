@@ -4,32 +4,21 @@ build-backend = "hatchling.build"
 
 [project]
 name = "novus-pytils"
-version = "0.0.16"
+version = "0.0.29"
 authors = [
   { name="John McMeen", email="johnmcmeen@gmail.com" },
 ]
 description = "A repository for useful python methods which abstract methods I can never remember how to use."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
-  "numpy",
-  "opencv-python",
-  "scikit-image"
+  "numpy"
 ]
-
-[project.optional-dependencies]
-keras = [
-    "tensorflow[and-cuda]==2.15.*"
-]
-clip = [
-    "open_clip_torch"
-]
-
 
 [project.urls]
 Homepage = "https://github.com/jmcmeen/novus-pytils"
