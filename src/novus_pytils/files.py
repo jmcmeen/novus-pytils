@@ -114,3 +114,6 @@ def get_file_name(file_path):
 def get_file_directory(file_path):
     return os.path.dirname(file_path)
 
+def recreate_directory(directory_path):
+    delete_directory(directory_path)
+    create_directory(directory_path)

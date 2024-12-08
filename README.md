@@ -1,2 +1,2 @@
 # novus-pytils
-A repository for useful python methods which abstract methods I can never remember how to use. 
+A library of useful Python methods/wrappers.
