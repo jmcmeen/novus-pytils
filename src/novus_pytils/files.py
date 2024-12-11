@@ -117,3 +117,6 @@ def get_file_directory(file_path):
 def recreate_directory(directory_path):
     delete_directory(directory_path)
     create_directory(directory_path)
+
+def copy_directory(src_dir, dest_dir):
+    shutil.copytree(src_dir, dest_dir)
