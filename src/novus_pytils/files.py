@@ -105,6 +105,10 @@ def delete_directory(directory_path):
         if os.path.isdir(directory_path):
             shutil.rmtree(directory_path)
 
+def delete_file(file_path):
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
 def get_file_extension(file_path):
     return os.path.splitext(file_path)[1].lower()
 
