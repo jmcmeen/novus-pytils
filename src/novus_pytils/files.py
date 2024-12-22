@@ -100,6 +100,9 @@ def move_file(src_file_path, dest_file_path):
 def directory_exists(directory_path):
     return os.path.exists(directory_path) and os.path.isdir(directory_path)
 
+def file_exists(file_path):
+    return os.path.exists(file_path) and os.path.isfile(file_path)
+
 def delete_directory(directory_path):
     if os.path.exists(directory_path):
         if os.path.isdir(directory_path):
