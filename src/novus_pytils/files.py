@@ -29,7 +29,7 @@ def get_files_by_extension(directory, extensions, relative=False):
             for ext in extensions:
                 if ext.casefold() == file_ext.casefold():
                     if relative:
-                        relative_root = root.replace(directory, '')
+                        relative_root = root.replace(os.path.join(directory, ''), '')
                         file_list.append(os.path.join(relative_root, file))
                     else:
                         file_list.append(os.path.join(root, file))
