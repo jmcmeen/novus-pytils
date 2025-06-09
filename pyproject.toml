@@ -4,11 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "novus-pytils"
-version = "0.0.34"
+version = "0.0.35"
 authors = [
   { name="John McMeen", email="johnmcmeen@gmail.com" },
 ]
-description = "A repository for useful python methods which abstract methods I can never remember how to use."
+description = "A library of useful Python methods/wrappers."
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
