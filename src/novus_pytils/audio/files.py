@@ -2,22 +2,28 @@
 SUPPORTED_EXTENSIONS = ['.wav', '.ogg', '.flac', '.mp3', '.mp4']
 from novus_pytils.files import get_files_by_extension
 
-def find_audio_files(input_dir):
-    """
-    Find all supported audio files in the input directory recursively.
-    
-    Args:
-        input_dir (Path): Input directory path
-    
-    Returns:
-        list: List of Path objects for audio files
-    """
-    # audio_files = []
-    
-    # for file_path in input_dir.rglob('*'):
-    #     if file_path.is_file() and file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
-    #         audio_files.append(file_path)
+def count_audio_files(audio_folder_path):
+    """Count the number of audio files in a folder.
 
-    audio_files = get_files_by_extension(input_dir, SUPPORTED_EXTENSIONS)
-    
-    return audio_files
+    Args:
+        audio_folder_path (str): The path to the folder containing the audio files.
+        file_extensions (list, optional): A list of file extensions to consider as audio files. Defaults to supported_audio_file_extensions.
+
+    Returns:
+        int: The number of audio files in the folder.
+    """
+    files = get_files_by_extension(audio_folder_path, SUPPORTED_EXTENSIONS)
+    return len(files)
+
+def get_audio_files(audio_folder_path, file_extensions=supported_audio_file_extensions):
+    """Get a list of audio files in a folder.
+
+    Args:
+        audio_folder_path (str): The path to the folder containing the audio files.
+        file_extensions (list, optional): A list of file extensions to consider as audio files. Defaults to supported_audio_file_extensions.
+
+    Returns:
+        list: A list of audio file paths.
+    """
+    files = get_files_by_extension(audio_folder_path, file_extensions, relative=True)
+    return files
