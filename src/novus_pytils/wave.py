@@ -2,6 +2,7 @@
 import wave
 import numpy as np
 from novus_pytils.files import get_files_by_extension
+from novus_pytils.hash import get_file_md5_hash
 
 def get_wav_files(dir):
     """
@@ -53,6 +54,77 @@ def get_wav_metadata(wav_filepath : str) -> dict:
             "num_frames": wav_file.getnframes(),
             "duration": wav_file.getnframes() / wav_file.getframerate()
         }
+    
+def analyze_wav_file(wav_path, input_dir):
+    """
+    Analyze a WAV file and extract comprehensive information.
+    
+    Args:
+        wav_path (Path): Path to the WAV file
+        input_dir (Path): Input directory path for relative path calculation
+    
+    Returns:
+        dict: Dictionary containing file analysis results
+    """
+    file_info = {
+        'filename': wav_path.name,
+        'relative_path': str(wav_path.relative_to(input_dir)),
+        'full_path': str(wav_path),
+        'file_size_bytes': 0,
+        'file_size_mb': 0.0,
+        'sample_rate': 0,
+        'num_channels': 0,
+        'num_frames': 0,
+        'sample_width_bytes': 0,
+        'sample_width_bits': 0,
+        'length_seconds': 0.0,
+        'length_milliseconds': 0,
+        'length_formatted': '00:00:00.000',
+        'md5_hash': '',
+        'compression_type': '',
+        'compression_name': '',
+        'status': 'Success',
+        'error_message': ''
+    }
+    
+    try:
+        # Get file size
+        file_info['file_size_bytes'] = wav_path.stat().st_size
+        file_info['file_size_mb'] = file_info['file_size_bytes'] / (1024 * 1024)
+        
+        # Open and analyze WAV file
+        with wave.open(str(wav_path), 'rb') as wav_file:
+            # Get basic parameters
+            file_info['num_channels'] = wav_file.getnchannels()
+            file_info['sample_rate'] = wav_file.getframerate()
+            file_info['num_frames'] = wav_file.getnframes()
+            file_info['sample_width_bytes'] = wav_file.getsampwidth()
+            file_info['sample_width_bits'] = file_info['sample_width_bytes'] * 8
+            file_info['compression_type'] = wav_file.getcomptype()
+            file_info['compression_name'] = wav_file.getcompname()
+            
+            # Calculate duration
+            if file_info['sample_rate'] > 0:
+                file_info['length_seconds'] = file_info['num_frames'] / file_info['sample_rate']
+                file_info['length_milliseconds'] = int(file_info['length_seconds'] * 1000)
+                
+                # Format duration as HH:MM:SS.mmm
+                hours = int(file_info['length_seconds'] // 3600)
+                minutes = int((file_info['length_seconds'] % 3600) // 60)
+                seconds = file_info['length_seconds'] % 60
+                file_info['length_formatted'] = f"{hours:02d}:{minutes:02d}:{seconds:06.3f}"
+        
+        # Calculate MD5 hash
+        file_info['md5_hash'] = get_file_md5_hash(wav_path)
+        
+    except wave.Error as e:
+        file_info['status'] = 'WAV Error'
+        file_info['error_message'] = str(e)
+    except Exception as e:
+        file_info['status'] = 'Error'
+        file_info['error_message'] = str(e)
+    
+    return file_info
     
 def get_wav_files_metadata(wav_filepaths : list) -> list:
     """
