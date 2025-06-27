@@ -16,7 +16,8 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-  "numpy"
+  "numpy",
+  "pydub"
 ]
 
 [project.urls]
