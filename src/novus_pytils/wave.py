@@ -65,8 +65,10 @@ def analyze_wav_file(wav_path, input_dir):
     Returns:
         dict: Dictionary containing file analysis results
     """
+    from pathlib import Path
+    wav_path = Path(wav_path)
     file_info = {
-        'filename': get_file_name(wav_path),
+        'filename': wav_path.name,
         'relative_path': str(wav_path.relative_to(input_dir)),
         'full_path': str(wav_path),
         'file_size_bytes': 0,
