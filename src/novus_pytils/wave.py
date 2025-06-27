@@ -1,7 +1,7 @@
 # Wrapper for the wave library
 import wave
 import numpy as np
-from novus_pytils.files import get_files_by_extension
+from novus_pytils.files import get_files_by_extension, get_file_name
 from novus_pytils.hash import get_file_md5_hash
 
 def get_wav_files(dir):
@@ -15,7 +15,6 @@ def get_wav_files(dir):
         list: A list of paths to WAV files in the directory.
     """
     return get_files_by_extension(dir, ['.wav'])
-
 def read_wav_file(filename):
     """
     Reads a WAV file and returns the audio data and file metadata.
@@ -67,7 +66,7 @@ def analyze_wav_file(wav_path, input_dir):
         dict: Dictionary containing file analysis results
     """
     file_info = {
-        'filename': wav_path.name,
+        'filename': get_file_name(wav_path),
         'relative_path': str(wav_path.relative_to(input_dir)),
         'full_path': str(wav_path),
         'file_size_bytes': 0,
