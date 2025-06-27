@@ -3,6 +3,21 @@ import wave
 import numpy as np
 
 def read_wav_file(filename):
+    """
+    Reads a WAV file and returns the audio data and file metadata.
+
+    Args:
+        filename (str): The path to the WAV file to read.
+
+    Returns:
+        tuple: A tuple containing:
+            audio_data (numpy.ndarray): The raw audio data as a NumPy array of int16 values.
+            num_channels (int): The number of audio channels in the file (1 for mono, 2 for stereo).
+            sample_width (int): The sample width in bytes (1, 2, 3, or 4).
+            frame_rate (int): The frame rate of the file in Hz.
+            num_frames (int): The total number of frames in the file.
+            duration (float): The duration of the file in seconds.
+    """
     with wave.open(filename, 'rb') as wav_file:
         num_channels = wav_file.getnchannels()
         sample_width = wav_file.getsampwidth()
@@ -15,6 +30,20 @@ def read_wav_file(filename):
         return audio_data, num_channels, sample_width, frame_rate, num_frames, duration
     
 def get_wav_file_metadata(filename):
+    """
+    Reads a WAV file and returns its metadata.
+
+    Args:
+        filename (str): The path to the WAV file to read.
+
+    Returns:
+        tuple: A tuple containing:
+            num_channels (int): The number of audio channels in the file (1 for mono, 2 for stereo).
+            sample_width (int): The sample width in bytes (1, 2, 3, or 4).
+            frame_rate (int): The frame rate of the file in Hz.
+            num_frames (int): The total number of frames in the file.
+            duration (float): The duration of the file in seconds.
+    """
     with wave.open(filename, 'rb') as wav_file:
         num_channels = wav_file.getnchannels()
         sample_width = wav_file.getsampwidth()
@@ -37,30 +66,99 @@ def get_wav_files_metadata(wav_filepaths : list) -> list:
     return [get_wav_file_metadata(wav_file) for wav_file in wav_filepaths]
     
 def get_wav_num_channels(filename):
+    """
+    Reads a WAV file and returns the number of audio channels it contains.
+
+    Args:
+        filename (str): The path to the WAV file to read.
+
+    Returns:
+        int: The number of audio channels in the file (1 for mono, 2 for stereo).
+    """
     with wave.open(filename, 'rb') as wav_file:
         return wav_file.getnchannels()
     
 def get_wav_sample_width(filename):
+    """
+    Reads a WAV file and returns its sample width in bytes.
+
+    Args:
+        filename (str): The path to the WAV file to read.
+
+    Returns:
+        int: The sample width in bytes (1, 2, 3, or 4).
+    """
+
     with wave.open(filename, 'rb') as wav_file:
         return wav_file.getsampwidth()
     
 def get_wav_frame_rate(filename):
+    """
+    Reads a WAV file and returns its frame rate in Hz.
+
+    Args:
+        filename (str): The path to the WAV file to read.
+
+    Returns:
+        int: The frame rate of the file in Hz.
+    """
     with wave.open(filename, 'rb') as wav_file:
         return wav_file.getframerate()
     
 def get_wav_num_frames(filename):
+    """
+    Reads a WAV file and returns the total number of frames.
+
+    Args:
+        filename (str): The path to the WAV file to read.
+
+    Returns:
+        int: The total number of frames in the file.
+    """
+
     with wave.open(filename, 'rb') as wav_file:
         return wav_file.getnframes()
     
 def get_wav_duration(filename):
+    """
+    Reads a WAV file and returns its duration in seconds.
+
+    Args:
+        filename (str): The path to the WAV file to read.
+
+    Returns:
+        float: The duration of the file in seconds.
+    """
+
     with wave.open(filename, 'rb') as wav_file:
         return wav_file.getnframes() / wav_file.getframerate()
 
 def get_wav_data(filename):
+    """
+    Reads a WAV file and returns its raw audio data.
+
+    Args:
+        filename (str): The path to the WAV file to read.
+
+    Returns:
+        bytes: The raw audio data from the file.
+    """
+
     with wave.open(filename, 'rb') as wav_file:
         return wav_file.readframes(wav_file.getnframes())
     
 def write_wav_file(filename, audio_data, num_channels, sample_width, frame_rate):
+    """
+    Writes audio data to a WAV file with specified parameters.
+
+    Args:
+        filename (str): The path to the output WAV file.
+        audio_data (numpy.ndarray): The audio data to write as a NumPy array.
+        num_channels (int): The number of audio channels (1 for mono, 2 for stereo).
+        sample_width (int): The sample width in bytes (1, 2, 3, or 4).
+        frame_rate (int): The frame rate of the audio data in Hz.
+    """
+
     with wave.open(filename, 'wb') as wav_file:
         wav_file.setnchannels(num_channels)
         wav_file.setsampwidth(sample_width)
@@ -68,9 +166,29 @@ def write_wav_file(filename, audio_data, num_channels, sample_width, frame_rate)
         wav_file.writeframes(audio_data.tobytes())
 
 def convert_array_to_wav(filename, audio_data, num_channels, sample_width, frame_rate):
+    """
+    Writes a NumPy array of audio data to a WAV file with specified parameters.
+
+    Args:
+        filename (str): The path to the output WAV file.
+        audio_data (numpy.ndarray): The audio data to write as a NumPy array.
+        num_channels (int): The number of audio channels (1 for mono, 2 for stereo).
+        sample_width (int): The sample width in bytes (1, 2, 3, or 4).
+        frame_rate (int): The frame rate of the audio data in Hz.
+    """
     write_wav_file(filename, audio_data, num_channels, sample_width, frame_rate)
 
 def split_wav_file(filename, duration):
+    """
+    Splits a WAV file into segments of a given duration.
+
+    Args:
+        filename (str): The path to the WAV file to split.
+        duration (float): The duration of each segment in seconds.
+
+    Returns:
+        None
+    """
     with wave.open(filename, 'rb') as wav_file:
         num_channels = wav_file.getnchannels()
         sample_width = wav_file.getsampwidth()
