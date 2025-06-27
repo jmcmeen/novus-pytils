@@ -1,5 +1,34 @@
 import os
 import shutil
+import requests
+import zipfile
+
+def download_file(url: str, save_to: str):
+    """
+    Downloads a file from the specified URL and saves it to the given path.
+
+    Args:
+        url (str): The URL of the file to be downloaded.
+        save_to (str): The local file path where the downloaded file will be saved.
+    """
+
+    response = requests.get(url)
+    with open(save_to, 'wb') as f:
+        f.write(response.content)
+
+def extract_zip_file(zip_file: str, extract_to: str):
+    """
+    Extracts the contents of a ZIP file to a specified directory.
+
+    Args:
+        zip_file (str): The path to the ZIP file to be extracted.
+        extract_to (str): The directory where the contents will be extracted. 
+                          If the directory does not exist, it will be created.
+    """
+
+    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+        os.makedirs(extract_to, exist_ok=True)
+        zip_ref.extractall(extract_to)
 
 def get_file_list(directory):
     """
