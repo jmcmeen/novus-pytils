@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "novus-pytils"
-version = "0.0.45"
+version = "0.0.46"
 authors = [
   { name="John McMeen", email="johnmcmeen@gmail.com" },
 ]
@@ -17,7 +17,8 @@ classifiers = [
 ]
 dependencies = [
   "numpy",
-  "pydub"
+  "pydub",
+  "requests"
 ]
 
 [project.urls]
