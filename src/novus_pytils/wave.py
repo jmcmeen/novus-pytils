@@ -42,21 +42,6 @@ def read_wav_file(filename):
 
         return audio_data, num_channels, sample_width, frame_rate, num_frames, duration
     
-def get_wav_file_metadata(filename):
-    """
-    Reads a WAV file and returns its metadata.
-
-    Args:
-        filename (str): The path to the WAV file to read.
-
-    Returns:
-        tuple: A tuple containing:
-            num_channels (int): The number of audio channels in the file (1 for mono, 2 for stereo).
-            sample_width (int): The sample width in bytes (1, 2, 3, or 4).
-            frame_rate (int): The frame rate of the file in Hz.
-            num_frames (int): The total number of frames in the file.
-            duration (float): The duration of the file in seconds.
-    """
 def get_wav_metadata(wav_filepath : str) -> dict:
     with wave.open(wav_filepath, 'rb') as wav_file:
         return {
@@ -79,7 +64,7 @@ def get_wav_files_metadata(wav_filepaths : list) -> list:
     Returns:
         list: A list of dictionaries containing the metadata of the wav files.
     """
-    return [get_wav_file_metadata(wav_file) for wav_file in wav_filepaths]
+    return [get_wav_metadata(wav_file) for wav_file in wav_filepaths]
     
 def get_wav_num_channels(filename):
     """
