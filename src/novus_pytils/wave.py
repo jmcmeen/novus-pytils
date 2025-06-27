@@ -1,6 +1,19 @@
 # Wrapper for the wave library
 import wave
 import numpy as np
+from novus_pytils.files import get_files_by_extension
+
+def get_wav_files(dir):
+    """
+    Get all WAV files in a directory.
+
+    Args:
+        dir (str): The directory to search for WAV files.
+
+    Returns:
+        list: A list of paths to WAV files in the directory.
+    """
+    return get_files_by_extension(dir, ['.wav'])
 
 def read_wav_file(filename):
     """
