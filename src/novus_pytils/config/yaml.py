@@ -27,5 +27,5 @@ def get_yaml_files(dir_path : str) -> list:
     Returns:
         list: A list of paths to yaml files in the directory.
     """
-    return get_files_by_extension(dir_path, [".yaml"])
+    return get_files_by_extension(dir_path, [".yaml", ".yml"])
     
