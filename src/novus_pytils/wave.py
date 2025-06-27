@@ -1,7 +1,7 @@
 # Wrapper for the wave library
 import wave
 import numpy as np
-from novus_pytils.files import get_files_by_extension, get
+from novus_pytils.files import get_files_by_extension
 
 def get_wav_files(dir):
     """
