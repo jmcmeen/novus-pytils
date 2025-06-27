@@ -1,7 +1,7 @@
 # Wrapper for the wave library
 import wave
 import numpy as np
-from novus_pytils.files import get_files_by_extension
+from novus_pytils.files import get_files_by_extension, get
 
 def get_wav_files(dir):
     """
@@ -57,14 +57,17 @@ def get_wav_file_metadata(filename):
             num_frames (int): The total number of frames in the file.
             duration (float): The duration of the file in seconds.
     """
-    with wave.open(filename, 'rb') as wav_file:
-        num_channels = wav_file.getnchannels()
-        sample_width = wav_file.getsampwidth()
-        frame_rate = wav_file.getframerate()
-        num_frames = wav_file.getnframes()
-        duration = num_frames / frame_rate
-
-        return num_channels, sample_width, frame_rate, num_frames, duration
+def get_wav_metadata(wav_filepath : str) -> dict:
+    with wave.open(wav_filepath, 'rb') as wav_file:
+        return {
+            "filepath": wav_filepath,
+            "file_size": wav_file.getnframes() * wav_file.getnchannels() * wav_file.getsampwidth(),
+            "num_channels": wav_file.getnchannels(),
+            "sample_width": wav_file.getsampwidth(),
+            "frame_rate": wav_file.getframerate(),
+            "num_frames": wav_file.getnframes(),
+            "duration": wav_file.getnframes() / wav_file.getframerate()
+        }
     
 def get_wav_files_metadata(wav_filepaths : list) -> list:
     """
