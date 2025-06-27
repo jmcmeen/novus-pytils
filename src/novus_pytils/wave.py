@@ -1,3 +1,4 @@
+# Wrapper for the wave library
 import wave
 import numpy as np
 
@@ -13,7 +14,7 @@ def read_wav_file(filename):
 
         return audio_data, num_channels, sample_width, frame_rate, num_frames, duration
     
-def read_wav_file_metadata(filename):
+def get_wav_file_metadata(filename):
     with wave.open(filename, 'rb') as wav_file:
         num_channels = wav_file.getnchannels()
         sample_width = wav_file.getsampwidth()
@@ -22,6 +23,18 @@ def read_wav_file_metadata(filename):
         duration = num_frames / frame_rate
 
         return num_channels, sample_width, frame_rate, num_frames, duration
+    
+def get_wav_files_metadata(wav_filepaths : list) -> list:
+    """
+    Returns the metadata of a list of wav files.
+    
+    Args:
+        wav_filepaths (list): A list of paths to the wav files.
+        
+    Returns:
+        list: A list of dictionaries containing the metadata of the wav files.
+    """
+    return [get_wav_file_metadata(wav_file) for wav_file in wav_filepaths]
     
 def get_wav_num_channels(filename):
     with wave.open(filename, 'rb') as wav_file:
