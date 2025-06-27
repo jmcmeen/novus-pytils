@@ -1,6 +1,4 @@
 """
-Pure Python WAV File Parser Package
-
 A lightweight, dependency-free Python package for parsing WAV audio files.
 Supports standard PCM WAV files with proper RIFF structure parsing.
 """
