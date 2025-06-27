@@ -239,6 +239,34 @@ def copy_file(src_file_path, dest_file_path):
 
     shutil.copy2(src_file_path, dest_file_path)
 
+def copy_files(src_paths, dest_dir, enumerate_dups=True):
+    """
+    Copies files from the source paths to the destination directory.
+
+    Args:
+        src_paths (list): A list of paths to the source files.
+        dest_dir (str): The path to the destination directory.
+        enumerate_dups (bool, optional): If True, appends a number to the file name if a file with the same name already exists in the destination directory. Defaults to True.
+
+    Notes:
+        This function preserves the file's metadata, such as modification and access times.
+    """
+
+    for src_path in src_paths:
+        filename = os.path.basename(src_path)
+        dest_path = os.path.join(dest_dir, filename)
+
+        if enumerate_dups:
+            counter = 1
+            while os.path.exists(dest_path):
+                filename, extension = os.path.splitext(filename)
+                filename = f"{filename}_{counter}{extension}"
+                dest_path = os.path.join(dest_dir, filename)
+                counter += 1
+
+        shutil.copy2(src_path, dest_path)
+
+
 def move_file(src_file_path, dest_file_path):
     """
     Moves a file from the source path to the destination path.
