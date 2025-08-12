@@ -1,5 +1,5 @@
 # Supported audio file extensions
-SUPPORTED_EXTENSIONS = ['.wav', '.ogg', '.flac', '.mp3', '.mp4']
+SUPPORTED_EXTENSIONS = ['.wav', '.ogg', '.flac', '.mp3', '.mp4'] # move to global constants?
 from novus_pytils.files import get_files_by_extension
 
 def count_audio_files(audio_folder_path):
