@@ -1,14 +1,60 @@
-"""
-A lightweight, dependency-free Python package for parsing WAV audio files.
-Supports standard PCM WAV files with proper RIFF structure parsing.
-"""
+"""Audio file operations and utilities.
 
+This module consolidates all audio-related file operations including counting,
+retrieving, parsing WAV files, and comprehensive audio analysis.
+"""
+import wave
 import struct
+import numpy as np
 from typing import Dict, List, Optional, Union
 from dataclasses import dataclass
 from pathlib import Path
 
+from novus_pytils.file_operations.general import get_files_by_extension
+from novus_pytils.globals import SUPPORTED_AUDIO_EXTENSIONS
+from novus_pytils.utils.hash import get_file_md5_hash
 
+
+def count_audio_files(audio_folder_path):
+    """Count the number of audio files in a folder.
+
+    Args:
+        audio_folder_path (str): The path to the folder containing the audio files.
+
+    Returns:
+        int: The number of audio files in the folder.
+    """
+    files = get_files_by_extension(audio_folder_path, SUPPORTED_AUDIO_EXTENSIONS)
+    return len(files)
+
+
+def get_audio_files(audio_folder_path, file_extensions=SUPPORTED_AUDIO_EXTENSIONS):
+    """Get a list of audio files in a folder.
+
+    Args:
+        audio_folder_path (str): The path to the folder containing the audio files.
+        file_extensions (list, optional): A list of file extensions to consider as audio files.
+
+    Returns:
+        list: A list of audio file paths.
+    """
+    files = get_files_by_extension(audio_folder_path, file_extensions, relative=True)
+    return files
+
+
+def get_wav_files(dir):
+    """Get all WAV files in a directory.
+
+    Args:
+        dir (str): The directory to search for WAV files.
+
+    Returns:
+        list: A list of paths to WAV files in the directory.
+    """
+    return get_files_by_extension(dir, ['.wav'])
+
+
+# WAV Parser Classes and Functions
 class WAVError(Exception):
     """Base exception for WAV parsing errors."""
     pass
@@ -42,7 +88,6 @@ class WAVFormat:
     @property
     def duration_seconds(self) -> float:
         """Calculate duration based on byte rate (requires data size)."""
-        # This will be set by the parser when data size is known
         return getattr(self, '_duration', 0.0)
 
 
@@ -82,7 +127,6 @@ class WAVParser:
     
     def _parse_riff_header(self, f) -> None:
         """Parse the RIFF header."""
-        # Read RIFF header (12 bytes)
         riff_header = f.read(12)
         if len(riff_header) != 12:
             raise CorruptedFileError("File too small to be a valid WAV file")
@@ -94,32 +138,22 @@ class WAVParser:
         
         if wave_id != b'WAVE':
             raise InvalidWAVFormatError("Not a valid WAV file")
-        
-        # Validate file size
-        expected_size = file_size + 8
-        if expected_size != self._file_size:
-            # Some files have incorrect size in header, warn but continue
-            pass
     
     def _parse_chunks(self, f) -> None:
         """Parse all chunks in the WAV file."""
         while True:
             chunk_header = f.read(8)
             if len(chunk_header) < 8:
-                break  # End of file
+                break
             
             chunk_id, chunk_size = struct.unpack('<4sI', chunk_header)
             chunk_id = chunk_id.decode('ascii', errors='ignore')
             
-            # Store current position for chunk data
             chunk_offset = f.tell()
-            
-            # Read chunk data
             chunk_data = f.read(chunk_size)
             if len(chunk_data) != chunk_size:
                 raise CorruptedFileError(f"Incomplete chunk: {chunk_id}")
             
-            # Store chunk
             self.chunks[chunk_id] = WAVChunk(
                 id=chunk_id,
                 size=chunk_size,
@@ -127,13 +161,11 @@ class WAVParser:
                 offset=chunk_offset
             )
             
-            # Parse specific chunks
             if chunk_id == 'fmt ':
                 self._parse_format_chunk(chunk_data)
             elif chunk_id == 'data':
                 self.audio_data = chunk_data
             
-            # Align to even byte boundary (WAV spec requirement)
             if chunk_size % 2:
                 f.read(1)
     
@@ -142,7 +174,6 @@ class WAVParser:
         if len(data) < 16:
             raise InvalidWAVFormatError("Format chunk too small")
         
-        # Standard format chunk (16 bytes minimum)
         fmt_data = struct.unpack('<HHIIHH', data[:16])
         
         self.format_info = WAVFormat(
@@ -154,7 +185,6 @@ class WAVParser:
             bits_per_sample=fmt_data[5]
         )
         
-        # Calculate duration if we have audio data
         if self.audio_data and self.format_info.byte_rate > 0:
             duration = len(self.audio_data) / self.format_info.byte_rate
             self.format_info._duration = duration
@@ -211,159 +241,115 @@ class WAVParser:
         
         bytes_per_sample = self.format_info.bits_per_sample // 8
         return len(self.audio_data) // (bytes_per_sample * self.format_info.channels)
-    
-    def get_audio_samples(self, normalize: bool = False) -> List[List[float]]:
-        """
-        Extract audio samples from the WAV file.
-        
-        Args:
-            normalize: If True, normalize samples to [-1.0, 1.0] range
-            
-        Returns:
-            List of channels, each containing a list of sample values
-        """
-        if not self.audio_data or not self.format_info:
-            raise WAVError("No audio data available")
-        
-        channels = self.format_info.channels
-        bits_per_sample = self.format_info.bits_per_sample
-        sample_count = self._calculate_sample_count()
-        
-        # Determine sample format
-        if bits_per_sample == 8:
-            fmt = 'B'  # unsigned byte
-            offset = 128
-            max_val = 127
-        elif bits_per_sample == 16:
-            fmt = 'h'  # signed short
-            offset = 0
-            max_val = 32767
-        elif bits_per_sample == 24:
-            # 24-bit samples need special handling
-            return self._parse_24bit_samples(normalize)
-        elif bits_per_sample == 32:
-            fmt = 'i'  # signed int
-            offset = 0
-            max_val = 2147483647
-        else:
-            raise InvalidWAVFormatError(f"Unsupported bit depth: {bits_per_sample}")
-        
-        # Parse samples
-        sample_size = bits_per_sample // 8
-        format_str = f'<{sample_count * channels}{fmt}'
-        
-        samples = struct.unpack(format_str, self.audio_data)
-        
-        # Organize by channel
-        channel_samples = [[] for _ in range(channels)]
-        for i, sample in enumerate(samples):
-            channel = i % channels
-            value = sample - offset
-            
-            if normalize:
-                value = value / max_val
-            
-            channel_samples[channel].append(value)
-        
-        return channel_samples
-    
-    def _parse_24bit_samples(self, normalize: bool = False) -> List[List[float]]:
-        """Parse 24-bit samples (special case)."""
-        channels = self.format_info.channels
-        sample_count = self._calculate_sample_count()
-        
-        channel_samples = [[] for _ in range(channels)]
-        
-        for i in range(sample_count):
-            for ch in range(channels):
-                # Read 3 bytes and convert to signed 24-bit
-                offset = (i * channels + ch) * 3
-                if offset + 3 > len(self.audio_data):
-                    break
-                
-                bytes_sample = self.audio_data[offset:offset + 3]
-                # Convert to signed 24-bit integer
-                value = struct.unpack('<I', bytes_sample + b'\x00')[0]
-                if value & 0x800000:  # Sign bit set
-                    value -= 0x1000000
-                
-                if normalize:
-                    value = value / 8388607  # 2^23 - 1
-                
-                channel_samples[ch].append(value)
-        
-        return channel_samples
-    
-    def export_metadata(self) -> Dict:
-        """Export metadata in a structured format."""
-        info = self.get_info()
-        
-        metadata = {
-            'basic': {
-                'duration': f"{info['duration_seconds']:.2f} seconds",
-                'channels': info['format']['channels'],
-                'sample_rate': f"{info['format']['sample_rate']} Hz",
-                'bit_depth': f"{info['format']['bits_per_sample']} bits",
-                'format': 'PCM' if info['format']['is_pcm'] else 'Compressed'
-            },
-            'technical': {
-                'file_size': f"{info['file_size']:,} bytes",
-                'audio_data_size': f"{info['audio_data_size']:,} bytes",
-                'byte_rate': f"{info['format']['byte_rate']:,} bytes/sec",
-                'block_align': info['format']['block_align'],
-                'sample_count': f"{info['sample_count']:,} samples"
-            },
-            'chunks': info['chunks']
+
+
+# Standard wave library functions
+def read_wav_file(filename):
+    """Reads a WAV file and returns the audio data and file metadata."""
+    with wave.open(filename, 'rb') as wav_file:
+        num_channels = wav_file.getnchannels()
+        sample_width = wav_file.getsampwidth()
+        frame_rate = wav_file.getframerate()
+        num_frames = wav_file.getnframes()
+        duration = num_frames / frame_rate
+
+        audio_data = np.frombuffer(wav_file.readframes(num_frames), dtype=np.int16)
+
+        return audio_data, num_channels, sample_width, frame_rate, num_frames, duration
+
+
+def get_wav_metadata(wav_filepath: str) -> dict:
+    """Get metadata information from a WAV file."""
+    with wave.open(wav_filepath, 'rb') as wav_file:
+        return {
+            "filepath": wav_filepath,
+            "file_size": wav_file.getnframes() * wav_file.getnchannels() * wav_file.getsampwidth(),
+            "num_channels": wav_file.getnchannels(),
+            "sample_width": wav_file.getsampwidth(),
+            "frame_rate": wav_file.getframerate(),
+            "num_frames": wav_file.getnframes(),
+            "duration": wav_file.getnframes() / wav_file.getframerate()
         }
+
+
+def analyze_wav_file(wav_path, input_dir):
+    """Analyze a WAV file and extract comprehensive information."""
+    wav_path = Path(wav_path)
+    file_info = {
+        'filename': wav_path.name,
+        'relative_path': str(wav_path.relative_to(input_dir)),
+        'full_path': str(wav_path),
+        'file_size_bytes': 0,
+        'file_size_mb': 0.0,
+        'sample_rate': 0,
+        'num_channels': 0,
+        'num_frames': 0,
+        'sample_width_bytes': 0,
+        'sample_width_bits': 0,
+        'length_seconds': 0.0,
+        'length_milliseconds': 0,
+        'length_formatted': '00:00:00.000',
+        'md5_hash': '',
+        'compression_type': '',
+        'compression_name': '',
+        'status': 'Success',
+        'error_message': ''
+    }
+    
+    try:
+        file_info['file_size_bytes'] = wav_path.stat().st_size
+        file_info['file_size_mb'] = file_info['file_size_bytes'] / (1024 * 1024)
         
-        return metadata
+        with wave.open(str(wav_path), 'rb') as wav_file:
+            file_info['num_channels'] = wav_file.getnchannels()
+            file_info['sample_rate'] = wav_file.getframerate()
+            file_info['num_frames'] = wav_file.getnframes()
+            file_info['sample_width_bytes'] = wav_file.getsampwidth()
+            file_info['sample_width_bits'] = file_info['sample_width_bytes'] * 8
+            file_info['compression_type'] = wav_file.getcomptype()
+            file_info['compression_name'] = wav_file.getcompname()
+            
+            if file_info['sample_rate'] > 0:
+                file_info['length_seconds'] = file_info['num_frames'] / file_info['sample_rate']
+                file_info['length_milliseconds'] = int(file_info['length_seconds'] * 1000)
+                
+                hours = int(file_info['length_seconds'] // 3600)
+                minutes = int((file_info['length_seconds'] % 3600) // 60)
+                seconds = file_info['length_seconds'] % 60
+                file_info['length_formatted'] = f"{hours:02d}:{minutes:02d}:{seconds:06.3f}"
+        
+        file_info['md5_hash'] = get_file_md5_hash(wav_path)
+        
+    except wave.Error as e:
+        file_info['status'] = 'WAV Error'
+        file_info['error_message'] = str(e)
+    except Exception as e:
+        file_info['status'] = 'Error'
+        file_info['error_message'] = str(e)
+    
+    return file_info
+
+
+def write_wav_file(filename, audio_data, num_channels, sample_width, frame_rate):
+    """Writes audio data to a WAV file with specified parameters."""
+    with wave.open(filename, 'wb') as wav_file:
+        wav_file.setnchannels(num_channels)
+        wav_file.setsampwidth(sample_width)
+        wav_file.setframerate(frame_rate)
+        wav_file.writeframes(audio_data.tobytes())
 
 
 # Convenience functions
 def parse_wav(file_path: Union[str, Path]) -> Dict:
-    """
-    Quick function to parse a WAV file and return information.
-    
-    Args:
-        file_path: Path to the WAV file
-        
-    Returns:
-        Dictionary containing WAV file information
-    """
+    """Quick function to parse a WAV file and return information."""
     parser = WAVParser(file_path)
     return parser.parse()
 
 
-def get_wav_samples(file_path: Union[str, Path], normalize: bool = True) -> List[List[float]]:
-    """
-    Quick function to extract audio samples from a WAV file.
-    
-    Args:
-        file_path: Path to the WAV file
-        normalize: Whether to normalize samples to [-1.0, 1.0] range
-        
-    Returns:
-        List of channels, each containing sample values
-    """
-    parser = WAVParser(file_path)
-    parser.parse()
-    return parser.get_audio_samples(normalize=normalize)
-
-
 def validate_wav(file_path: Union[str, Path]) -> bool:
-    """
-    Check if a file is a valid WAV file.
-    
-    Args:
-        file_path: Path to the file to validate
-        
-    Returns:
-        True if valid WAV file, False otherwise
-    """
+    """Check if a file is a valid WAV file."""
     try:
         parse_wav(file_path)
         return True
     except (WAVError, FileNotFoundError, struct.error):
         return False
-
-

@@ -4,23 +4,49 @@ build-backend = "hatchling.build"
 
 [project]
 name = "novus-pytils"
-version = "0.0.63"
+version = ".0.63"
 authors = [
   { name="John McMeen", email="johnmcmeen@gmail.com" },
 ]
-description = "A library of useful Python methods/wrappers."
+description = "A comprehensive file management library with CRUD operations, format conversion, and multi-API support for text, image, audio, and video files."
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Multimedia",
+    "Topic :: System :: Filesystems",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Operating System :: OS Independent",
-]
 dependencies = [
   "numpy",
   "pandas",
   "pydub",
-  "requests"
+  "requests",
+  "pyyaml"
 ]
+
+[project.optional-dependencies]
+web = [
+    "fastapi>=0.100.0",
+    "uvicorn[standard]>=0.20.0",
+    "python-multipart>=0.0.6"
+]
+image = [
+    "Pillow>=9.0.0"
+]
+all = [
+    "fastapi>=0.100.0",
+    "uvicorn[standard]>=0.20.0", 
+    "python-multipart>=0.0.6",
+    "Pillow>=9.0.0"
+]
+
+[project.scripts]
+novus-pytils = "novus_pytils.cli.commands:main"
 
 [project.urls]
 Homepage = "https://github.com/jmcmeen/novus-pytils"

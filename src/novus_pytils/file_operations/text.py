@@ -1,8 +1,10 @@
-"""CSV file utilities using pandas.
+"""Text and data file operations.
 
-This module provides functions for working with CSV files using pandas DataFrames.
+This module provides functions for working with text files, CSV files,
+and other data file formats.
 """
 import pandas as pd
+
 
 def to_frame(input) -> pd.DataFrame:
     """Convert input data to a pandas DataFrame.
@@ -13,11 +15,10 @@ def to_frame(input) -> pd.DataFrame:
     Returns:
         pd.DataFrame: A pandas DataFrame object created from the input data.
     """
-    
     return pd.DataFrame(input)
 
 
-def write_csv(df : pd.DataFrame, filepath : str) -> None:
+def write_csv(df: pd.DataFrame, filepath: str) -> None:
     """Write a pandas DataFrame to a CSV file.
 
     Args:
