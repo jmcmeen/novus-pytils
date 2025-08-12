@@ -1,3 +1,8 @@
+"""File and directory utility functions.
+
+This module provides comprehensive file and directory operations including
+downloading, extracting, searching, copying, moving, and managing files and directories.
+"""
 import os
 import shutil
 import requests

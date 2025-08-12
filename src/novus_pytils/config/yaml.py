@@ -1,3 +1,7 @@
+"""YAML configuration file utilities.
+
+This module provides functions for loading and working with YAML configuration files.
+"""
 import yaml
 from novus_pytils.files import file_exists, get_files_by_extension
 

@@ -1,4 +1,8 @@
-# Supported audio file extensions
+"""Audio file utilities and operations.
+
+This module provides functions for working with audio files including counting
+and retrieving audio files from directories.
+"""
 from novus_pytils.files import get_files_by_extension
 from novus_pytils.globals import SUPPORTED_AUDIO_EXTENSIONS
 

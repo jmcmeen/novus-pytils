@@ -1,4 +1,8 @@
-# Print iterations progress
+"""Console utility functions for terminal output.
+
+This module provides functions for creating progress bars and other console output utilities.
+"""
+
 def printprogress (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
     """
     Call in a loop to create terminal progress bar found here (https://stackoverflow.com/questions/3173320/text-progress-bar-in-terminal-with-block-characters)

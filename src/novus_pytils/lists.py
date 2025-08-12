@@ -1,3 +1,8 @@
+"""List manipulation utility functions.
+
+This module provides functions for working with lists and performing common list operations.
+"""
+
 def remove_empty_lines_from_list(list):
     """
     Removes empty lines from a list of strings.

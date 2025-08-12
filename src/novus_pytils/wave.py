@@ -1,4 +1,8 @@
-# Wrapper for the wave library
+"""WAV audio file processing utilities.
+
+This module provides comprehensive functions for reading, writing, and analyzing WAV audio files
+using the standard wave library with additional metadata extraction capabilities.
+"""
 import wave
 import numpy as np
 from novus_pytils.files import get_files_by_extension, get_file_name
@@ -43,6 +47,14 @@ def read_wav_file(filename):
         return audio_data, num_channels, sample_width, frame_rate, num_frames, duration
     
 def get_wav_metadata(wav_filepath : str) -> dict:
+    """Get metadata information from a WAV file.
+    
+    Args:
+        wav_filepath (str): Path to the WAV file.
+        
+    Returns:
+        dict: Dictionary containing WAV file metadata including channels, sample rate, etc.
+    """
     with wave.open(wav_filepath, 'rb') as wav_file:
         return {
             "filepath": wav_filepath,

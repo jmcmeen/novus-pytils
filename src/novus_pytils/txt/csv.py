@@ -1,26 +1,27 @@
+"""CSV file utilities using pandas.
+
+This module provides functions for working with CSV files using pandas DataFrames.
+"""
 import pandas as pd
 
 def to_frame(input) -> pd.DataFrame:
-    """
-    Takes a list of lists or a dict and returns a pandas DataFrame object
+    """Convert input data to a pandas DataFrame.
+    
+    Args:
+        input: A list of lists, dict, or other data structure compatible with pandas DataFrame.
+        
+    Returns:
+        pd.DataFrame: A pandas DataFrame object created from the input data.
     """
     
     return pd.DataFrame(input)
 
 
 def write_csv(df : pd.DataFrame, filepath : str) -> None:
-    """
-    Writes a pandas DataFrame to a CSV file.
+    """Write a pandas DataFrame to a CSV file.
 
-    Parameters
-    ----------
-    df : pandas DataFrame
-        DataFrame to write to CSV
-    filepath : str
-        Path to write CSV file
-
-    Returns
-    -------
-    None
+    Args:
+        df (pd.DataFrame): DataFrame to write to CSV.
+        filepath (str): Path to write CSV file.
     """
     df.to_csv(filepath, index=False)

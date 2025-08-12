@@ -1,3 +1,7 @@
+"""Hash utility functions for file integrity checking.
+
+This module provides functions for calculating MD5 and SHA-256 hashes of files.
+"""
 import hashlib
 
 def get_file_md5_hash(file_path):
