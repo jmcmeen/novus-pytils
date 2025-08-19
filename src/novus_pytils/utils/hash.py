@@ -37,3 +37,31 @@ def get_file_sha256_hash(file_path):
         for chunk in iter(lambda: f.read(4096), b""):
             hash_sha256.update(chunk)
     return hash_sha256.hexdigest()
+
+def get_string_md5_hash(text: str) -> str:
+    """
+    Calculate the MD5 hash of a string.
+
+    Args:
+        text (str): The string for which the MD5 hash is to be calculated.
+
+    Returns:
+        str: The MD5 hash of the string in hexadecimal format.
+    """
+    hash_md5 = hashlib.md5()
+    hash_md5.update(text.encode('utf-8'))
+    return hash_md5.hexdigest()
+
+def get_string_sha256_hash(text: str) -> str:
+    """
+    Calculate the SHA-256 hash of a string.
+
+    Args:
+        text (str): The string for which the SHA-256 hash is to be calculated.
+
+    Returns:
+        str: The SHA-256 hash of the string in hexadecimal format.
+    """
+    hash_sha256 = hashlib.sha256()
+    hash_sha256.update(text.encode('utf-8'))
+    return hash_sha256.hexdigest()

@@ -7,6 +7,10 @@ import os
 import shutil
 import requests
 import zipfile
+import stat
+from datetime import datetime
+from pathlib import Path
+from typing import List, Dict, Any
 
 def download_file(url: str, save_to: str):
     """
@@ -402,3 +406,288 @@ def copy_directory(src_dir, dest_dir):
     """
     
     shutil.copytree(src_dir, dest_dir)
+
+# Alias for backward compatibility
+extract_zip = extract_zip_file
+
+def get_file_size(file_path: str) -> int:
+    """
+    Get the size of a file in bytes.
+
+    Args:
+        file_path (str): The path to the file.
+
+    Returns:
+        int: The size of the file in bytes.
+    """
+    return os.path.getsize(file_path)
+
+def get_directory_size(directory_path: str) -> int:
+    """
+    Get the total size of a directory in bytes.
+
+    Args:
+        directory_path (str): The path to the directory.
+
+    Returns:
+        int: The total size of the directory in bytes.
+    """
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(directory_path):
+        for filename in filenames:
+            filepath = os.path.join(dirpath, filename)
+            if os.path.exists(filepath):
+                total_size += os.path.getsize(filepath)
+    return total_size
+
+def count_files_in_directory(directory_path: str) -> int:
+    """
+    Count the number of files in a directory (recursively).
+
+    Args:
+        directory_path (str): The path to the directory.
+
+    Returns:
+        int: The number of files in the directory.
+    """
+    count = 0
+    for _, _, files in os.walk(directory_path):
+        count += len(files)
+    return count
+
+def get_subdirectories(directory_path: str) -> List[str]:
+    """
+    Get a list of subdirectories in a directory.
+
+    Args:
+        directory_path (str): The path to the directory.
+
+    Returns:
+        List[str]: A list of subdirectory paths.
+    """
+    subdirs = []
+    for item in os.listdir(directory_path):
+        item_path = os.path.join(directory_path, item)
+        if os.path.isdir(item_path):
+            subdirs.append(item_path)
+    return subdirs
+
+def create_file_from_content(file_path: str, content: str) -> None:
+    """
+    Create a file with the specified content.
+
+    Args:
+        file_path (str): The path to the file to create.
+        content (str): The content to write to the file.
+    """
+    with open(file_path, 'w', encoding='utf-8') as f:
+        f.write(content)
+
+def read_file_content(file_path: str) -> str:
+    """
+    Read the content of a file.
+
+    Args:
+        file_path (str): The path to the file to read.
+
+    Returns:
+        str: The content of the file.
+    """
+    with open(file_path, 'r', encoding='utf-8') as f:
+        return f.read()
+
+def append_to_file(file_path: str, content: str) -> None:
+    """
+    Append content to a file.
+
+    Args:
+        file_path (str): The path to the file.
+        content (str): The content to append.
+    """
+    with open(file_path, 'a', encoding='utf-8') as f:
+        f.write(content)
+
+def get_file_creation_time(file_path: str) -> datetime:
+    """
+    Get the creation time of a file.
+
+    Args:
+        file_path (str): The path to the file.
+
+    Returns:
+        datetime: The creation time of the file.
+    """
+    return datetime.fromtimestamp(os.path.getctime(file_path))
+
+def get_file_modification_time(file_path: str) -> datetime:
+    """
+    Get the modification time of a file.
+
+    Args:
+        file_path (str): The path to the file.
+
+    Returns:
+        datetime: The modification time of the file.
+    """
+    return datetime.fromtimestamp(os.path.getmtime(file_path))
+
+def is_file_empty(file_path: str) -> bool:
+    """
+    Check if a file is empty.
+
+    Args:
+        file_path (str): The path to the file.
+
+    Returns:
+        bool: True if the file is empty, False otherwise.
+    """
+    return os.path.getsize(file_path) == 0
+
+def get_files_recursively(directory_path: str) -> List[str]:
+    """
+    Get all files in a directory recursively.
+
+    Args:
+        directory_path (str): The path to the directory.
+
+    Returns:
+        List[str]: A list of file paths.
+    """
+    files = []
+    for root, _, filenames in os.walk(directory_path):
+        for filename in filenames:
+            files.append(os.path.join(root, filename))
+    return files
+
+def filter_files_by_size(files: List[str], min_size: int = 0, max_size: int = None) -> List[str]:
+    """
+    Filter files by size.
+
+    Args:
+        files (List[str]): List of file paths.
+        min_size (int): Minimum file size in bytes.
+        max_size (int): Maximum file size in bytes (None for no limit).
+
+    Returns:
+        List[str]: Filtered list of file paths.
+    """
+    filtered_files = []
+    for file_path in files:
+        if os.path.exists(file_path):
+            size = os.path.getsize(file_path)
+            if size >= min_size and (max_size is None or size <= max_size):
+                filtered_files.append(file_path)
+    return filtered_files
+
+def filter_files_by_date(files: List[str], start_date: datetime = None, end_date: datetime = None) -> List[str]:
+    """
+    Filter files by modification date.
+
+    Args:
+        files (List[str]): List of file paths.
+        start_date (datetime): Start date filter.
+        end_date (datetime): End date filter.
+
+    Returns:
+        List[str]: Filtered list of file paths.
+    """
+    filtered_files = []
+    for file_path in files:
+        if os.path.exists(file_path):
+            mod_time = datetime.fromtimestamp(os.path.getmtime(file_path))
+            if (start_date is None or mod_time >= start_date) and (end_date is None or mod_time <= end_date):
+                filtered_files.append(file_path)
+    return filtered_files
+
+def rename_file(old_path: str, new_path: str) -> None:
+    """
+    Rename a file.
+
+    Args:
+        old_path (str): The current path of the file.
+        new_path (str): The new path for the file.
+    """
+    os.rename(old_path, new_path)
+
+def get_file_permissions(file_path: str) -> str:
+    """
+    Get the permissions of a file.
+
+    Args:
+        file_path (str): The path to the file.
+
+    Returns:
+        str: The file permissions in octal format.
+    """
+    return oct(os.stat(file_path).st_mode)[-3:]
+
+def set_file_permissions(file_path: str, permissions: int) -> None:
+    """
+    Set the permissions of a file.
+
+    Args:
+        file_path (str): The path to the file.
+        permissions (int): The permissions to set (e.g., 0o644).
+    """
+    os.chmod(file_path, permissions)
+
+def create_backup(file_path: str, backup_suffix: str = '.bak') -> str:
+    """
+    Create a backup of a file.
+
+    Args:
+        file_path (str): The path to the file to backup.
+        backup_suffix (str): The suffix to add to the backup file.
+
+    Returns:
+        str: The path to the backup file.
+    """
+    backup_path = file_path + backup_suffix
+    shutil.copy2(file_path, backup_path)
+    return backup_path
+
+def restore_backup(backup_path: str, original_path: str = None) -> None:
+    """
+    Restore a file from its backup.
+
+    Args:
+        backup_path (str): The path to the backup file.
+        original_path (str): The path to restore to (defaults to backup path without suffix).
+    """
+    if original_path is None:
+        if backup_path.endswith('.bak'):
+            original_path = backup_path[:-4]
+        else:
+            original_path = backup_path.replace('.backup', '')
+    
+    shutil.copy2(backup_path, original_path)
+
+def sync_directories(src_dir: str, dest_dir: str) -> None:
+    """
+    Synchronize two directories.
+
+    Args:
+        src_dir (str): The source directory.
+        dest_dir (str): The destination directory.
+    """
+    if not os.path.exists(dest_dir):
+        os.makedirs(dest_dir)
+    
+    for root, dirs, files in os.walk(src_dir):
+        # Create directories
+        for dir_name in dirs:
+            src_path = os.path.join(root, dir_name)
+            rel_path = os.path.relpath(src_path, src_dir)
+            dest_path = os.path.join(dest_dir, rel_path)
+            if not os.path.exists(dest_path):
+                os.makedirs(dest_path)
+        
+        # Copy files
+        for file_name in files:
+            src_path = os.path.join(root, file_name)
+            rel_path = os.path.relpath(src_path, src_dir)
+            dest_path = os.path.join(dest_dir, rel_path)
+            
+            # Copy if file doesn't exist or is newer
+            if not os.path.exists(dest_path) or os.path.getmtime(src_path) > os.path.getmtime(dest_path):
+                shutil.copy2(src_path, dest_path)

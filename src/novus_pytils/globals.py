@@ -42,3 +42,85 @@ TEXT_CONVERSION_MAP = {
     '.xml': ['.json', '.yaml', '.csv', '.txt'],
     '.yaml': ['.json', '.xml', '.txt']
 }
+
+# Configuration constants
+DEFAULT_QUALITY = 85
+MAX_FILE_SIZE_MB = 100
+TEMP_DIRECTORY = '/tmp'
+API_HOST = 'localhost'
+API_PORT = 8000
+
+def get_all_supported_extensions():
+    """
+    Get all supported file extensions.
+
+    Returns:
+        list: A list of all supported file extensions.
+    """
+    return (SUPPORTED_AUDIO_EXTENSIONS + SUPPORTED_VIDEO_EXTENSIONS + 
+            SUPPORTED_IMAGE_EXTENSIONS + SUPPORTED_TEXT_EXTENSIONS)
+
+def is_supported_extension(extension: str) -> bool:
+    """
+    Check if a file extension is supported.
+
+    Args:
+        extension (str): The file extension to check.
+
+    Returns:
+        bool: True if the extension is supported, False otherwise.
+    """
+    return extension.lower() in get_all_supported_extensions()
+
+def get_file_type_by_extension(extension: str) -> str:
+    """
+    Get the file type based on its extension.
+
+    Args:
+        extension (str): The file extension.
+
+    Returns:
+        str: The file type ('audio', 'video', 'image', 'text', or 'unknown').
+    """
+    ext = extension.lower()
+    if ext in SUPPORTED_AUDIO_EXTENSIONS:
+        return 'audio'
+    elif ext in SUPPORTED_VIDEO_EXTENSIONS:
+        return 'video'
+    elif ext in SUPPORTED_IMAGE_EXTENSIONS:
+        return 'image'
+    elif ext in SUPPORTED_TEXT_EXTENSIONS:
+        return 'text'
+    else:
+        return 'unknown'
+
+def get_default_conversion_quality(file_type: str) -> int:
+    """
+    Get the default conversion quality for a file type.
+
+    Args:
+        file_type (str): The type of file ('audio', 'video', 'image').
+
+    Returns:
+        int: The default quality value.
+    """
+    quality_map = {
+        'image': DEFAULT_QUALITY,
+        'audio': 192,  # kbps
+        'video': 23    # CRF value for x264
+    }
+    return quality_map.get(file_type, DEFAULT_QUALITY)
+
+def validate_file_type(file_path: str) -> bool:
+    """
+    Validate if a file type is supported.
+
+    Args:
+        file_path (str): The path to the file.
+
+    Returns:
+        bool: True if the file type is supported, False otherwise.
+    """
+    import os
+    extension = os.path.splitext(file_path)[1].lower()
+    return is_supported_extension(extension)

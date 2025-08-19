@@ -3,6 +3,8 @@
 This module provides functions for loading and working with YAML configuration files.
 """
 import yaml
+import os
+from typing import Any, Dict, List
 from novus_pytils.file_operations.general import file_exists, get_files_by_extension
 
 def load_yaml(filepath : str) -> dict:
@@ -32,4 +34,123 @@ def get_yaml_files(dir_path : str) -> list:
         list: A list of paths to yaml files in the directory.
     """
     return get_files_by_extension(dir_path, [".yaml", ".yml"])
-    
+
+def load_config(filepath: str) -> Dict[str, Any]:
+    """
+    Load a configuration file and return the contents as a dictionary.
+
+    Args:
+        filepath (str): The path to the configuration file.
+
+    Returns:
+        Dict[str, Any]: The contents of the configuration file.
+    """
+    return load_yaml(filepath)
+
+def save_config(config: Dict[str, Any], filepath: str) -> None:
+    """
+    Save a configuration dictionary to a YAML file.
+
+    Args:
+        config (Dict[str, Any]): The configuration to save.
+        filepath (str): The path to save the configuration to.
+    """
+    with open(filepath, 'w') as f:
+        yaml.safe_dump(config, f, default_flow_style=False)
+
+def get_config_value(config: Dict[str, Any], key: str, default: Any = None) -> Any:
+    """
+    Get a value from a configuration dictionary using dot notation.
+
+    Args:
+        config (Dict[str, Any]): The configuration dictionary.
+        key (str): The key to retrieve (supports dot notation like 'section.subsection.key').
+        default (Any): The default value to return if the key is not found.
+
+    Returns:
+        Any: The value associated with the key, or the default value.
+    """
+    keys = key.split('.')
+    value = config
+    try:
+        for k in keys:
+            value = value[k]
+        return value
+    except (KeyError, TypeError):
+        return default
+
+def set_config_value(config: Dict[str, Any], key: str, value: Any) -> None:
+    """
+    Set a value in a configuration dictionary using dot notation.
+
+    Args:
+        config (Dict[str, Any]): The configuration dictionary to modify.
+        key (str): The key to set (supports dot notation like 'section.subsection.key').
+        value (Any): The value to set.
+    """
+    keys = key.split('.')
+    current = config
+    for k in keys[:-1]:
+        if k not in current:
+            current[k] = {}
+        current = current[k]
+    current[keys[-1]] = value
+
+def validate_config(config: Dict[str, Any], schema: Dict[str, Any]) -> bool:
+    """
+    Validate a configuration dictionary against a schema.
+
+    Args:
+        config (Dict[str, Any]): The configuration to validate.
+        schema (Dict[str, Any]): The schema to validate against.
+
+    Returns:
+        bool: True if the configuration is valid, False otherwise.
+    """
+    # Basic validation - check if required keys exist
+    for key, value in schema.items():
+        if isinstance(value, dict) and 'required' in value and value['required']:
+            if key not in config:
+                return False
+        elif isinstance(value, dict) and key in config:
+            if not validate_config(config[key], value):
+                return False
+    return True
+
+def merge_configs(*configs: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Merge multiple configuration dictionaries.
+
+    Args:
+        *configs: Variable number of configuration dictionaries to merge.
+
+    Returns:
+        Dict[str, Any]: The merged configuration dictionary.
+    """
+    result = {}
+    for config in configs:
+        for key, value in config.items():
+            if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+                result[key] = merge_configs(result[key], value)
+            else:
+                result[key] = value
+    return result
+
+def create_default_config() -> Dict[str, Any]:
+    """
+    Create a default configuration dictionary.
+
+    Returns:
+        Dict[str, Any]: A default configuration dictionary.
+    """
+    return {
+        'app': {
+            'name': 'novus-pytils',
+            'version': '0.0.63',
+            'debug': False
+        },
+        'logging': {
+            'level': 'INFO',
+            'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        }
+    }

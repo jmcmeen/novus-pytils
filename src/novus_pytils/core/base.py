@@ -24,6 +24,11 @@ class ConversionError(FileHandlerError):
     pass
 
 
+class ValidationError(FileHandlerError):
+    """Exception raised when file validation fails."""
+    pass
+
+
 class BaseFileHandler(ABC):
     """Abstract base class for file handlers."""
     
