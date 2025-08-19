@@ -249,7 +249,9 @@ results = batch_operation(image_files, "copy", dest_dir="backup/")
 - `uvicorn` - ASGI server
 - `python-multipart` - File upload support  
 - `Pillow` - Image processing
-- `FFmpeg` - Video processing (external)
+
+### External Dependencies
+- `FFmpeg` - Required for video processing (must be installed separately)
 
 ## Development
 
