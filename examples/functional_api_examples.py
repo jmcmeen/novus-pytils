@@ -5,8 +5,7 @@ This file demonstrates how to use the functional API for various file operations
 import os
 import tempfile
 from novus_pytils import (
-    create_file, read_file, write_file, convert_file, resize_image, 
-    crop_image, trim_audio, merge_files, batch_convert, get_file_info
+    create_file, read_file, convert_file, merge_files, batch_convert, get_file_info
 )
 
 

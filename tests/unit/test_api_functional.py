@@ -1,7 +1,6 @@
 """Unit tests for api.functional module."""
 import pytest
 from unittest.mock import patch, MagicMock
-import os
 
 from novus_pytils.api.functional import (
     _get_handler, read_file, write_file, create_file, update_file,

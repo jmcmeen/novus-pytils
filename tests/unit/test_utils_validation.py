@@ -1,8 +1,5 @@
 """Unit tests for utils.validation module."""
-import pytest
-from unittest.mock import patch, MagicMock
-import os
-import tempfile
+from unittest.mock import patch
 
 from novus_pytils.utils.validation import (
     validate_file_path, validate_file_extension, validate_file_size,

@@ -1,7 +1,6 @@
 """Unit tests for api.object_oriented module."""
 import pytest
-from unittest.mock import patch, MagicMock, mock_open
-import os
+from unittest.mock import patch, MagicMock
 
 from novus_pytils.api.object_oriented import (
     FileManager, File, FileBatch, MediaCollection

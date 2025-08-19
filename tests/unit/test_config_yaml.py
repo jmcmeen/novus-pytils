@@ -1,6 +1,6 @@
 """Unit tests for config.yaml module."""
 import pytest
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import patch, mock_open
 import yaml
 
 from novus_pytils.config.yaml import (

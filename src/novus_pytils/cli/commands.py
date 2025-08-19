@@ -7,18 +7,14 @@ import os
 import sys
 import argparse
 import json
-from pathlib import Path
-from typing import List, Optional, Dict, Any
 
 from novus_pytils.api.functional import (
-    read_file, write_file, create_file, update_file, delete_file,
-    copy_file, move_file, convert_file, get_file_info, get_supported_conversions,
+    convert_file, get_file_info, get_supported_conversions,
     batch_convert, batch_operation, resize_image, crop_image, trim_audio, trim_video,
     merge_files, split_file, create_thumbnail, apply_filter, extract_audio_from_video,
-    extract_frames_from_video, normalize_audio, change_audio_volume
+    extract_frames_from_video
 )
 from novus_pytils.api.web_api import run_server, FASTAPI_AVAILABLE
-from novus_pytils.core.base import FileHandlerError, UnsupportedFormatError
 
 
 def print_success(message: str):
@@ -330,7 +326,7 @@ def main():
     resize_parser.add_argument('output', help='Output image')
     resize_parser.add_argument('width', type=int, help='Width in pixels')
     resize_parser.add_argument('height', type=int, help='Height in pixels')
-    resize_parser.add_argument('--no-maintain-aspect', dest='maintain_aspect', action='store_false', help='Don\\'t maintain aspect ratio')
+    resize_parser.add_argument('--no-maintain-aspect', dest='maintain_aspect', action='store_false', help="Don't maintain aspect ratio")
     resize_parser.add_argument('--quality', type=int, help='Quality (1-100)')
     
     crop_parser = subparsers.add_parser('crop', help='Crop image')

@@ -5,7 +5,6 @@ import shutil
 import pytest
 from pathlib import Path
 import wave
-import struct
 import numpy as np
 from PIL import Image
 

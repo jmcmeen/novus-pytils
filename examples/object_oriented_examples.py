@@ -4,7 +4,7 @@ This file demonstrates how to use the object-oriented API for various file opera
 """
 import os
 import tempfile
-from novus_pytils import FileManager, File
+from novus_pytils import FileManager
 
 
 def basic_file_operations():
@@ -45,7 +45,7 @@ def chaining_operations():
         data = {"name": "Alice", "age": 30, "skills": ["Python", "JavaScript"]}
         
         # Chain: create → write → convert → get info
-        file_obj = (manager.get_file(json_file)
+        (manager.get_file(json_file)
                    .create(data)
                    .convert_to(yaml_file, "yaml"))
         

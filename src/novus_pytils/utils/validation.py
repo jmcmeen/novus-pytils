@@ -6,7 +6,7 @@ utilities for file operations and data validation.
 import os
 import re
 import mimetypes
-from typing import List, Dict, Any, Optional, Union, Tuple
+from typing import List, Dict, Tuple
 from pathlib import Path
 from novus_pytils.core.base import FileHandlerError, UnsupportedFormatError
 from novus_pytils.globals import (

@@ -3,8 +3,7 @@ import pytest
 import wave
 import struct
 import numpy as np
-from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from novus_pytils.file_operations.audio import (
     count_audio_files, get_audio_files, get_wav_files, read_wav_file,
@@ -142,7 +141,7 @@ class TestWAVParser:
     def test_wav_parser_class(self, sample_wav_file):
         """Test WAVParser class directly."""
         parser = WAVParser(sample_wav_file)
-        info = parser.parse()
+        parser.parse()
         
         assert parser.format_info is not None
         assert parser.audio_data is not None

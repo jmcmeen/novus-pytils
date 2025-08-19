@@ -1,6 +1,5 @@
 """Unit tests for utils.lists module."""
 import pytest
-from unittest.mock import patch
 
 from novus_pytils.utils.lists import (
     flatten_list, remove_duplicates, chunk_list, filter_list,

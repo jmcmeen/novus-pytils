@@ -1,7 +1,6 @@
 """Unit tests for file_operations.text module."""
 import pytest
 import pandas as pd
-from pathlib import Path
 
 from novus_pytils.file_operations.text import to_frame, write_csv
 
@@ -312,5 +311,5 @@ class TestErrorHandling:
             # Clean up - restore write permissions
             try:
                 output_path.chmod(0o644)
-            except:
+            except (OSError, AttributeError):
                 pass

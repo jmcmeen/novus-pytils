@@ -4,7 +4,7 @@ This module provides an object-oriented interface for file management operations
 with support for chaining and context management.
 """
 import os
-from typing import Any, Dict, List, Optional, Union, Type
+from typing import Any, Dict, List, Union
 from contextlib import contextmanager
 from novus_pytils.handlers.text_handler import TextHandler
 from novus_pytils.handlers.image_handler import ImageHandler

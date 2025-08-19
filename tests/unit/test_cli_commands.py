@@ -1,8 +1,6 @@
 """Unit tests for cli.commands module."""
 import pytest
-from unittest.mock import patch, MagicMock, call
-import sys
-import argparse
+from unittest.mock import patch, MagicMock
 
 from novus_pytils.cli.commands import (
     print_success, print_error, print_warning, print_info,

@@ -1,9 +1,8 @@
 """Unit tests for file_operations.general module."""
 import pytest
 import os
-import shutil
 from pathlib import Path
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import patch, MagicMock
 import requests
 
 from novus_pytils.file_operations.general import (

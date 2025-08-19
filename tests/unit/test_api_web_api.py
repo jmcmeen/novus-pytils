@@ -1,8 +1,6 @@
 """Unit tests for api.web_api module."""
 import pytest
 from unittest.mock import patch, MagicMock, mock_open
-import tempfile
-import os
 
 from novus_pytils.api.web_api import (
     ConversionRequest, ResizeRequest, CropRequest, TrimRequest, FilterRequest,
@@ -157,7 +155,7 @@ class TestWebAPIEndpoints:
         mock_exists.return_value = True
         
         with patch('fastapi.responses.FileResponse') as mock_response:
-            response = self.client.get("/download/test.txt")
+            self.client.get("/download/test.txt")
             mock_response.assert_called_once()
     
     @patch('os.path.exists')

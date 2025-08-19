@@ -1,5 +1,5 @@
 """Unit tests for globals module."""
-import pytest
+import gc
 
 from novus_pytils.globals import (
     SUPPORTED_TEXT_EXTENSIONS, SUPPORTED_IMAGE_EXTENSIONS,
@@ -348,10 +348,9 @@ class TestMemoryEfficiency:
     
     def test_function_calls_are_efficient(self):
         """Test that function calls don't create excessive objects."""
-        import sys
         
         # Get initial object count
-        initial_objects = len(gc.get_objects()) if 'gc' in sys.modules else 0
+        initial_objects = len(gc.get_objects())
         
         # Call functions multiple times
         for _ in range(100):
@@ -361,8 +360,6 @@ class TestMemoryEfficiency:
             get_default_conversion_quality('image')
         
         # Object count shouldn't grow excessively
-        if 'gc' in sys.modules:
-            import gc
-            final_objects = len(gc.get_objects())
-            # Allow some growth but not excessive
-            assert final_objects - initial_objects < 1000
+        final_objects = len(gc.get_objects())
+        # Allow some growth but not excessive
+        assert final_objects - initial_objects < 1000

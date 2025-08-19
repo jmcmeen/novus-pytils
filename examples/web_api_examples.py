@@ -3,7 +3,6 @@
 This file shows how to interact with the Novus PyTils web API.
 """
 import requests
-import json
 import os
 from typing import Dict, Any
 
@@ -103,7 +102,7 @@ def basic_api_example():
     """Basic API usage example."""
     print("\\n=== Basic API Example ===")
     
-    client = FileManagerClient()
+    FileManagerClient()
     
     # Note: This assumes the server is running
     print("Example API calls (requires running server):")
@@ -124,7 +123,7 @@ def batch_operations_example():
     """Batch operations via API."""
     print("\\n=== Batch Operations Example ===")
     
-    client = FileManagerClient()
+    FileManagerClient()
     
     print("Example batch operations:")
     print("  # Convert multiple files")

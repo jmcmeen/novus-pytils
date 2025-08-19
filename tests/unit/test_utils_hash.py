@@ -1,8 +1,7 @@
 """Unit tests for utils.hash module."""
 import pytest
 import hashlib
-from pathlib import Path
-from unittest.mock import patch, mock_open
+from unittest.mock import patch
 
 from novus_pytils.utils.hash import get_file_md5_hash, get_string_md5_hash
 

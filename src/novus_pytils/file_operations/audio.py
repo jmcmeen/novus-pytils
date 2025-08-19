@@ -6,7 +6,7 @@ retrieving, parsing WAV files, and comprehensive audio analysis.
 import wave
 import struct
 import numpy as np
-from typing import Dict, List, Optional, Union
+from typing import Dict, Optional, Union
 from dataclasses import dataclass
 from pathlib import Path
 

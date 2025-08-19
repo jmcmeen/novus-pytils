@@ -5,7 +5,7 @@ This module provides abstract base classes and interfaces for file handling oper
 import os
 import shutil
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List
 from pathlib import Path
 
 
@@ -134,7 +134,7 @@ class FileManagerMixin:
                     output_path = os.path.splitext(file_path)[0] + target_format
                 
                 results[file_path] = self.convert(file_path, output_path, target_format, **kwargs)
-            except Exception as e:
+            except Exception:
                 results[file_path] = False
         
         return results

@@ -1,6 +1,6 @@
 """Unit tests for core.base module."""
 import pytest
-from unittest.mock import patch, MagicMock, mock_open
+from unittest.mock import patch
 import os
 
 from novus_pytils.core.base import (

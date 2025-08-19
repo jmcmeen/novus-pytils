@@ -1,7 +1,5 @@
 """Unit tests for utils.console module."""
-import pytest
-from unittest.mock import patch, MagicMock
-import sys
+from unittest.mock import patch
 
 from novus_pytils.utils.console import (
     print_colored, print_success, print_error, print_warning, print_info,

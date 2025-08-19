@@ -5,9 +5,7 @@ with support for upload, download, and conversion operations.
 """
 import os
 import tempfile
-import shutil
 from typing import List, Optional, Dict, Any, Union
-from pathlib import Path
 
 try:
     from fastapi import FastAPI, File, UploadFile, HTTPException, Form, Query
@@ -22,13 +20,12 @@ except ImportError:
         pass
 
 from novus_pytils.api.functional import (
-    read_file, write_file, create_file, update_file, delete_file,
-    copy_file, move_file, convert_file, get_file_info, get_supported_conversions,
+    delete_file,
+    convert_file, get_file_info, get_supported_conversions,
     batch_convert, batch_operation, resize_image, crop_image, trim_audio, trim_video,
-    merge_files, split_file, create_thumbnail, apply_filter, extract_audio_from_video,
-    extract_frames_from_video, normalize_audio, change_audio_volume
+    create_thumbnail, apply_filter, extract_audio_from_video,
+    extract_frames_from_video
 )
-from novus_pytils.core.base import FileHandlerError, UnsupportedFormatError
 
 
 class ConversionRequest(BaseModel):
@@ -262,7 +259,7 @@ def create_web_api(upload_dir: str = None, max_file_size: int = 100 * 1024 * 102
             ext = os.path.splitext(file_path)[1]
             output_path = f"{base_name}_trimmed{ext}"
             
-            file_info = get_file_info(file_path)
+            get_file_info(file_path)
             
             if ext.lower() in ['.wav', '.mp3', '.ogg', '.flac', '.aac']:
                 success = trim_audio(file_path, output_path, int(request.start), int(request.end) if request.end else None)

@@ -1,8 +1,6 @@
 """Unit tests for handlers.text_handler module."""
 import pytest
-from unittest.mock import patch, mock_open, MagicMock
-import os
-import tempfile
+from unittest.mock import patch, mock_open
 
 from novus_pytils.handlers.text_handler import TextHandler
 from novus_pytils.core.base import FileHandlerError, UnsupportedFormatError
@@ -216,7 +214,7 @@ class TestTextHandler:
     @patch('builtins.open', new_callable=mock_open, read_data='line1\nline2\nline3\nline4\nline5\n')
     def test_split_file(self, mock_file):
         """Test splitting text file into parts."""
-        with patch('builtins.open', mock_open()) as mock_output:
+        with patch('builtins.open', mock_open()):
             result = self.handler.split_file('input.txt', '/output', lines_per_file=2)
             
             assert isinstance(result, list)
