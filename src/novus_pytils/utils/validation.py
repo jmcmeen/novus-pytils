@@ -39,9 +39,12 @@ class ValidationResult:
     def __post_init__(self):
         if self.errors is None:
             self.errors = []
+    
+    def __str__(self):
+        return f"ValidationResult(valid={self.is_valid}, message='{self.message}')"
 
 
-def validate_file_path(file_path: str, must_exist: bool = True, check_permissions: bool = True) -> bool:
+def validate_file_path(file_path: str, must_exist: bool = True, check_permissions: bool = True) -> ValidationResult:
     """Validate file path for security and existence.
     
     Args:
@@ -50,37 +53,39 @@ def validate_file_path(file_path: str, must_exist: bool = True, check_permission
         check_permissions: Whether to check file permissions
         
     Returns:
-        bool: True if valid
-        
-    Raises:
-        ValidationError: If validation fails
-        SecurityError: If security checks fail
+        ValidationResult: Result of validation
     """
-    if not file_path or not isinstance(file_path, str):
-        raise ValidationError("File path must be a non-empty string")
+    if not file_path or file_path is None or not isinstance(file_path, str):
+        return ValidationResult(False, "File path must be a non-empty string")
+    
+    if file_path == "":
+        return ValidationResult(False, "File path cannot be empty")
     
     path = Path(file_path)
     
     if len(str(path)) > 260:
-        raise ValidationError("File path too long (max 260 characters)")
+        return ValidationResult(False, "File path too long (max 260 characters)")
     
     if has_path_traversal(file_path):
-        raise SecurityError("Path traversal detected in file path")
+        return ValidationResult(False, "Path traversal detected in file path")
     
     if contains_dangerous_chars(file_path):
-        raise SecurityError("Dangerous characters detected in file path")
+        return ValidationResult(False, "Dangerous characters detected in file path")
     
     if must_exist and not path.exists():
-        raise ValidationError(f"File does not exist: {file_path}")
+        return ValidationResult(False, f"File does not exist: {file_path}")
     
     if path.exists() and check_permissions:
         if must_exist and not os.access(file_path, os.R_OK):
-            raise ValidationError(f"File is not readable: {file_path}")
+            return ValidationResult(False, f"File is not readable: {file_path}")
         
         if path.parent.exists() and not os.access(path.parent, os.W_OK):
-            raise ValidationError(f"Directory is not writable: {path.parent}")
+            return ValidationResult(False, f"Directory is not writable: {path.parent}")
     
-    return True
+    if path.exists():
+        return ValidationResult(True, "File exists and is valid")
+    else:
+        return ValidationResult(True, "File path is valid")
 
 
 def validate_file_type(file_path: str, expected_types: List[str] = None) -> str:
@@ -301,7 +306,7 @@ def validate_time_format(time_str: str) -> bool:
     raise ValidationError("Invalid time format. Use HH:MM:SS, seconds, or decimal seconds")
 
 
-def validate_file_size(file_path: str, max_size: int = None, min_size: int = 0) -> bool:
+def validate_file_size(file_path: str, max_size: int = None, min_size: int = 0) -> ValidationResult:
     """Validate file size.
     
     Args:
@@ -310,44 +315,38 @@ def validate_file_size(file_path: str, max_size: int = None, min_size: int = 0) 
         min_size: Minimum file size in bytes
         
     Returns:
-        bool: True if valid
-        
-    Raises:
-        ValidationError: If size is invalid
+        ValidationResult: Result of validation
     """
     if not os.path.exists(file_path):
-        raise ValidationError(f"File does not exist: {file_path}")
+        return ValidationResult(False, f"File does not exist: {file_path}")
     
     size = os.path.getsize(file_path)
     
     if size < min_size:
-        raise ValidationError(f"File too small: {size} bytes (min {min_size})")
+        return ValidationResult(False, f"File too small: {size} bytes (minimum {min_size} bytes)")
     
     if max_size and size > max_size:
-        raise ValidationError(f"File too large: {size} bytes (max {max_size})")
+        return ValidationResult(False, f"File too large: {size} bytes (maximum {max_size} bytes)")
     
-    return True
+    return ValidationResult(True, f"File size {size} bytes is within valid range")
 
 
-def validate_quality_parameter(quality: int) -> bool:
+def validate_quality_parameter(quality: int) -> ValidationResult:
     """Validate quality parameter (1-100).
     
     Args:
         quality: Quality value
         
     Returns:
-        bool: True if valid
-        
-    Raises:
-        ValidationError: If quality is invalid
+        ValidationResult: Result of validation
     """
     if not isinstance(quality, int):
-        raise ValidationError("Quality must be an integer")
+        return ValidationResult(False, "Quality must be an integer")
     
     if quality < 1 or quality > 100:
-        raise ValidationError("Quality must be between 1 and 100")
+        return ValidationResult(False, "Quality must be between 1 and 100")
     
-    return True
+    return ValidationResult(True, f"Quality {quality} is valid")
 
 
 def has_path_traversal(path: str) -> bool:
@@ -421,9 +420,12 @@ def sanitize_filename(filename: str) -> str:
     Returns:
         str: Sanitized filename
     """
+    if not filename:
+        return 'unnamed'
+        
     sanitized = re.sub(r'[<>:"/\\|?*]', '_', filename)
     
-    sanitized = re.sub(r'[\\x00-\\x1f]', '_', sanitized)
+    sanitized = re.sub(r'[\x00-\x1f]', '_', sanitized)
     
     sanitized = sanitized.strip('. ')
     
@@ -488,7 +490,7 @@ def validate_batch_operation(files: List[str], operation: str, **kwargs) -> Dict
         'invalid': invalid_files
     }
 
-def validate_file_extension(file_path: str, allowed_extensions: List[str]) -> bool:
+def validate_file_extension(file_path: str, allowed_extensions: List[str]) -> ValidationResult:
     """
     Validate that file has an allowed extension.
 
@@ -497,17 +499,20 @@ def validate_file_extension(file_path: str, allowed_extensions: List[str]) -> bo
         allowed_extensions: List of allowed extensions (with dots).
 
     Returns:
-        bool: True if extension is allowed.
-
-    Raises:
-        ValidationError: If extension is not allowed.
+        ValidationResult: Result of validation.
     """
     ext = os.path.splitext(file_path)[1].lower()
-    if ext not in [e.lower() for e in allowed_extensions]:
-        raise ValidationError(f"File extension {ext} not allowed. Allowed: {allowed_extensions}")
-    return True
+    allowed_lower = [e.lower() for e in allowed_extensions]
+    
+    if ext == "":
+        return ValidationResult(False, "File has no extension")
+    
+    if ext not in allowed_lower:
+        return ValidationResult(False, f"File extension {ext} is not supported. Allowed extensions: {allowed_extensions}")
+    
+    return ValidationResult(True, f"File extension {ext} is valid")
 
-def validate_image_dimensions(width: int, height: int, max_width: int = 10000, max_height: int = 10000) -> bool:
+def validate_image_dimensions(width: int, height: int, max_width: int = 10000, max_height: int = 10000) -> ValidationResult:
     """
     Validate image dimensions.
 
@@ -518,23 +523,20 @@ def validate_image_dimensions(width: int, height: int, max_width: int = 10000, m
         max_height: Maximum allowed height.
 
     Returns:
-        bool: True if dimensions are valid.
-
-    Raises:
-        ValidationError: If dimensions are invalid.
+        ValidationResult: Result of validation.
     """
     if not isinstance(width, int) or not isinstance(height, int):
-        raise ValidationError("Width and height must be integers")
+        return ValidationResult(False, "Width and height must be integers")
     
     if width <= 0 or height <= 0:
-        raise ValidationError("Width and height must be positive")
+        return ValidationResult(False, "Width and height must be positive")
     
     if width > max_width or height > max_height:
-        raise ValidationError(f"Dimensions too large (max {max_width}x{max_height})")
+        return ValidationResult(False, f"Dimensions too large (maximum {max_width}x{max_height})")
     
-    return True
+    return ValidationResult(True, f"Image dimensions {width}x{height} are valid")
 
-def validate_audio_parameters(sample_rate: int = None, channels: int = None, bitrate: str = None) -> bool:
+def validate_audio_parameters(sample_rate: int = None, channels: int = None, bitrate: str = None, duration: float = None) -> ValidationResult:
     """
     Validate audio encoding parameters.
 
@@ -542,37 +544,39 @@ def validate_audio_parameters(sample_rate: int = None, channels: int = None, bit
         sample_rate: Sample rate in Hz.
         channels: Number of audio channels.
         bitrate: Bitrate string (e.g., '192k').
+        duration: Duration in seconds.
 
     Returns:
-        bool: True if all parameters are valid.
-
-    Raises:
-        ValidationError: If any parameter is invalid.
+        ValidationResult: Result of validation.
     """
     if sample_rate is not None:
         if not isinstance(sample_rate, int) or sample_rate <= 0:
-            raise ValidationError("Sample rate must be a positive integer")
+            return ValidationResult(False, "Sample rate must be a positive integer")
         
         if sample_rate < 8000 or sample_rate > 192000:
-            raise ValidationError("Sample rate must be between 8000 and 192000 Hz")
+            return ValidationResult(False, "Sample rate must be between 8000 and 192000 Hz")
     
     if channels is not None:
         if not isinstance(channels, int) or channels <= 0:
-            raise ValidationError("Channels must be a positive integer")
+            return ValidationResult(False, "Channels must be a positive integer")
         
         if channels > 8:
-            raise ValidationError("Maximum 8 audio channels supported")
+            return ValidationResult(False, "Maximum 8 audio channels supported")
     
     if bitrate is not None:
         if not isinstance(bitrate, str):
-            raise ValidationError("Bitrate must be a string")
+            return ValidationResult(False, "Bitrate must be a string")
         
         if not re.match(r'^\d+[kmKM]?$', bitrate):
-            raise ValidationError("Invalid bitrate format (e.g., '192k', '320K')")
+            return ValidationResult(False, "Invalid bitrate format (e.g., '192k', '320K')")
     
-    return True
+    if duration is not None:
+        if not isinstance(duration, (int, float)) or duration < 0:
+            return ValidationResult(False, "Duration must be a non-negative number")
+    
+    return ValidationResult(True, "Audio parameters are valid")
 
-def validate_video_parameters(fps: float = None, resolution: str = None, bitrate: str = None) -> bool:
+def validate_video_parameters(fps: float = None, resolution: str = None, bitrate: str = None) -> ValidationResult:
     """
     Validate video encoding parameters.
 
@@ -582,38 +586,39 @@ def validate_video_parameters(fps: float = None, resolution: str = None, bitrate
         bitrate: Bitrate string (e.g., '2M').
 
     Returns:
-        bool: True if all parameters are valid.
-
-    Raises:
-        ValidationError: If any parameter is invalid.
+        ValidationResult: Result of validation.
     """
     if fps is not None:
         if not isinstance(fps, (int, float)) or fps <= 0:
-            raise ValidationError("FPS must be a positive number")
+            return ValidationResult(False, "FPS must be a positive number")
         
         if fps > 120:
-            raise ValidationError("FPS cannot exceed 120")
+            return ValidationResult(False, "FPS cannot exceed 120")
     
     if resolution is not None:
         if not isinstance(resolution, str):
-            raise ValidationError("Resolution must be a string")
+            return ValidationResult(False, "Resolution must be a string")
         
         if not re.match(r'^\d+x\d+$', resolution):
-            raise ValidationError("Invalid resolution format (e.g., '1920x1080')")
+            return ValidationResult(False, "Invalid resolution format (e.g., '1920x1080')")
         
         width, height = map(int, resolution.split('x'))
-        validate_image_dimensions(width, height, 7680, 4320)  # 8K max
+        # Check dimensions without raising exceptions
+        if width <= 0 or height <= 0:
+            return ValidationResult(False, "Width and height must be positive")
+        if width > 7680 or height > 4320:  # 8K max
+            return ValidationResult(False, f"Dimensions too large (maximum 7680x4320)")
     
     if bitrate is not None:
         if not isinstance(bitrate, str):
-            raise ValidationError("Bitrate must be a string")
+            return ValidationResult(False, "Bitrate must be a string")
         
         if not re.match(r'^\d+[kmKM]?$', bitrate):
-            raise ValidationError("Invalid bitrate format (e.g., '2M', '1000k')")
+            return ValidationResult(False, "Invalid bitrate format (e.g., '2M', '1000k')")
     
-    return True
+    return ValidationResult(True, "Video parameters are valid")
 
-def validate_color_format(color: str) -> bool:
+def validate_color_format(color: str) -> ValidationResult:
     """
     Validate color format (hex, rgb, etc.).
 
@@ -621,34 +626,35 @@ def validate_color_format(color: str) -> bool:
         color: Color string to validate.
 
     Returns:
-        bool: True if color format is valid.
-
-    Raises:
-        ValidationError: If color format is invalid.
+        ValidationResult: Result of validation.
     """
     if not isinstance(color, str):
-        raise ValidationError("Color must be a string")
+        return ValidationResult(False, "Color must be a string")
     
-    # Check hex format
+    # Check hex format (6 digits)
     if re.match(r'^#[0-9a-fA-F]{6}$', color):
-        return True
+        return ValidationResult(True, f"Valid hex color: {color}")
+    
+    # Check hex format (3 digits)
+    if re.match(r'^#[0-9a-fA-F]{3}$', color):
+        return ValidationResult(True, f"Valid short hex color: {color}")
     
     # Check RGB format
     if re.match(r'^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$', color):
-        return True
+        return ValidationResult(True, f"Valid RGB color: {color}")
     
     # Check RGBA format
     if re.match(r'^rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*[\d.]+\s*\)$', color):
-        return True
+        return ValidationResult(True, f"Valid RGBA color: {color}")
     
     # Check named colors (basic set)
     named_colors = ['red', 'green', 'blue', 'black', 'white', 'yellow', 'cyan', 'magenta']
     if color.lower() in named_colors:
-        return True
+        return ValidationResult(True, f"Valid named color: {color}")
     
-    raise ValidationError(f"Invalid color format: {color}")
+    return ValidationResult(False, f"Invalid color format: {color}")
 
-def validate_url(url: str) -> bool:
+def validate_url(url: str) -> ValidationResult:
     """
     Validate URL format.
 
@@ -656,27 +662,27 @@ def validate_url(url: str) -> bool:
         url: URL string to validate.
 
     Returns:
-        bool: True if URL is valid.
-
-    Raises:
-        ValidationError: If URL is invalid.
+        ValidationResult: Result of validation.
     """
     if not isinstance(url, str):
-        raise ValidationError("URL must be a string")
+        return ValidationResult(False, "URL must be a string")
+    
+    if not url:
+        return ValidationResult(False, "URL cannot be empty")
     
     try:
         result = urllib.parse.urlparse(url)
         if not all([result.scheme, result.netloc]):
-            raise ValidationError("Invalid URL format")
+            return ValidationResult(False, "Invalid URL format")
         
         if result.scheme not in ['http', 'https', 'ftp', 'ftps']:
-            raise ValidationError("Unsupported URL scheme")
+            return ValidationResult(False, "Unsupported URL scheme")
         
-        return True
+        return ValidationResult(True, f"Valid URL: {url}")
     except Exception as e:
-        raise ValidationError(f"Invalid URL: {str(e)}")
+        return ValidationResult(False, f"Invalid URL: {str(e)}")
 
-def validate_email(email: str) -> bool:
+def validate_email(email: str) -> ValidationResult:
     """
     Validate email address format.
 
@@ -684,21 +690,18 @@ def validate_email(email: str) -> bool:
         email: Email address to validate.
 
     Returns:
-        bool: True if email is valid.
-
-    Raises:
-        ValidationError: If email is invalid.
+        ValidationResult: Result of validation.
     """
     if not isinstance(email, str):
-        raise ValidationError("Email must be a string")
+        return ValidationResult(False, "Email must be a string")
     
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     if not re.match(pattern, email):
-        raise ValidationError("Invalid email format")
+        return ValidationResult(False, "Invalid email format")
     
-    return True
+    return ValidationResult(True, f"Valid email: {email}")
 
-def validate_json_structure(json_str: str, schema: Dict[str, Any] = None) -> bool:
+def validate_json_structure(json_str: str, schema: Dict[str, Any] = None) -> ValidationResult:
     """
     Validate JSON string and optionally check against schema.
 
@@ -707,31 +710,28 @@ def validate_json_structure(json_str: str, schema: Dict[str, Any] = None) -> boo
         schema: Optional schema to validate against.
 
     Returns:
-        bool: True if JSON is valid.
-
-    Raises:
-        ValidationError: If JSON is invalid.
+        ValidationResult: Result of validation.
     """
     if not isinstance(json_str, str):
-        raise ValidationError("JSON must be a string")
+        return ValidationResult(False, "JSON must be a string")
     
     try:
         data = json.loads(json_str)
     except json.JSONDecodeError as e:
-        raise ValidationError(f"Invalid JSON: {str(e)}")
+        return ValidationResult(False, f"Invalid JSON: {str(e)}")
     
     if schema:
         # Basic schema validation
         for key, expected_type in schema.items():
             if key not in data:
-                raise ValidationError(f"Missing required key: {key}")
+                return ValidationResult(False, f"Missing required key: {key}")
             
             if not isinstance(data[key], expected_type):
-                raise ValidationError(f"Key {key} should be {expected_type.__name__}")
+                return ValidationResult(False, f"Key {key} should be {expected_type.__name__}")
     
-    return True
+    return ValidationResult(True, "Valid JSON structure")
 
-def is_safe_path(path: str, base_path: str = None) -> bool:
+def is_safe_path(path: str, base_path: str = None) -> ValidationResult:
     """
     Check if path is safe (no path traversal).
 
@@ -740,29 +740,26 @@ def is_safe_path(path: str, base_path: str = None) -> bool:
         base_path: Base path to restrict to.
 
     Returns:
-        bool: True if path is safe.
-
-    Raises:
-        SecurityError: If path is unsafe.
+        ValidationResult: Result of validation.
     """
     if has_path_traversal(path):
-        raise SecurityError("Path traversal detected")
+        return ValidationResult(False, "Path traversal detected")
     
     if contains_dangerous_chars(path):
-        raise SecurityError("Dangerous characters in path")
+        return ValidationResult(False, "Dangerous characters in path")
     
     if base_path:
         try:
             resolved_path = os.path.abspath(path)
             resolved_base = os.path.abspath(base_path)
             if not resolved_path.startswith(resolved_base):
-                raise SecurityError("Path outside base directory")
+                return ValidationResult(False, "Path outside base directory")
         except Exception:
-            raise SecurityError("Invalid path")
+            return ValidationResult(False, "Invalid path")
     
-    return True
+    return ValidationResult(True, "Path is safe")
 
-def check_disk_space(path: str, required_bytes: int) -> bool:
+def check_disk_space(path: str, required_bytes: int) -> ValidationResult:
     """
     Check if there's enough disk space at the given path.
 
@@ -771,15 +768,12 @@ def check_disk_space(path: str, required_bytes: int) -> bool:
         required_bytes: Required space in bytes.
 
     Returns:
-        bool: True if there's enough space.
-
-    Raises:
-        ValidationError: If there's not enough space.
+        ValidationResult: Result of validation.
     """
     try:
         total, used, free = shutil.disk_usage(path)
         if free < required_bytes:
-            raise ValidationError(f"Not enough disk space. Required: {required_bytes}, Available: {free}")
-        return True
+            return ValidationResult(False, f"Not enough disk space. Required: {required_bytes}, Available: {free}")
+        return ValidationResult(True, f"Sufficient disk space. Required: {required_bytes}, Available: {free}")
     except Exception as e:
-        raise ValidationError(f"Failed to check disk space: {str(e)}")
+        return ValidationResult(False, f"Failed to check disk space: {str(e)}")
