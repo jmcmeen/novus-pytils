@@ -42,7 +42,8 @@ image = [
 ]
 dev = [
     "pytest",
-    "ruff"
+    "ruff",
+    "httpx"
 ]
 all = [
     "fastapi>=0.100.0",
@@ -50,7 +51,8 @@ all = [
     "python-multipart>=0.0.6",
     "Pillow>=9.0.0",
     "pytest",
-    "ruff"
+    "ruff",
+    "httpx"
 ]
 
 [project.scripts]
