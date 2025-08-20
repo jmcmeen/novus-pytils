@@ -2,7 +2,7 @@
 from unittest.mock import patch
 
 from novus_pytils.utils.console import (
-    print_colored, print_success, print_error, print_warning, print_info,
+    print_color, print_success, print_error, print_warning, print_info,
     print_table, print_progress_bar, confirm_action, get_user_input,
     clear_screen, move_cursor, ColorCode
 )
@@ -35,7 +35,7 @@ class TestPrintColored:
     @patch('builtins.print')
     def test_print_colored_basic(self, mock_print):
         """Test basic colored printing."""
-        print_colored("Test message", ColorCode.RED)
+        print_color("Test message", ColorCode.RED)
         
         expected = f"{ColorCode.RED.value}Test message{ColorCode.RESET.value}"
         mock_print.assert_called_once_with(expected)
@@ -43,7 +43,7 @@ class TestPrintColored:
     @patch('builtins.print')
     def test_print_colored_with_background(self, mock_print):
         """Test colored printing with background color."""
-        print_colored("Test message", ColorCode.RED, ColorCode.YELLOW)
+        print_color("Test message", ColorCode.RED, ColorCode.YELLOW)
         
         expected = f"{ColorCode.RED.value}{ColorCode.YELLOW.value}Test message{ColorCode.RESET.value}"
         mock_print.assert_called_once_with(expected)
@@ -52,14 +52,14 @@ class TestPrintColored:
     def test_print_colored_no_color(self, mock_print):
         """Test printing without color when disabled."""
         with patch('novus_pytils.utils.console.COLORS_ENABLED', False):
-            print_colored("Test message", ColorCode.RED)
+            print_color("Test message", ColorCode.RED)
         
         mock_print.assert_called_once_with("Test message")
     
     @patch('builtins.print')
     def test_print_colored_with_kwargs(self, mock_print):
         """Test colored printing with additional print kwargs."""
-        print_colored("Test message", ColorCode.GREEN, end="", flush=True)
+        print_color("Test message", ColorCode.GREEN, end="", flush=True)
         
         expected = f"{ColorCode.GREEN.value}Test message{ColorCode.RESET.value}"
         mock_print.assert_called_once_with(expected, end="", flush=True)
