@@ -2,7 +2,7 @@
 import pytest
 import pandas as pd
 
-from novus_pytils.file_operations.text import to_frame, write_csv
+from novus_pytils.text import to_frame, write_csv
 
 
 class TestDataFrameOperations:

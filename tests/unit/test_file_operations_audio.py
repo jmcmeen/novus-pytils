@@ -5,7 +5,7 @@ import struct
 import numpy as np
 from unittest.mock import patch
 
-from novus_pytils.file_operations.audio import (
+from novus_pytils.wave import (
     count_audio_files, get_audio_files, get_wav_files, read_wav_file,
     get_wav_metadata, analyze_wav_file, write_wav_file, parse_wav,
     validate_wav, WAVParser, WAVError, InvalidWAVFormatError, CorruptedFileError
