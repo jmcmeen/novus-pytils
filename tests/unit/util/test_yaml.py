@@ -12,7 +12,7 @@ from novus_pytils.utils.yaml import (
 class TestLoadConfig:
     """Test load_config function."""
     
-    @patch('novus_pytils.yaml.file_exists')
+    @patch('novus_pytils.utils.yaml.file_exists')
     @patch('builtins.open', new_callable=mock_open, read_data='key: value\nnum: 42')
     @patch('yaml.safe_load')
     def test_load_config_success(self, mock_yaml_load, mock_file, mock_file_exists):
