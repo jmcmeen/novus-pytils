@@ -31,8 +31,8 @@ from novus_pytils.models.exceptions import (
 
 from novus_pytils.models.validation import ValidationError, SecurityError
 
-__version__ = "1.0.0"
-__author__ = "John McMeen"
+__version__ = "0.0.63"
+__author__ = "novus-pytils crew"
 
 __all__ = [
     # Functional API
