@@ -9,10 +9,10 @@ import mimetypes
 import json
 import urllib.parse
 import shutil
-from typing import List, Dict, Tuple, Any
+from typing import List, Dict, Tuple
 from pathlib import Path
 from dataclasses import dataclass
-from novus_pytils.exceptions import FileHandlerError, UnsupportedFormatError, ValidationError, SecurityError
+from novus_pytils.exceptions import UnsupportedFormatError, ValidationError, SecurityError
 from novus_pytils.globals import (
     SUPPORTED_TEXT_EXTENSIONS, SUPPORTED_IMAGE_EXTENSIONS,
     SUPPORTED_AUDIO_EXTENSIONS, SUPPORTED_VIDEO_EXTENSIONS
@@ -518,119 +518,6 @@ def validate_file_extension(file_path: str, allowed_extensions: List[str]) -> Va
     
     return ValidationResult(True, f"File extension {ext} is valid")
 
-def validate_image_dimensions(width: int, height: int, max_width: int = 10000, max_height: int = 10000) -> ValidationResult:
-    """
-    Validate image dimensions.
-
-    Args:
-        width: Image width in pixels.
-        height: Image height in pixels.
-        max_width: Maximum allowed width.
-        max_height: Maximum allowed height.
-
-    Returns:
-        ValidationResult: Result of validation.
-    """
-    if not isinstance(width, int) or not isinstance(height, int):
-        return ValidationResult(False, "Width and height must be integers")
-    
-    if width <= 0 or height <= 0:
-        return ValidationResult(False, "Width and height must be positive")
-    
-    if width > max_width:
-        return ValidationResult(False, f"Width {width} exceeds maximum allowed width of {max_width}")
-    
-    if height > max_height:
-        return ValidationResult(False, f"Height {height} exceeds maximum allowed height of {max_height}")
-    
-    return ValidationResult(True, f"Image dimensions {width}x{height} are valid")
-
-def validate_audio_parameters(sample_rate: int = None, channels: int = None, bitrate: str = None, duration: float = None) -> ValidationResult:
-    """
-    Validate audio encoding parameters.
-
-    Args:
-        sample_rate: Sample rate in Hz.
-        channels: Number of audio channels.
-        bitrate: Bitrate string (e.g., '192k').
-        duration: Duration in seconds.
-
-    Returns:
-        ValidationResult: Result of validation.
-    """
-    if sample_rate is not None:
-        if not isinstance(sample_rate, int) or sample_rate <= 0:
-            return ValidationResult(False, "Sample rate must be a positive integer")
-        
-        if sample_rate < 8000 or sample_rate > 192000:
-            return ValidationResult(False, "Sample rate must be between 8000 and 192000 Hz")
-    
-    if channels is not None:
-        if not isinstance(channels, int) or channels <= 0:
-            return ValidationResult(False, "Channels must be a positive integer")
-        
-        if channels > 8:
-            return ValidationResult(False, "Maximum 8 audio channels supported")
-    
-    if bitrate is not None:
-        if not isinstance(bitrate, str):
-            return ValidationResult(False, "Bitrate must be a string")
-        
-        if not re.match(r'^\d+[kmKM]?$', bitrate):
-            return ValidationResult(False, "Invalid bitrate format (e.g., '192k', '320K')")
-    
-    if duration is not None:
-        if not isinstance(duration, (int, float)) or duration < 0:
-            return ValidationResult(False, "Duration must be a non-negative number")
-    
-    return ValidationResult(True, "Audio parameters are valid")
-
-def validate_video_parameters(fps: float = None, resolution: str = None, bitrate: str = None, duration: float = None) -> ValidationResult:
-    """
-    Validate video encoding parameters.
-
-    Args:
-        fps: Frames per second.
-        resolution: Resolution string (e.g., '1920x1080').
-        bitrate: Bitrate string (e.g., '2M').
-        duration: Duration in seconds.
-
-    Returns:
-        ValidationResult: Result of validation.
-    """
-    if fps is not None:
-        if not isinstance(fps, (int, float)) or fps <= 0:
-            return ValidationResult(False, "FPS must be a positive number")
-        
-        if fps > 120:
-            return ValidationResult(False, "FPS cannot exceed 120")
-    
-    if resolution is not None:
-        if not isinstance(resolution, str):
-            return ValidationResult(False, "Resolution must be a string")
-        
-        if not re.match(r'^\d+x\d+$', resolution):
-            return ValidationResult(False, "Invalid resolution format (e.g., '1920x1080')")
-        
-        width, height = map(int, resolution.split('x'))
-        # Check dimensions without raising exceptions
-        if width <= 0 or height <= 0:
-            return ValidationResult(False, "Width and height must be positive")
-        if width > 7680 or height > 4320:  # 8K max
-            return ValidationResult(False, f"Dimensions too large (maximum 7680x4320)")
-    
-    if bitrate is not None:
-        if not isinstance(bitrate, str):
-            return ValidationResult(False, "Bitrate must be a string")
-        
-        if not re.match(r'^\d+[kmKM]?$', bitrate):
-            return ValidationResult(False, "Invalid bitrate format (e.g., '2M', '1000k')")
-    
-    if duration is not None:
-        if not isinstance(duration, (int, float)) or duration < 0:
-            return ValidationResult(False, "Duration must be a non-negative number")
-    
-    return ValidationResult(True, "Video parameters are valid")
 
 def validate_color_format(color: str) -> ValidationResult:
     """

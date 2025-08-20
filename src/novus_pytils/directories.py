@@ -7,10 +7,8 @@ import os
 import shutil
 import requests
 import zipfile
-import stat
 from datetime import datetime
-from pathlib import Path
-from typing import List, Dict, Any
+from typing import List
 
 def download_file(url: str, save_to: str):
     """
