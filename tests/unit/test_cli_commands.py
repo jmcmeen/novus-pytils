@@ -2,7 +2,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 
-from novus_pytils.cli.commands import (
+from novus_pytils.commands import (
     print_success, print_error, print_warning, print_info,
     cmd_info, cmd_convert, cmd_resize, cmd_crop, cmd_trim,
     cmd_merge, cmd_split, cmd_thumbnail, cmd_filter,

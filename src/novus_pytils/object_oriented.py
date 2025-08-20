@@ -11,7 +11,7 @@ from novus_pytils.models.handlers.image_handler import ImageHandler
 from novus_pytils.models.handlers.audio_handler import AudioHandler
 from novus_pytils.models.handlers.video_handler import VideoHandler
 from novus_pytils.models.base import BaseFileHandler
-from novus_pytils.exceptions import FileHandlerError, UnsupportedFormatError
+from novus_pytils.models.exceptions import FileHandlerError, UnsupportedFormatError
 from novus_pytils.globals import (
     SUPPORTED_TEXT_EXTENSIONS, SUPPORTED_IMAGE_EXTENSIONS,
     SUPPORTED_AUDIO_EXTENSIONS, SUPPORTED_VIDEO_EXTENSIONS

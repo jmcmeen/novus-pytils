@@ -9,7 +9,7 @@ from novus_pytils.models.handlers.text_handler import TextHandler
 from novus_pytils.models.handlers.image_handler import ImageHandler
 from novus_pytils.models.handlers.audio_handler import AudioHandler
 from novus_pytils.models.handlers.video_handler import VideoHandler
-from novus_pytils.exceptions import UnsupportedFormatError
+from novus_pytils.models.exceptions import UnsupportedFormatError
 from novus_pytils.globals import (
     SUPPORTED_TEXT_EXTENSIONS, SUPPORTED_IMAGE_EXTENSIONS,
     SUPPORTED_AUDIO_EXTENSIONS, SUPPORTED_VIDEO_EXTENSIONS

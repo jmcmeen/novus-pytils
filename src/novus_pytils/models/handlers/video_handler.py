@@ -8,7 +8,7 @@ import subprocess
 import json
 from typing import Any, Dict, List
 from novus_pytils.models.base import BaseFileHandler, FileManagerMixin
-from novus_pytils.exceptions import ConversionError
+from novus_pytils.models.exceptions import ConversionError
 from novus_pytils.globals import SUPPORTED_VIDEO_EXTENSIONS, VIDEO_CONVERSION_MAP
 
 

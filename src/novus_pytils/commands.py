@@ -8,13 +8,13 @@ import sys
 import argparse
 import json
 
-from novus_pytils.api.functional import (
+from novus_pytils.functional import (
     convert_file, get_file_info, get_supported_conversions,
     batch_convert, batch_operation, resize_image, crop_image, trim_audio, trim_video,
     merge_files, split_file, create_thumbnail, apply_filter, extract_audio_from_video,
     extract_frames_from_video
 )
-from novus_pytils.api.web_api import run_server, FASTAPI_AVAILABLE
+from novus_pytils.web_api import run_server, FASTAPI_AVAILABLE
 
 
 def print_success(message: str):

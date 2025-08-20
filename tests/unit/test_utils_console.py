@@ -1,7 +1,7 @@
 """Unit tests for utils.console module."""
 from unittest.mock import patch
 
-from novus_pytils.console import (
+from novus_pytils.models.console import (
     print_color, print_success, print_error, print_warning, print_info,
     print_table, print_progress_bar, confirm_action, get_user_input,
     clear_screen, move_cursor, ColorCode
@@ -337,7 +337,7 @@ class TestEnvironmentDetection:
         # Just check that the detection doesn't crash
         with patch('novus_pytils.utils.console._detect_color_support') as mock_detect:
             mock_detect.return_value = True
-            from novus_pytils.console import COLORS_ENABLED
+            from novus_pytils.models.console import COLORS_ENABLED
             assert isinstance(COLORS_ENABLED, bool)
     
     @patch('sys.stdout.isatty')
@@ -347,7 +347,7 @@ class TestEnvironmentDetection:
         mock_isatty.return_value = True
         mock_env_get.side_effect = lambda key, default=None: 'truecolor' if key == 'COLORTERM' else default
         
-        from novus_pytils.console import _detect_color_support
+        from novus_pytils.models.console import _detect_color_support
         assert _detect_color_support() is True
     
     @patch('sys.stdout.isatty')
@@ -355,5 +355,5 @@ class TestEnvironmentDetection:
         """Test color support detection without TTY."""
         mock_isatty.return_value = False
         
-        from novus_pytils.console import _detect_color_support
+        from novus_pytils.models.console import _detect_color_support
         assert _detect_color_support() is False

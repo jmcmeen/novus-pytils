@@ -2,7 +2,7 @@
 import pytest
 from unittest.mock import patch, MagicMock, mock_open
 
-from novus_pytils.api.web_api import (
+from novus_pytils.web_api import (
     ConversionRequest, ResizeRequest, CropRequest, TrimRequest, FilterRequest,
     FileOperationResponse, BatchOperationResponse, create_web_api, run_server,
     FASTAPI_AVAILABLE

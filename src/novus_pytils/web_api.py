@@ -19,7 +19,7 @@ except ImportError:
     class BaseModel:
         pass
 
-from novus_pytils.api.functional import (
+from novus_pytils.functional import (
     delete_file,
     convert_file, get_file_info, get_supported_conversions,
     batch_convert, batch_operation, resize_image, crop_image, trim_audio, trim_video,
