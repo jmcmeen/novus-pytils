@@ -5,7 +5,7 @@ from unittest.mock import patch, MagicMock
 from novus_pytils.api.object_oriented import (
     FileManager, File, FileBatch, MediaCollection
 )
-from novus_pytils.core.base import FileHandlerError, UnsupportedFormatError
+from novus_pytils.models.base import FileHandlerError, UnsupportedFormatError
 
 
 class TestFileManager:

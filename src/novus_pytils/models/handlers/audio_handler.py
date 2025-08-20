@@ -6,7 +6,7 @@ and conversion between various audio formats using minimal dependencies.
 import os
 import wave
 from typing import Any, Dict, List, Union
-from novus_pytils.core.base import BaseFileHandler, FileManagerMixin, ConversionError
+from novus_pytils.models.base import BaseFileHandler, FileManagerMixin, ConversionError
 from novus_pytils.globals import SUPPORTED_AUDIO_EXTENSIONS, AUDIO_CONVERSION_MAP
 
 

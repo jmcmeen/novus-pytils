@@ -3,7 +3,7 @@ import pytest
 from unittest.mock import patch, mock_open
 
 from novus_pytils.handlers.text_handler import TextHandler
-from novus_pytils.core.base import FileHandlerError, UnsupportedFormatError
+from novus_pytils.models.base import FileHandlerError, UnsupportedFormatError
 
 
 class TestTextHandler:

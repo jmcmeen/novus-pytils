@@ -3,7 +3,7 @@ import pytest
 from unittest.mock import patch, mock_open
 import yaml
 
-from novus_pytils.config.yaml import (
+from novus_pytils.yaml import (
     load_config, save_config, get_config_value, set_config_value,
     validate_config, merge_configs
 )

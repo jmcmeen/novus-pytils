@@ -25,7 +25,7 @@ from novus_pytils.api.functional import (
 
 from novus_pytils.api.object_oriented import FileManager, File, FileBatch, MediaCollection
 
-from novus_pytils.core.base import (
+from novus_pytils.models.base import (
     FileHandlerError, UnsupportedFormatError, ConversionError
 )
 
