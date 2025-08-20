@@ -10,7 +10,7 @@ from novus_pytils.api.functional import (
     split_file, create_thumbnail, apply_filter, extract_audio_from_video,
     extract_frames_from_video, normalize_audio, change_audio_volume
 )
-from novus_pytils.models.base import UnsupportedFormatError
+from novus_pytils.exceptions import UnsupportedFormatError
 
 
 class TestGetHandler:
@@ -229,7 +229,8 @@ class TestBatchOperations:
     def test_batch_convert_without_batch_support(self, mock_splitext, mock_get_handler):
         """Test batch convert with handler that doesn't support batch operations."""
         mock_handler = MagicMock()
-        delattr(type(mock_handler), 'batch_convert')
+        # Remove batch_convert method to simulate handler without batch support
+        del mock_handler.batch_convert
         mock_handler.convert.return_value = True
         mock_get_handler.return_value = (mock_handler, 'image')
         mock_splitext.return_value = ('file1', '.jpg')
@@ -441,7 +442,8 @@ class TestMergeAndSplit:
     def test_merge_files_unsupported(self, mock_get_handler):
         """Test merging unsupported file type."""
         mock_handler = MagicMock()
-        delattr(type(mock_handler), 'merge_files')
+        # Remove merge_files method to simulate unsupported file type
+        del mock_handler.merge_files
         mock_get_handler.return_value = (mock_handler, 'text')
         
         with pytest.raises(UnsupportedFormatError):
@@ -474,7 +476,7 @@ class TestMergeAndSplit:
         result = split_file('input.mp3', '/output', min_silence_len=2000)
         
         assert result == ['part1.mp3', 'part2.mp3']
-        mock_handler.split_on_silence.assert_called_once_with('input.mp3', '/output', 2000, -40)
+        mock_handler.split_on_silence.assert_called_once_with('input.mp3', '/output', 2000, -40, min_silence_len=2000)
 
 
 class TestThumbnailAndFilter:
@@ -490,7 +492,7 @@ class TestThumbnailAndFilter:
         result = create_thumbnail('input.jpg', 'thumb.jpg', size=(64, 64))
         
         assert result is True
-        mock_handler.create_thumbnail.assert_called_once_with('input.jpg', 'thumb.jpg', (64, 64))
+        mock_handler.create_thumbnail.assert_called_once_with('input.jpg', 'thumb.jpg', (64, 64), size=(64, 64))
         
     @patch('novus_pytils.api.functional._get_handler')
     def test_create_thumbnail_video(self, mock_get_handler):
@@ -502,7 +504,7 @@ class TestThumbnailAndFilter:
         result = create_thumbnail('input.mp4', 'thumb.jpg', time_position='00:00:05')
         
         assert result is True
-        mock_handler.create_thumbnail.assert_called_once_with('input.mp4', 'thumb.jpg', '00:00:05')
+        mock_handler.create_thumbnail.assert_called_once_with('input.mp4', 'thumb.jpg', '00:00:05', time_position='00:00:05')
         
     @patch('novus_pytils.api.functional._get_handler')
     def test_apply_filter(self, mock_get_handler):

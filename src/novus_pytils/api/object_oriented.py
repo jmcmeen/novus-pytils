@@ -6,11 +6,12 @@ with support for chaining and context management.
 import os
 from typing import Any, Dict, List, Union
 from contextlib import contextmanager
-from novus_pytils.handlers.text_handler import TextHandler
-from novus_pytils.handlers.image_handler import ImageHandler
-from novus_pytils.handlers.audio_handler import AudioHandler
-from novus_pytils.handlers.video_handler import VideoHandler
-from novus_pytils.models.base import BaseFileHandler, FileHandlerError, UnsupportedFormatError
+from novus_pytils.models.handlers.text_handler import TextHandler
+from novus_pytils.models.handlers.image_handler import ImageHandler
+from novus_pytils.models.handlers.audio_handler import AudioHandler
+from novus_pytils.models.handlers.video_handler import VideoHandler
+from novus_pytils.models.base import BaseFileHandler
+from novus_pytils.exceptions import FileHandlerError, UnsupportedFormatError
 from novus_pytils.globals import (
     SUPPORTED_TEXT_EXTENSIONS, SUPPORTED_IMAGE_EXTENSIONS,
     SUPPORTED_AUDIO_EXTENSIONS, SUPPORTED_VIDEO_EXTENSIONS
