@@ -5,7 +5,7 @@ import yaml
 
 from novus_pytils.config.yaml import (
     load_config, save_config, get_config_value, set_config_value,
-    validate_config, merge_configs, create_default_config
+    validate_config, merge_configs
 )
 
 
@@ -217,40 +217,3 @@ class TestMergeConfigs:
         assert result == {'a': 1, 'b': 2}
 
 
-class TestCreateDefaultConfig:
-    """Test create_default_config function."""
-    
-    def test_create_default_config(self):
-        """Test creating default config."""
-        result = create_default_config()
-        
-        assert isinstance(result, dict)
-        assert 'file_operations' in result
-        assert 'api' in result
-        assert 'logging' in result
-        
-        # Check some default values
-        assert result['file_operations']['default_quality'] == 95
-        assert result['api']['host'] == '0.0.0.0'
-        assert result['api']['port'] == 8000
-    
-    def test_create_default_config_structure(self):
-        """Test default config has expected structure."""
-        result = create_default_config()
-        
-        # Check required sections exist
-        required_sections = ['file_operations', 'api', 'logging', 'cache']
-        for section in required_sections:
-            assert section in result
-        
-        # Check file_operations section
-        file_ops = result['file_operations']
-        assert 'default_quality' in file_ops
-        assert 'max_file_size' in file_ops
-        assert 'temp_directory' in file_ops
-        
-        # Check api section
-        api = result['api']
-        assert 'host' in api
-        assert 'port' in api
-        assert 'max_upload_size' in api

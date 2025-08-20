@@ -136,21 +136,3 @@ def merge_configs(*configs: Dict[str, Any]) -> Dict[str, Any]:
                 result[key] = value
     return result
 
-def create_default_config() -> Dict[str, Any]:
-    """
-    Create a default configuration dictionary.
-
-    Returns:
-        Dict[str, Any]: A default configuration dictionary.
-    """
-    return {
-        'app': {
-            'name': 'novus-pytils',
-            'version': '0.0.63',
-            'debug': False
-        },
-        'logging': {
-            'level': 'INFO',
-            'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        }
-    }
