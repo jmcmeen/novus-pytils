@@ -46,16 +46,17 @@ def load_config(filepath: str) -> Dict[str, Any]:
     """
     return load_yaml(filepath)
 
-def save_config(config: Dict[str, Any], filepath: str) -> None:
+def save_config(config: Dict[str, Any], filepath: str, indent: int = 2) -> None:
     """
     Save a configuration dictionary to a YAML file.
 
     Args:
         config (Dict[str, Any]): The configuration to save.
         filepath (str): The path to save the configuration to.
+        indent (int): Number of spaces for indentation.
     """
     with open(filepath, 'w') as f:
-        yaml.safe_dump(config, f, default_flow_style=False)
+        yaml.dump(config, f, default_flow_style=False, indent=indent)
 
 def get_config_value(config: Dict[str, Any], key: str, default: Any = None) -> Any:
     """

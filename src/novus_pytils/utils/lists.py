@@ -95,7 +95,12 @@ def chunk_list(lst: List[Any], chunk_size: int) -> List[List[Any]]:
 
     Returns:
         A list of chunks.
+        
+    Raises:
+        ValueError: If chunk_size is less than or equal to 0.
     """
+    if chunk_size <= 0:
+        raise ValueError("chunk_size must be greater than 0")
     return [lst[i:i + chunk_size] for i in range(0, len(lst), chunk_size)]
 
 def filter_list(lst: List[Any], predicate: Callable[[Any], bool]) -> List[Any]:
@@ -122,8 +127,16 @@ def sort_list_of_dicts(lst: List[Dict[str, Any]], key: str, reverse: bool = Fals
 
     Returns:
         A sorted list of dictionaries.
+        
+    Raises:
+        KeyError: If any dictionary is missing the specified key.
     """
-    return sorted(lst, key=lambda x: x.get(key), reverse=reverse)
+    # Check that all dictionaries have the key
+    for item in lst:
+        if key not in item:
+            raise KeyError(f"Key '{key}' not found in dictionary")
+    
+    return sorted(lst, key=lambda x: x[key], reverse=reverse)
 
 def group_by_key(lst: List[Dict[str, Any]], key: str) -> Dict[Any, List[Dict[str, Any]]]:
     """
@@ -135,10 +148,18 @@ def group_by_key(lst: List[Dict[str, Any]], key: str) -> Dict[Any, List[Dict[str
 
     Returns:
         A dictionary with grouped items.
+        
+    Raises:
+        KeyError: If any dictionary is missing the specified key.
     """
+    # Check that all dictionaries have the key
+    for item in lst:
+        if key not in item:
+            raise KeyError(f"Key '{key}' not found in dictionary")
+    
     groups = defaultdict(list)
     for item in lst:
-        groups[item.get(key)].append(item)
+        groups[item[key]].append(item)
     return dict(groups)
 
 def find_in_list(lst: List[Any], predicate: Callable[[Any], bool]) -> Any:
@@ -269,7 +290,14 @@ def get_list_statistics(lst: List[float]) -> Dict[str, float]:
         A dictionary containing various statistics.
     """
     if not lst:
-        return {}
+        return {
+            'count': 0,
+            'sum': 0,
+            'min': None,
+            'max': None,
+            'mean': None,
+            'median': None
+        }
     
     return {
         'count': len(lst),

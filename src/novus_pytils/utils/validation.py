@@ -126,7 +126,7 @@ def validate_file_type(file_path: str, expected_types: List[str] = None) -> str:
     return file_type
 
 
-def validate_image_dimensions(width: int, height: int, max_width: int = 10000, max_height: int = 10000) -> bool:
+def validate_image_dimensions(width: int, height: int, max_width: int = 10000, max_height: int = 10000) -> ValidationResult:
     """Validate image dimensions.
     
     Args:
@@ -136,21 +136,21 @@ def validate_image_dimensions(width: int, height: int, max_width: int = 10000, m
         max_height: Maximum allowed height
         
     Returns:
-        bool: True if valid
-        
-    Raises:
-        ValidationError: If dimensions are invalid
+        ValidationResult: Validation result with is_valid and message
     """
     if not isinstance(width, int) or not isinstance(height, int):
-        raise ValidationError("Width and height must be integers")
+        return ValidationResult(is_valid=False, message="Width and height must be integers")
     
     if width <= 0 or height <= 0:
-        raise ValidationError("Width and height must be positive")
+        return ValidationResult(is_valid=False, message="Width and height must be positive")
     
-    if width > max_width or height > max_height:
-        raise ValidationError(f"Dimensions too large (max {max_width}x{max_height})")
+    if width > max_width:
+        return ValidationResult(is_valid=False, message=f"Width {width} exceeds maximum allowed width of {max_width}")
     
-    return True
+    if height > max_height:
+        return ValidationResult(is_valid=False, message=f"Height {height} exceeds maximum allowed height of {max_height}")
+    
+    return ValidationResult(is_valid=True, message="Valid dimensions")
 
 
 def validate_crop_box(box: Tuple[int, int, int, int], image_width: int = None, image_height: int = None) -> bool:
@@ -188,83 +188,89 @@ def validate_crop_box(box: Tuple[int, int, int, int], image_width: int = None, i
     return True
 
 
-def validate_audio_parameters(sample_rate: int = None, channels: int = None, bitrate: str = None) -> bool:
+def validate_audio_parameters(sample_rate: int = None, channels: int = None, bitrate: str = None, duration: float = None) -> ValidationResult:
     """Validate audio parameters.
     
     Args:
         sample_rate: Sample rate in Hz
         channels: Number of audio channels
         bitrate: Bitrate string (e.g., '192k')
+        duration: Duration in seconds
         
     Returns:
-        bool: True if valid
-        
-    Raises:
-        ValidationError: If parameters are invalid
+        ValidationResult: Validation result with is_valid and message
     """
     if sample_rate is not None:
         if not isinstance(sample_rate, int) or sample_rate <= 0:
-            raise ValidationError("Sample rate must be a positive integer")
+            return ValidationResult(is_valid=False, message="Sample rate must be a positive integer")
         
         if sample_rate < 8000 or sample_rate > 192000:
-            raise ValidationError("Sample rate must be between 8000 and 192000 Hz")
+            return ValidationResult(is_valid=False, message="Sample rate must be between 8000 and 192000 Hz")
     
     if channels is not None:
         if not isinstance(channels, int) or channels <= 0:
-            raise ValidationError("Channels must be a positive integer")
+            return ValidationResult(is_valid=False, message="Channels must be a positive integer")
         
         if channels > 8:
-            raise ValidationError("Maximum 8 audio channels supported")
+            return ValidationResult(is_valid=False, message="Maximum 8 audio channels supported")
     
     if bitrate is not None:
         if not isinstance(bitrate, str):
-            raise ValidationError("Bitrate must be a string")
+            return ValidationResult(is_valid=False, message="Bitrate must be a string")
         
-        if not re.match(r'^\\d+[kmKM]?$', bitrate):
-            raise ValidationError("Invalid bitrate format (e.g., '192k', '320K')")
+        if not re.match(r'^\d+[kmKM]?$', bitrate):
+            return ValidationResult(is_valid=False, message="Invalid bitrate format (e.g., '192k', '320K')")
     
-    return True
+    if duration is not None:
+        if not isinstance(duration, (int, float)) or duration < 0:
+            return ValidationResult(is_valid=False, message="Duration must be a non-negative number")
+    
+    return ValidationResult(is_valid=True, message="Valid audio parameters")
 
 
-def validate_video_parameters(fps: float = None, resolution: str = None, bitrate: str = None) -> bool:
+def validate_video_parameters(fps: float = None, resolution: str = None, bitrate: str = None, duration: float = None) -> ValidationResult:
     """Validate video parameters.
     
     Args:
         fps: Frames per second
         resolution: Resolution string (e.g., '1920x1080')
         bitrate: Bitrate string (e.g., '2M')
+        duration: Duration in seconds
         
     Returns:
-        bool: True if valid
-        
-    Raises:
-        ValidationError: If parameters are invalid
+        ValidationResult: Validation result with is_valid and message
     """
     if fps is not None:
         if not isinstance(fps, (int, float)) or fps <= 0:
-            raise ValidationError("FPS must be a positive number")
+            return ValidationResult(is_valid=False, message="FPS must be a positive number")
         
         if fps > 120:
-            raise ValidationError("FPS cannot exceed 120")
+            return ValidationResult(is_valid=False, message="FPS cannot exceed 120")
     
     if resolution is not None:
         if not isinstance(resolution, str):
-            raise ValidationError("Resolution must be a string")
+            return ValidationResult(is_valid=False, message="Resolution must be a string")
         
-        if not re.match(r'^\\d+x\\d+$', resolution):
-            raise ValidationError("Invalid resolution format (e.g., '1920x1080')")
+        if not re.match(r'^\d+x\d+$', resolution):
+            return ValidationResult(is_valid=False, message="Invalid resolution format (e.g., '1920x1080')")
         
         width, height = map(int, resolution.split('x'))
-        validate_image_dimensions(width, height, 7680, 4320)  # 8K max
+        dim_result = validate_image_dimensions(width, height, 7680, 4320)  # 8K max
+        if not dim_result.is_valid:
+            return ValidationResult(is_valid=False, message=f"Invalid resolution: {dim_result.message}")
     
     if bitrate is not None:
         if not isinstance(bitrate, str):
-            raise ValidationError("Bitrate must be a string")
+            return ValidationResult(is_valid=False, message="Bitrate must be a string")
         
-        if not re.match(r'^\\d+[kmKM]?$', bitrate):
-            raise ValidationError("Invalid bitrate format (e.g., '2M', '1000k')")
+        if not re.match(r'^\d+[kmKM]?$', bitrate):
+            return ValidationResult(is_valid=False, message="Invalid bitrate format (e.g., '2M', '1000k')")
     
-    return True
+    if duration is not None:
+        if not isinstance(duration, (int, float)) or duration < 0:
+            return ValidationResult(is_valid=False, message="Duration must be a non-negative number")
+    
+    return ValidationResult(is_valid=True, message="Valid video parameters")
 
 
 def validate_time_format(time_str: str) -> bool:

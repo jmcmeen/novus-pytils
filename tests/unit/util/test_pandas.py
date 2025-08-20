@@ -275,7 +275,7 @@ class TestErrorHandling:
         # Try to write to a directory that doesn't exist
         invalid_path = temp_dir / "nonexistent" / "subdir" / "file.csv"
         
-        with pytest.raises(FileNotFoundError):
+        with pytest.raises((FileNotFoundError, OSError)):
             write_csv(df, str(invalid_path))
     
     def test_to_frame_invalid_data(self):

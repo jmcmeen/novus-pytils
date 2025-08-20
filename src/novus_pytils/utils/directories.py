@@ -76,7 +76,7 @@ def get_dir_list(directory, relative=False):
     return dir_list
 
 
-def get_files_by_extension(directory, extensions, relative=False):
+def get_files_by_extension(directory, extensions, relative=False, recursive=False):
     """
     Retrieves a list of files with specified extensions from a directory.
 
@@ -84,23 +84,40 @@ def get_files_by_extension(directory, extensions, relative=False):
         directory (str): The directory to search for files.
         extensions (list): A list of file extensions to filter by.
         relative (bool, optional): If True, returns file paths relative to the input directory. Defaults to False.
+        recursive (bool, optional): If True, searches subdirectories recursively. Defaults to False.
 
     Returns:
         list: A list of file paths with the specified extensions.
     """
 
     file_list = []
-    for root, _, files in os.walk(directory):
-        for file in files:
-            file_ext = os.path.splitext(file)[1].lower()
+    
+    if recursive:
+        for root, _, files in os.walk(directory):
+            for file in files:
+                file_ext = os.path.splitext(file)[1].lower()
 
-            for ext in extensions:
-                if ext.casefold() == file_ext.casefold():
-                    if relative:
-                        relative_root = root.replace(os.path.join(directory, ''), '')
-                        file_list.append(os.path.join(relative_root, file))
-                    else:
-                        file_list.append(os.path.join(root, file))
+                for ext in extensions:
+                    if ext.casefold() == file_ext.casefold():
+                        if relative:
+                            relative_root = root.replace(os.path.join(directory, ''), '')
+                            file_list.append(os.path.join(relative_root, file))
+                        else:
+                            file_list.append(os.path.join(root, file))
+    else:
+        # Only search the root directory
+        if os.path.exists(directory):
+            for file in os.listdir(directory):
+                file_path = os.path.join(directory, file)
+                if os.path.isfile(file_path):
+                    file_ext = os.path.splitext(file)[1].lower()
+                    
+                    for ext in extensions:
+                        if ext.casefold() == file_ext.casefold():
+                            if relative:
+                                file_list.append(file)
+                            else:
+                                file_list.append(file_path)
 
     return file_list
 
@@ -354,15 +371,15 @@ def get_file_extension(file_path):
 
 def get_file_name(file_path):
     """
-    Retrieves the file name from the given file path.
+    Retrieves the file name (without extension) from the given file path.
 
     Args:
         file_path (str): The path to the file.
 
     Returns:
-        str: The file name.
+        str: The file name without extension.
     """
-    return os.path.basename(file_path)
+    return os.path.splitext(os.path.basename(file_path))[0]
 
 def get_file_directory(file_path):
     """
@@ -438,20 +455,32 @@ def get_directory_size(directory_path: str) -> int:
                 total_size += os.path.getsize(filepath)
     return total_size
 
-def count_files_in_directory(directory_path: str) -> int:
+def count_files_in_directory(directory_path: str, recursive: bool = False) -> int:
     """
-    Count the number of files in a directory (recursively).
+    Count the number of files in a directory.
 
     Args:
         directory_path (str): The path to the directory.
+        recursive (bool): If True, count files recursively in subdirectories. Defaults to False.
 
     Returns:
         int: The number of files in the directory.
     """
-    count = 0
-    for _, _, files in os.walk(directory_path):
-        count += len(files)
-    return count
+    if recursive:
+        count = 0
+        for _, _, files in os.walk(directory_path):
+            count += len(files)
+        return count
+    else:
+        # Count only files in the root directory
+        if not os.path.exists(directory_path):
+            return 0
+        count = 0
+        for item in os.listdir(directory_path):
+            item_path = os.path.join(directory_path, item)
+            if os.path.isfile(item_path):
+                count += 1
+        return count
 
 def get_subdirectories(directory_path: str) -> List[str]:
     """
@@ -505,7 +534,7 @@ def append_to_file(file_path: str, content: str) -> None:
     with open(file_path, 'a', encoding='utf-8') as f:
         f.write(content)
 
-def get_file_creation_time(file_path: str) -> datetime:
+def get_file_creation_time(file_path: str) -> float:
     """
     Get the creation time of a file.
 
@@ -513,11 +542,11 @@ def get_file_creation_time(file_path: str) -> datetime:
         file_path (str): The path to the file.
 
     Returns:
-        datetime: The creation time of the file.
+        float: The creation time of the file as a timestamp.
     """
-    return datetime.fromtimestamp(os.path.getctime(file_path))
+    return os.path.getctime(file_path)
 
-def get_file_modification_time(file_path: str) -> datetime:
+def get_file_modification_time(file_path: str) -> float:
     """
     Get the modification time of a file.
 
@@ -525,9 +554,9 @@ def get_file_modification_time(file_path: str) -> datetime:
         file_path (str): The path to the file.
 
     Returns:
-        datetime: The modification time of the file.
+        float: The modification time of the file as a timestamp.
     """
-    return datetime.fromtimestamp(os.path.getmtime(file_path))
+    return os.path.getmtime(file_path)
 
 def is_file_empty(file_path: str) -> bool:
     """
@@ -541,12 +570,13 @@ def is_file_empty(file_path: str) -> bool:
     """
     return os.path.getsize(file_path) == 0
 
-def get_files_recursively(directory_path: str) -> List[str]:
+def get_files_recursively(directory_path: str, extensions: List[str] = None) -> List[str]:
     """
     Get all files in a directory recursively.
 
     Args:
         directory_path (str): The path to the directory.
+        extensions (List[str], optional): List of file extensions to filter by.
 
     Returns:
         List[str]: A list of file paths.
@@ -554,7 +584,13 @@ def get_files_recursively(directory_path: str) -> List[str]:
     files = []
     for root, _, filenames in os.walk(directory_path):
         for filename in filenames:
-            files.append(os.path.join(root, filename))
+            file_path = os.path.join(root, filename)
+            if extensions:
+                file_ext = os.path.splitext(filename)[1].lower()
+                if any(ext.lower() == file_ext for ext in extensions):
+                    files.append(file_path)
+            else:
+                files.append(file_path)
     return files
 
 def filter_files_by_size(files: List[str], min_size: int = 0, max_size: int = None) -> List[str]:
@@ -577,18 +613,27 @@ def filter_files_by_size(files: List[str], min_size: int = 0, max_size: int = No
                 filtered_files.append(file_path)
     return filtered_files
 
-def filter_files_by_date(files: List[str], start_date: datetime = None, end_date: datetime = None) -> List[str]:
+def filter_files_by_date(files: List[str], start_date: datetime = None, end_date: datetime = None, 
+                        after: datetime = None, before: datetime = None) -> List[str]:
     """
     Filter files by modification date.
 
     Args:
         files (List[str]): List of file paths.
-        start_date (datetime): Start date filter.
-        end_date (datetime): End date filter.
+        start_date (datetime): Start date filter (deprecated, use after).
+        end_date (datetime): End date filter (deprecated, use before).
+        after (datetime): Filter files modified after this date.
+        before (datetime): Filter files modified before this date.
 
     Returns:
         List[str]: Filtered list of file paths.
     """
+    # Support both old and new parameter names for backward compatibility
+    if after is not None:
+        start_date = after
+    if before is not None:
+        end_date = before
+        
     filtered_files = []
     for file_path in files:
         if os.path.exists(file_path):
@@ -629,18 +674,28 @@ def set_file_permissions(file_path: str, permissions: int) -> None:
     """
     os.chmod(file_path, permissions)
 
-def create_backup(file_path: str, backup_suffix: str = '.bak') -> str:
+def create_backup(file_path: str, backup_location: str = None) -> str:
     """
     Create a backup of a file.
 
     Args:
         file_path (str): The path to the file to backup.
-        backup_suffix (str): The suffix to add to the backup file.
+        backup_location (str): The directory to place the backup, or suffix if it doesn't exist as a directory.
 
     Returns:
         str: The path to the backup file.
     """
-    backup_path = file_path + backup_suffix
+    if backup_location and os.path.isdir(backup_location):
+        # backup_location is a directory
+        filename = os.path.basename(file_path)
+        backup_path = os.path.join(backup_location, filename + '.bak')
+    elif backup_location:
+        # backup_location is a suffix
+        backup_path = file_path + backup_location
+    else:
+        # Default suffix
+        backup_path = file_path + '.bak'
+    
     shutil.copy2(file_path, backup_path)
     return backup_path
 

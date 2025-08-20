@@ -73,7 +73,10 @@ class TestFileMD5Hash:
         
         hash_value = get_file_md5_hash(str(large_file))
         
-        expected_hash = hashlib.md5(content.encode()).hexdigest()
+        # Read the actual file content as bytes to get the correct hash
+        with open(large_file, 'rb') as f:
+            actual_content = f.read()
+        expected_hash = hashlib.md5(actual_content).hexdigest()
         assert hash_value == expected_hash
     
     def test_get_file_md5_hash_nonexistent_file(self, temp_dir):

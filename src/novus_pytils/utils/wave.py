@@ -109,6 +109,7 @@ class WAVParser:
         with open(self.file_path, 'rb') as f:
             self._parse_riff_header(f)
             self._parse_chunks(f)
+            self._calculate_duration()
             self._validate_format()
         
         return self.get_info()
@@ -172,8 +173,10 @@ class WAVParser:
             block_align=fmt_data[4],
             bits_per_sample=fmt_data[5]
         )
-        
-        if self.audio_data and self.format_info.byte_rate > 0:
+    
+    def _calculate_duration(self) -> None:
+        """Calculate audio duration after all chunks are parsed."""
+        if self.audio_data and self.format_info and self.format_info.byte_rate > 0:
             duration = len(self.audio_data) / self.format_info.byte_rate
             self.format_info._duration = duration
     
