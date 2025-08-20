@@ -1,7 +1,7 @@
 """Unit tests for utils.lists module."""
 import pytest
 
-from novus_pytils.utils.lists import (
+from novus_pytils.lists import (
     flatten_list, remove_duplicates, chunk_list, filter_list,
     sort_list_of_dicts, group_by_key, find_in_list, list_intersection,
     list_union, list_difference, rotate_list, partition_list,
