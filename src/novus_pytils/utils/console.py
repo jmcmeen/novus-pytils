@@ -21,7 +21,7 @@ class ColorCode(Enum):
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-def print_colored(text: str, color: ColorCode) -> None:
+def print_color(text: str, color: ColorCode) -> None:
     """
     Print text in the specified color.
 
@@ -38,7 +38,7 @@ def print_success(text: str) -> None:
     Args:
         text (str): The success message to print.
     """
-    print_colored(f"✓ {text}", ColorCode.GREEN)
+    print_color(f"✓ {text}", ColorCode.GREEN)
 
 def print_error(text: str) -> None:
     """
@@ -47,7 +47,7 @@ def print_error(text: str) -> None:
     Args:
         text (str): The error message to print.
     """
-    print_colored(f"✗ {text}", ColorCode.RED)
+    print_color(f"✗ {text}", ColorCode.RED)
 
 def print_warning(text: str) -> None:
     """
@@ -56,7 +56,7 @@ def print_warning(text: str) -> None:
     Args:
         text (str): The warning message to print.
     """
-    print_colored(f"⚠ {text}", ColorCode.YELLOW)
+    print_color(f"⚠ {text}", ColorCode.YELLOW)
 
 def print_info(text: str) -> None:
     """
@@ -65,7 +65,7 @@ def print_info(text: str) -> None:
     Args:
         text (str): The info message to print.
     """
-    print_colored(f"ℹ {text}", ColorCode.BLUE)
+    print_color(f"ℹ {text}", ColorCode.BLUE)
 
 def print_table(headers: List[str], rows: List[List[str]], separator: str = '|') -> None:
     """
