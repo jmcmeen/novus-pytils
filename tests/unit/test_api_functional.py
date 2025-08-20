@@ -2,7 +2,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 
-from novus_pytils.functional import (
+from novus_pytils.core.functions import (
     _get_handler, read_file, write_file, create_file, update_file,
     delete_file, copy_file, move_file, convert_file, get_file_info,
     get_supported_conversions, batch_convert, batch_operation,
@@ -10,7 +10,7 @@ from novus_pytils.functional import (
     split_file, create_thumbnail, apply_filter, extract_audio_from_video,
     extract_frames_from_video, normalize_audio, change_audio_volume
 )
-from novus_pytils.models.exceptions import UnsupportedFormatError
+from novus_pytils.utils.exceptions import UnsupportedFormatError
 
 
 class TestGetHandler:

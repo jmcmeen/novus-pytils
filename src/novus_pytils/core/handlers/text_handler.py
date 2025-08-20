@@ -8,8 +8,8 @@ import json
 import csv
 import yaml
 from typing import Any, Dict, List, Union
-from novus_pytils.models.base import BaseFileHandler, FileManagerMixin
-from novus_pytils.models.exceptions import ConversionError
+from novus_pytils.core.models import BaseFileHandler, FileManagerMixin
+from novus_pytils.utils.exceptions import ConversionError
 from novus_pytils.globals import SUPPORTED_TEXT_EXTENSIONS, TEXT_CONVERSION_MAP
 
 

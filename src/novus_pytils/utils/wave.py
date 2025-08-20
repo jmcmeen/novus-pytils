@@ -10,10 +10,10 @@ from typing import Dict, Optional, Union
 from dataclasses import dataclass
 from pathlib import Path
 
-from novus_pytils.models.directories import get_files_by_extension
+from novus_pytils.utils.directories import get_files_by_extension
 from novus_pytils.globals import SUPPORTED_AUDIO_EXTENSIONS
-from novus_pytils.models.hash import get_file_md5_hash
-from novus_pytils.models.exceptions import WAVError, InvalidWAVFormatError, CorruptedFileError
+from novus_pytils.utils.hash import get_file_md5_hash
+from novus_pytils.utils.exceptions import WAVError, InvalidWAVFormatError, CorruptedFileError
 
 
 def count_audio_files(audio_folder_path):

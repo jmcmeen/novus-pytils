@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 import requests
 
-from novus_pytils.models.directories import (
+from novus_pytils.utils.directories import (
     download_file, extract_zip, get_files_by_extension, get_file_name,
     get_file_extension, get_file_size, file_exists, create_directory,
     copy_file, move_file, delete_file, delete_directory, get_directory_size,

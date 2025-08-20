@@ -7,7 +7,7 @@ import shutil
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
 from pathlib import Path
-from .exceptions import FileHandlerError
+from ..utils.exceptions import FileHandlerError
 
 class BaseFileHandler(ABC):
     """Abstract base class for file handlers."""

@@ -3,12 +3,12 @@ import pytest
 from unittest.mock import patch
 import os
 
-from novus_pytils.models.exceptions import (
+from novus_pytils.utils.exceptions import (
     FileHandlerError, UnsupportedFormatError,
     ValidationError
 )
 
-from novus_pytils.models.base import BaseFileHandler
+from novus_pytils.core.models import BaseFileHandler
 
 
 class TestExceptions:

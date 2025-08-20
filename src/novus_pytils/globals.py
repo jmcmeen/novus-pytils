@@ -45,7 +45,7 @@ TEXT_CONVERSION_MAP = {
 
 # Configuration constants
 DEFAULT_QUALITY = 85
-MAX_FILE_SIZE_MB = 100
+MAX_FILE_SIZE_MB = 1000
 TEMP_DIRECTORY = '/tmp'
 API_HOST = 'localhost'
 API_PORT = 8000
