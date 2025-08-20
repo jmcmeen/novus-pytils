@@ -13,6 +13,7 @@ from pathlib import Path
 from novus_pytils.file_operations.general import get_files_by_extension
 from novus_pytils.globals import SUPPORTED_AUDIO_EXTENSIONS
 from novus_pytils.utils.hash import get_file_md5_hash
+from novus_pytils.exceptions import WAVError, InvalidWAVFormatError, CorruptedFileError
 
 
 def count_audio_files(audio_folder_path):
@@ -55,19 +56,6 @@ def get_wav_files(dir):
 
 
 # WAV Parser Classes and Functions
-class WAVError(Exception):
-    """Base exception for WAV parsing errors."""
-    pass
-
-
-class InvalidWAVFormatError(WAVError):
-    """Raised when WAV file format is invalid or unsupported."""
-    pass
-
-
-class CorruptedFileError(WAVError):
-    """Raised when WAV file appears to be corrupted."""
-    pass
 
 
 @dataclass

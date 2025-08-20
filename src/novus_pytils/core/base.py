@@ -7,26 +7,9 @@ import shutil
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
 from pathlib import Path
+from ..exceptions import FileHandlerError, UnsupportedFormatError, ConversionError, ValidationError
 
 
-class FileHandlerError(Exception):
-    """Base exception for file handler operations."""
-    pass
-
-
-class UnsupportedFormatError(FileHandlerError):
-    """Exception raised when attempting to work with unsupported file formats."""
-    pass
-
-
-class ConversionError(FileHandlerError):
-    """Exception raised when file conversion fails."""
-    pass
-
-
-class ValidationError(FileHandlerError):
-    """Exception raised when file validation fails."""
-    pass
 
 
 class BaseFileHandler(ABC):

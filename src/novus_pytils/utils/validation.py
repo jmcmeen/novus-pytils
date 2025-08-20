@@ -12,21 +12,13 @@ import shutil
 from typing import List, Dict, Tuple, Any
 from pathlib import Path
 from dataclasses import dataclass
-from novus_pytils.core.base import FileHandlerError, UnsupportedFormatError
+from novus_pytils.exceptions import FileHandlerError, UnsupportedFormatError, ValidationError, SecurityError
 from novus_pytils.globals import (
     SUPPORTED_TEXT_EXTENSIONS, SUPPORTED_IMAGE_EXTENSIONS,
     SUPPORTED_AUDIO_EXTENSIONS, SUPPORTED_VIDEO_EXTENSIONS
 )
 
 
-class ValidationError(FileHandlerError):
-    """Exception raised when validation fails."""
-    pass
-
-
-class SecurityError(FileHandlerError):
-    """Exception raised when security checks fail."""
-    pass
 
 
 @dataclass
