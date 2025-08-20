@@ -124,7 +124,7 @@ class TestWebAPIEndpoints:
         assert data["message"] == "Novus PyTils File Management API"
         assert data["version"] == "1.0.0"
     
-    @patch('novus_pytils.api.web_api.get_file_info')
+    @patch('novus_pytils.api.app.get_file_info')
     @patch('builtins.open', new_callable=mock_open)
     def test_upload_file_success(self, mock_file, mock_get_info):
         """Test successful file upload."""
@@ -150,7 +150,7 @@ class TestWebAPIEndpoints:
         assert response.status_code == 413
     
     @patch('os.path.exists')
-    @patch('novus_pytils.api.web_api.FileResponse')
+    @patch('novus_pytils.api.app.FileResponse')
     def test_download_file_success(self, mock_response, mock_exists):
         """Test successful file download."""
         mock_exists.return_value = True
@@ -168,7 +168,7 @@ class TestWebAPIEndpoints:
         assert response.status_code == 404
     
     @patch('os.path.exists')
-    @patch('novus_pytils.api.web_api.get_file_info')
+    @patch('novus_pytils.api.app.get_file_info')
     def test_file_info_success(self, mock_get_info, mock_exists):
         """Test getting file info."""
         mock_exists.return_value = True
@@ -190,7 +190,7 @@ class TestWebAPIEndpoints:
         assert response.status_code == 404
     
     @patch('os.path.exists')
-    @patch('novus_pytils.api.web_api.delete_file')
+    @patch('novus_pytils.api.app.delete_file')
     def test_delete_file_success(self, mock_delete, mock_exists):
         """Test successful file deletion."""
         mock_exists.return_value = True
@@ -213,7 +213,7 @@ class TestWebAPIEndpoints:
         assert response.status_code == 404
     
     @patch('os.path.exists')
-    @patch('novus_pytils.api.web_api.convert_file')
+    @patch('novus_pytils.api.app.convert_file')
     @patch('os.path.splitext')
     def test_convert_file_success(self, mock_splitext, mock_convert, mock_exists):
         """Test successful file conversion."""
@@ -235,7 +235,7 @@ class TestWebAPIEndpoints:
         assert "file_path" in data
     
     @patch('os.path.exists')
-    @patch('novus_pytils.api.web_api.resize_image')
+    @patch('novus_pytils.api.app.resize_image')
     @patch('os.path.splitext')
     def test_resize_image_success(self, mock_splitext, mock_resize, mock_exists):
         """Test successful image resize."""
@@ -258,7 +258,7 @@ class TestWebAPIEndpoints:
         assert data["message"] == "Image resized successfully"
     
     @patch('os.path.exists')
-    @patch('novus_pytils.api.web_api.crop_image')
+    @patch('novus_pytils.api.app.crop_image')
     @patch('os.path.splitext')
     def test_crop_image_success(self, mock_splitext, mock_crop, mock_exists):
         """Test successful image crop."""
@@ -282,8 +282,8 @@ class TestWebAPIEndpoints:
         assert data["message"] == "Image cropped successfully"
     
     @patch('os.path.exists')
-    @patch('novus_pytils.api.web_api.trim_audio')
-    @patch('novus_pytils.api.web_api.get_file_info')
+    @patch('novus_pytils.api.app.trim_audio')
+    @patch('novus_pytils.api.app.get_file_info')
     @patch('os.path.splitext')
     def test_trim_audio_success(self, mock_splitext, mock_get_info, mock_trim, mock_exists):
         """Test successful audio trim."""
@@ -305,7 +305,7 @@ class TestWebAPIEndpoints:
         assert data["message"] == "File trimmed successfully"
     
     @patch('os.path.exists')
-    @patch('novus_pytils.api.web_api.apply_filter')
+    @patch('novus_pytils.api.app.apply_filter')
     @patch('os.path.splitext')
     def test_apply_filter_success(self, mock_splitext, mock_filter, mock_exists):
         """Test successful filter application."""
@@ -326,7 +326,7 @@ class TestWebAPIEndpoints:
         assert data["message"] == "Filter applied successfully"
     
     @patch('os.path.exists')
-    @patch('novus_pytils.api.web_api.create_thumbnail')
+    @patch('novus_pytils.api.app.create_thumbnail')
     @patch('os.path.splitext')
     def test_create_thumbnail_image_success(self, mock_splitext, mock_thumbnail, mock_exists):
         """Test successful thumbnail creation from image."""
@@ -342,7 +342,7 @@ class TestWebAPIEndpoints:
         assert data["message"] == "Thumbnail created successfully"
     
     @patch('os.path.exists')
-    @patch('novus_pytils.api.web_api.create_thumbnail')
+    @patch('novus_pytils.api.app.create_thumbnail')
     @patch('os.path.splitext')
     def test_create_thumbnail_video_success(self, mock_splitext, mock_thumbnail, mock_exists):
         """Test successful thumbnail creation from video."""
@@ -357,7 +357,7 @@ class TestWebAPIEndpoints:
         assert data["success"] is True
         assert data["message"] == "Thumbnail created successfully"
     
-    @patch('novus_pytils.api.web_api.batch_convert')
+    @patch('novus_pytils.api.app.batch_convert')
     def test_batch_convert_success(self, mock_batch_convert):
         """Test successful batch conversion."""
         mock_batch_convert.return_value = {"file1.jpg": True, "file2.jpg": True}
@@ -375,7 +375,7 @@ class TestWebAPIEndpoints:
         assert data["failure_count"] == 0
         assert data["results"] == {"file1.jpg": True, "file2.jpg": True}
     
-    @patch('novus_pytils.api.web_api.batch_operation')
+    @patch('novus_pytils.api.app.batch_operation')
     def test_batch_operation_success(self, mock_batch_operation):
         """Test successful batch operation."""
         mock_batch_operation.return_value = {"file1.txt": True, "file2.txt": False}
@@ -394,7 +394,7 @@ class TestWebAPIEndpoints:
         assert data["results"] == {"file1.txt": True, "file2.txt": False}
     
     @patch('os.path.exists')
-    @patch('novus_pytils.api.web_api.get_supported_conversions')
+    @patch('novus_pytils.api.app.get_supported_conversions')
     def test_supported_conversions_success(self, mock_conversions, mock_exists):
         """Test getting supported conversions."""
         mock_exists.return_value = True
@@ -407,7 +407,7 @@ class TestWebAPIEndpoints:
         assert data["supported_formats"] == [".png", ".gif", ".bmp"]
     
     @patch('os.path.exists')
-    @patch('novus_pytils.api.web_api.extract_audio_from_video')
+    @patch('novus_pytils.api.app.extract_audio_from_video')
     @patch('os.path.splitext')
     def test_extract_audio_success(self, mock_splitext, mock_extract, mock_exists):
         """Test successful audio extraction from video."""
@@ -423,7 +423,7 @@ class TestWebAPIEndpoints:
         assert data["message"] == "Audio extracted successfully"
     
     @patch('os.path.exists')
-    @patch('novus_pytils.api.web_api.extract_frames_from_video')
+    @patch('novus_pytils.api.app.extract_frames_from_video')
     @patch('os.makedirs')
     @patch('os.path.basename')
     def test_extract_frames_success(self, mock_basename, mock_makedirs, mock_extract, mock_exists):
@@ -446,7 +446,7 @@ class TestRunServer:
     
     @pytest.mark.skipif(not FASTAPI_AVAILABLE, reason="FastAPI not available")
     @patch('builtins.__import__')
-    @patch('novus_pytils.api.web_api.create_web_api')
+    @patch('novus_pytils.api.app.create_web_api')
     def test_run_server_success(self, mock_create_app, mock_import):
         """Test successful server run."""
         mock_app = MagicMock()
@@ -471,7 +471,7 @@ class TestRunServer:
             run_server()
     
     @pytest.mark.skipif(not FASTAPI_AVAILABLE, reason="FastAPI not available")
-    @patch('novus_pytils.api.web_api.create_web_api')
+    @patch('novus_pytils.api.app.create_web_api')
     def test_run_server_no_uvicorn(self, mock_create_app):
         """Test running server without uvicorn."""
         with patch.dict('sys.modules', {'uvicorn': None}):
