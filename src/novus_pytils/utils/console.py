@@ -3,9 +3,8 @@
 This module provides functions for creating progress bars and other console output utilities.
 """
 import os
-import sys
 from enum import Enum
-from typing import List, Dict, Any
+from typing import List
 
 class ColorCode(Enum):
     """ANSI color codes for terminal output."""
@@ -179,6 +178,7 @@ def move_cursor(x: int, y: int) -> None:
     print(f"\033[{y};{x}H", end='')
 
 # Alias for backward compatibility
+@DeprecationWarning
 def printprogress(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
     """Legacy function name for print_progress_bar."""
     print_progress_bar(iteration, total, prefix, suffix, decimals, length, fill, printEnd)
