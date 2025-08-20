@@ -126,6 +126,7 @@ def cmd_trim(args):
         else:
             print_error("File format not supported for trimming")
             sys.exit(1)
+            return
         
         if success:
             print_success(f"Trimmed {args.input}")
@@ -278,6 +279,7 @@ def cmd_server(args):
     if not FASTAPI_AVAILABLE:
         print_error("FastAPI is required for web server. Install with: pip install fastapi uvicorn python-multipart")
         sys.exit(1)
+        return
     
     print_info(f"Starting server on {args.host}:{args.port}")
     if args.upload_dir:
@@ -402,6 +404,7 @@ def main():
     if not args.command:
         parser.print_help()
         sys.exit(1)
+        return
     
     command_map = {
         'info': cmd_info,

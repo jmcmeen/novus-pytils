@@ -461,14 +461,13 @@ class TestMainFunction:
         mock_cmd_info.assert_called_once()
     
     @patch('sys.argv', ['novus-pytils', 'invalid-command'])
-    @patch('novus_pytils.cli.commands.print_error')
-    @patch('sys.exit')
-    def test_main_with_invalid_command(self, mock_exit, mock_error):
+    def test_main_with_invalid_command(self):
         """Test main with invalid command."""
-        main()
+        with pytest.raises(SystemExit) as exc_info:
+            main()
         
-        mock_error.assert_called_once()
-        mock_exit.assert_called_once_with(1)
+        # argparse handles invalid commands and exits with status 2
+        assert exc_info.value.code == 2
     
     @patch('sys.argv', ['novus-pytils', '--version'])
     def test_main_version(self):

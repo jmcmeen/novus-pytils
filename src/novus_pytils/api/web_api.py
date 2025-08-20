@@ -104,13 +104,13 @@ def create_web_api(upload_dir: str = None, max_file_size: int = 100 * 1024 * 102
     async def upload_file(file: UploadFile = File(...)):
         """Upload a file to the server."""
         try:
-            if file.size > max_file_size:
+            content = await file.read()
+            if len(content) > max_file_size:
                 raise HTTPException(status_code=413, detail="File too large")
             
             file_path = os.path.join(upload_directory, file.filename)
             
             with open(file_path, "wb") as buffer:
-                content = await file.read()
                 buffer.write(content)
             
             file_info = get_file_info(file_path)
@@ -122,6 +122,8 @@ def create_web_api(upload_dir: str = None, max_file_size: int = 100 * 1024 * 102
                 file_info=file_info
             )
         
+        except HTTPException:
+            raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
     
@@ -135,6 +137,8 @@ def create_web_api(upload_dir: str = None, max_file_size: int = 100 * 1024 * 102
             filename = os.path.basename(file_path)
             return FileResponse(file_path, filename=filename)
         
+        except HTTPException:
+            raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
     
@@ -148,6 +152,8 @@ def create_web_api(upload_dir: str = None, max_file_size: int = 100 * 1024 * 102
             info = get_file_info(file_path)
             return JSONResponse(content=info)
         
+        except HTTPException:
+            raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
     
@@ -165,6 +171,8 @@ def create_web_api(upload_dir: str = None, max_file_size: int = 100 * 1024 * 102
                 message="File deleted successfully" if success else "Failed to delete file"
             )
         
+        except HTTPException:
+            raise
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
     

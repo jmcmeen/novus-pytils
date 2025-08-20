@@ -150,13 +150,13 @@ class TestWebAPIEndpoints:
         assert response.status_code == 413
     
     @patch('os.path.exists')
-    def test_download_file_success(self, mock_exists):
+    @patch('novus_pytils.api.web_api.FileResponse')
+    def test_download_file_success(self, mock_response, mock_exists):
         """Test successful file download."""
         mock_exists.return_value = True
         
-        with patch('fastapi.responses.FileResponse') as mock_response:
-            self.client.get("/download/test.txt")
-            mock_response.assert_called_once()
+        self.client.get("/download/test.txt")
+        mock_response.assert_called_once()
     
     @patch('os.path.exists')
     def test_download_file_not_found(self, mock_exists):
@@ -445,12 +445,19 @@ class TestRunServer:
     """Test run_server function."""
     
     @pytest.mark.skipif(not FASTAPI_AVAILABLE, reason="FastAPI not available")
-    @patch('novus_pytils.api.web_api.uvicorn')
+    @patch('builtins.__import__')
     @patch('novus_pytils.api.web_api.create_web_api')
-    def test_run_server_success(self, mock_create_app, mock_uvicorn):
+    def test_run_server_success(self, mock_create_app, mock_import):
         """Test successful server run."""
         mock_app = MagicMock()
         mock_create_app.return_value = mock_app
+        
+        mock_uvicorn = MagicMock()
+        def side_effect(name, *args, **kwargs):
+            if name == 'uvicorn':
+                return mock_uvicorn
+            return __import__(name, *args, **kwargs)
+        mock_import.side_effect = side_effect
         
         run_server(host="localhost", port=8080, upload_dir="/custom")
         
