@@ -29,7 +29,7 @@ from novus_pytils.core.base import (
     FileHandlerError, UnsupportedFormatError, ConversionError
 )
 
-from novus_pytils.utils.validation import ValidationError, SecurityError
+from novus_pytils.validation import ValidationError, SecurityError
 
 __version__ = "1.0.0"
 __author__ = "John McMeen"

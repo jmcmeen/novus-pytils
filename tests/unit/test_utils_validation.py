@@ -1,7 +1,7 @@
 """Unit tests for utils.validation module."""
 from unittest.mock import patch
 
-from novus_pytils.utils.validation import (
+from novus_pytils.validation import (
     validate_file_path, validate_file_extension, validate_file_size,
     validate_image_dimensions, validate_audio_parameters, validate_video_parameters,
     validate_quality_parameter, validate_color_format, validate_url,
