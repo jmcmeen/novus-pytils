@@ -12,7 +12,7 @@ from pathlib import Path
 
 from novus_pytils.file_operations.general import get_files_by_extension
 from novus_pytils.globals import SUPPORTED_AUDIO_EXTENSIONS
-from novus_pytils.utils.hash import get_file_md5_hash
+from novus_pytils.hash import get_file_md5_hash
 from novus_pytils.exceptions import WAVError, InvalidWAVFormatError, CorruptedFileError
 
 
