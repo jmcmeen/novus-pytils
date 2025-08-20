@@ -42,8 +42,8 @@ class TestPrintFunctions:
 class TestCommandFunctions:
     """Test command functions."""
     
-    @patch('novus_pytils.cli.commands.get_file_info')
-    @patch('novus_pytils.cli.commands.print_success')
+    @patch('novus_pytils.cli.app.get_file_info')
+    @patch('novus_pytils.cli.app.print_success')
     @patch('builtins.print')
     def test_cmd_info_regular_output(self, mock_print, mock_success, mock_get_info):
         """Test cmd_info with regular output."""
@@ -66,7 +66,7 @@ class TestCommandFunctions:
         mock_success.assert_called_once()
         assert mock_print.call_count >= 6  # Multiple print calls for info display
     
-    @patch('novus_pytils.cli.commands.get_file_info')
+    @patch('novus_pytils.cli.app.get_file_info')
     @patch('json.dumps')
     @patch('builtins.print')
     def test_cmd_info_json_output(self, mock_print, mock_json_dumps, mock_get_info):
@@ -84,8 +84,8 @@ class TestCommandFunctions:
         mock_json_dumps.assert_called_once()
         mock_print.assert_called()
     
-    @patch('novus_pytils.cli.commands.get_file_info')
-    @patch('novus_pytils.cli.commands.print_error')
+    @patch('novus_pytils.cli.app.get_file_info')
+    @patch('novus_pytils.cli.app.print_error')
     @patch('sys.exit')
     def test_cmd_info_exception(self, mock_exit, mock_error, mock_get_info):
         """Test cmd_info with exception."""
@@ -100,8 +100,8 @@ class TestCommandFunctions:
         mock_error.assert_called_once()
         mock_exit.assert_called_once_with(1)
     
-    @patch('novus_pytils.cli.commands.convert_file')
-    @patch('novus_pytils.cli.commands.print_success')
+    @patch('novus_pytils.cli.app.convert_file')
+    @patch('novus_pytils.cli.app.print_success')
     def test_cmd_convert_success(self, mock_success, mock_convert):
         """Test cmd_convert with success."""
         mock_convert.return_value = True
@@ -122,8 +122,8 @@ class TestCommandFunctions:
         )
         mock_success.assert_called_once()
     
-    @patch('novus_pytils.cli.commands.convert_file')
-    @patch('novus_pytils.cli.commands.print_error')
+    @patch('novus_pytils.cli.app.convert_file')
+    @patch('novus_pytils.cli.app.print_error')
     @patch('sys.exit')
     def test_cmd_convert_failure(self, mock_exit, mock_error, mock_convert):
         """Test cmd_convert with failure."""
@@ -142,8 +142,8 @@ class TestCommandFunctions:
         mock_error.assert_called_once()
         mock_exit.assert_called_once_with(1)
     
-    @patch('novus_pytils.cli.commands.resize_image')
-    @patch('novus_pytils.cli.commands.print_success')
+    @patch('novus_pytils.cli.app.resize_image')
+    @patch('novus_pytils.cli.app.print_success')
     def test_cmd_resize_success(self, mock_success, mock_resize):
         """Test cmd_resize with success."""
         mock_resize.return_value = True
@@ -163,8 +163,8 @@ class TestCommandFunctions:
         )
         mock_success.assert_called_once()
     
-    @patch('novus_pytils.cli.commands.crop_image')
-    @patch('novus_pytils.cli.commands.print_success')
+    @patch('novus_pytils.cli.app.crop_image')
+    @patch('novus_pytils.cli.app.print_success')
     def test_cmd_crop_success(self, mock_success, mock_crop):
         """Test cmd_crop with success."""
         mock_crop.return_value = True
@@ -186,8 +186,8 @@ class TestCommandFunctions:
         mock_success.assert_called_once()
     
     @patch('os.path.splitext')
-    @patch('novus_pytils.cli.commands.trim_audio')
-    @patch('novus_pytils.cli.commands.print_success')
+    @patch('novus_pytils.cli.app.trim_audio')
+    @patch('novus_pytils.cli.app.print_success')
     def test_cmd_trim_audio_success(self, mock_success, mock_trim_audio, mock_splitext):
         """Test cmd_trim with audio file."""
         mock_splitext.return_value = ('test', '.mp3')
@@ -206,8 +206,8 @@ class TestCommandFunctions:
         mock_success.assert_called_once()
     
     @patch('os.path.splitext')
-    @patch('novus_pytils.cli.commands.trim_video')
-    @patch('novus_pytils.cli.commands.print_success')
+    @patch('novus_pytils.cli.app.trim_video')
+    @patch('novus_pytils.cli.app.print_success')
     def test_cmd_trim_video_success(self, mock_success, mock_trim_video, mock_splitext):
         """Test cmd_trim with video file."""
         mock_splitext.return_value = ('test', '.mp4')
@@ -226,7 +226,7 @@ class TestCommandFunctions:
         mock_success.assert_called_once()
     
     @patch('os.path.splitext')
-    @patch('novus_pytils.cli.commands.print_error')
+    @patch('novus_pytils.cli.app.print_error')
     @patch('sys.exit')
     def test_cmd_trim_unsupported_format(self, mock_exit, mock_error, mock_splitext):
         """Test cmd_trim with unsupported format."""
@@ -243,8 +243,8 @@ class TestCommandFunctions:
         mock_error.assert_called_once()
         mock_exit.assert_called_once_with(1)
     
-    @patch('novus_pytils.cli.commands.merge_files')
-    @patch('novus_pytils.cli.commands.print_success')
+    @patch('novus_pytils.cli.app.merge_files')
+    @patch('novus_pytils.cli.app.print_success')
     def test_cmd_merge_success(self, mock_success, mock_merge):
         """Test cmd_merge with success."""
         mock_merge.return_value = True
@@ -263,8 +263,8 @@ class TestCommandFunctions:
         )
         mock_success.assert_called_once()
     
-    @patch('novus_pytils.cli.commands.split_file')
-    @patch('novus_pytils.cli.commands.print_success')
+    @patch('novus_pytils.cli.app.split_file')
+    @patch('novus_pytils.cli.app.print_success')
     def test_cmd_split_success(self, mock_success, mock_split):
         """Test cmd_split with success."""
         mock_split.return_value = ['part1.txt', 'part2.txt']
@@ -284,8 +284,8 @@ class TestCommandFunctions:
         )
         mock_success.assert_called_once()
     
-    @patch('novus_pytils.cli.commands.create_thumbnail')
-    @patch('novus_pytils.cli.commands.print_success')
+    @patch('novus_pytils.cli.app.create_thumbnail')
+    @patch('novus_pytils.cli.app.print_success')
     def test_cmd_thumbnail_success(self, mock_success, mock_thumbnail):
         """Test cmd_thumbnail with success."""
         mock_thumbnail.return_value = True
@@ -304,8 +304,8 @@ class TestCommandFunctions:
         )
         mock_success.assert_called_once()
     
-    @patch('novus_pytils.cli.commands.apply_filter')
-    @patch('novus_pytils.cli.commands.print_success')
+    @patch('novus_pytils.cli.app.apply_filter')
+    @patch('novus_pytils.cli.app.print_success')
     def test_cmd_filter_success(self, mock_success, mock_filter):
         """Test cmd_filter with success."""
         mock_filter.return_value = True
@@ -323,8 +323,8 @@ class TestCommandFunctions:
         )
         mock_success.assert_called_once()
     
-    @patch('novus_pytils.cli.commands.extract_audio_from_video')
-    @patch('novus_pytils.cli.commands.print_success')
+    @patch('novus_pytils.cli.app.extract_audio_from_video')
+    @patch('novus_pytils.cli.app.print_success')
     def test_cmd_extract_audio_success(self, mock_success, mock_extract):
         """Test cmd_extract_audio with success."""
         mock_extract.return_value = True
@@ -338,8 +338,8 @@ class TestCommandFunctions:
         mock_extract.assert_called_once_with('input.mp4', 'output.mp3')
         mock_success.assert_called_once()
     
-    @patch('novus_pytils.cli.commands.extract_frames_from_video')
-    @patch('novus_pytils.cli.commands.print_success')
+    @patch('novus_pytils.cli.app.extract_frames_from_video')
+    @patch('novus_pytils.cli.app.print_success')
     def test_cmd_extract_frames_success(self, mock_success, mock_extract):
         """Test cmd_extract_frames with success."""
         mock_extract.return_value = ['frame1.jpg', 'frame2.jpg']
@@ -355,8 +355,8 @@ class TestCommandFunctions:
         mock_extract.assert_called_once_with('input.mp4', '/output', 2.0)
         mock_success.assert_called_once()
     
-    @patch('novus_pytils.cli.commands.batch_convert')
-    @patch('novus_pytils.cli.commands.print_info')
+    @patch('novus_pytils.cli.app.batch_convert')
+    @patch('novus_pytils.cli.app.print_info')
     def test_cmd_batch_convert_success(self, mock_info, mock_batch_convert):
         """Test cmd_batch with convert operation."""
         mock_batch_convert.return_value = {'file1.jpg': True, 'file2.jpg': True}
@@ -374,9 +374,9 @@ class TestCommandFunctions:
         mock_batch_convert.assert_called_once_with(['file1.jpg', 'file2.jpg'], '.png', '/output')
         mock_info.assert_called_once()
     
-    @patch('novus_pytils.cli.commands.batch_operation')
-    @patch('novus_pytils.cli.commands.print_info')
-    @patch('novus_pytils.cli.commands.print_success')
+    @patch('novus_pytils.cli.app.batch_operation')
+    @patch('novus_pytils.cli.app.print_info')
+    @patch('novus_pytils.cli.app.print_success')
     def test_cmd_batch_other_operation_verbose(self, mock_success, mock_info, mock_batch_operation):
         """Test cmd_batch with other operation and verbose output."""
         mock_batch_operation.return_value = {'file1.txt': True, 'file2.txt': False}
@@ -397,9 +397,9 @@ class TestCommandFunctions:
         mock_info.assert_called_once()
         assert mock_success.call_count >= 1  # For successful files
     
-    @patch('novus_pytils.cli.commands.FASTAPI_AVAILABLE', True)
-    @patch('novus_pytils.cli.commands.run_server')
-    @patch('novus_pytils.cli.commands.print_info')
+    @patch('novus_pytils.cli.app.FASTAPI_AVAILABLE', True)
+    @patch('novus_pytils.cli.app.run_server')
+    @patch('novus_pytils.cli.app.print_info')
     def test_cmd_server_success(self, mock_info, mock_run_server):
         """Test cmd_server with FastAPI available."""
         args = MagicMock()
@@ -412,8 +412,8 @@ class TestCommandFunctions:
         mock_run_server.assert_called_once_with('localhost', 8080, '/uploads')
         assert mock_info.call_count >= 2  # Multiple info messages
     
-    @patch('novus_pytils.cli.commands.FASTAPI_AVAILABLE', False)
-    @patch('novus_pytils.cli.commands.print_error')
+    @patch('novus_pytils.cli.app.FASTAPI_AVAILABLE', False)
+    @patch('novus_pytils.cli.app.print_error')
     @patch('sys.exit')
     def test_cmd_server_no_fastapi(self, mock_exit, mock_error):
         """Test cmd_server without FastAPI."""
@@ -424,7 +424,7 @@ class TestCommandFunctions:
         mock_error.assert_called_once()
         mock_exit.assert_called_once_with(1)
     
-    @patch('novus_pytils.cli.commands.get_supported_conversions')
+    @patch('novus_pytils.cli.app.get_supported_conversions')
     @patch('builtins.print')
     def test_cmd_supported_success(self, mock_print, mock_get_supported):
         """Test cmd_supported with success."""
@@ -453,7 +453,7 @@ class TestMainFunction:
         mock_exit.assert_called_once_with(1)
     
     @patch('sys.argv', ['novus-pytils', 'info', 'test.txt'])
-    @patch('novus_pytils.cli.commands.cmd_info')
+    @patch('novus_pytils.cli.app.cmd_info')
     def test_main_with_valid_command(self, mock_cmd_info):
         """Test main with valid command."""
         main()

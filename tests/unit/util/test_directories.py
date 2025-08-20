@@ -21,7 +21,7 @@ from novus_pytils.utils.directories import (
 class TestDownloadFile:
     """Test download_file function."""
     
-    @patch('novus_pytils.file_operations.general.requests.get')
+    @patch('novus_pytils.utils.directories.requests.get')
     def test_download_file_success(self, mock_get, temp_dir):
         """Test successful file download."""
         mock_response = MagicMock()
@@ -35,7 +35,7 @@ class TestDownloadFile:
         assert save_path.read_bytes() == b"test content"
         mock_get.assert_called_once_with("http://example.com/file.txt")
     
-    @patch('novus_pytils.file_operations.general.requests.get')
+    @patch('novus_pytils.utils.directories.requests.get')
     def test_download_file_http_error(self, mock_get, temp_dir):
         """Test download with HTTP error."""
         mock_get.side_effect = requests.RequestException("Connection error")
