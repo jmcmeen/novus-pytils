@@ -1,1 +1,0 @@
-"""Integration tests for novus-pytils package."""
