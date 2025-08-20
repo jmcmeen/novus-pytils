@@ -20,7 +20,7 @@ class TestFileManager:
         assert 'video' in manager._handlers
         assert isinstance(manager._cache, dict)
     
-    @patch('novus_pytils.api.object_oriented.SUPPORTED_TEXT_EXTENSIONS', ['.txt'])
+    @patch('novus_pytils.globals.SUPPORTED_TEXT_EXTENSIONS', ['.txt'])
     def test_get_handler_text(self):
         """Test getting text handler."""
         manager = FileManager()
@@ -28,7 +28,7 @@ class TestFileManager:
         assert file_type == 'text'
         assert handler == manager._handlers['text']
     
-    @patch('novus_pytils.api.object_oriented.SUPPORTED_IMAGE_EXTENSIONS', ['.jpg'])
+    @patch('novus_pytils.globals.SUPPORTED_IMAGE_EXTENSIONS', ['.jpg'])
     def test_get_handler_image(self):
         """Test getting image handler."""
         manager = FileManager()
@@ -89,7 +89,7 @@ class TestFile:
         assert self.file.directory == '/path/to'
         mock_dirname.assert_called_once_with('test.txt')
     
-    @patch('novus_pytils.api.object_oriented.SUPPORTED_TEXT_EXTENSIONS', ['.txt'])
+    @patch('novus_pytils.globals.SUPPORTED_TEXT_EXTENSIONS', ['.txt'])
     def test_file_type_property(self):
         """Test file_type property."""
         assert self.file.file_type == 'text'
@@ -282,7 +282,7 @@ class TestFile:
         _ = self.file.content
         mock_read.assert_called_once()
     
-    @patch('novus_pytils.api.object_oriented.SUPPORTED_IMAGE_EXTENSIONS', ['.jpg'])
+    @patch('novus_pytils.globals.SUPPORTED_IMAGE_EXTENSIONS', ['.jpg'])
     @patch.object(FileManager, '_get_handler')
     def test_resize(self, mock_get_handler):
         """Test resizing image."""
@@ -302,7 +302,7 @@ class TestFile:
         with pytest.raises(UnsupportedFormatError):
             self.file.resize((100, 100))
     
-    @patch('novus_pytils.api.object_oriented.SUPPORTED_IMAGE_EXTENSIONS', ['.jpg'])
+    @patch('novus_pytils.globals.SUPPORTED_IMAGE_EXTENSIONS', ['.jpg'])
     @patch.object(FileManager, '_get_handler')
     def test_resize_to(self, mock_get_handler):
         """Test resizing image to new file."""
@@ -317,7 +317,7 @@ class TestFile:
         assert result.path == 'output.jpg'
         mock_handler.resize.assert_called_once_with('test.jpg', 'output.jpg', (100, 100), True)
     
-    @patch('novus_pytils.api.object_oriented.SUPPORTED_AUDIO_EXTENSIONS', ['.mp3'])
+    @patch('novus_pytils.globals.SUPPORTED_AUDIO_EXTENSIONS', ['.mp3'])
     @patch.object(FileManager, '_get_handler')
     def test_trim_audio(self, mock_get_handler):
         """Test trimming audio."""
@@ -337,7 +337,7 @@ class TestFile:
         with pytest.raises(UnsupportedFormatError):
             self.file.trim(1000, 5000)
     
-    @patch('novus_pytils.api.object_oriented.SUPPORTED_IMAGE_EXTENSIONS', ['.jpg'])
+    @patch('novus_pytils.globals.SUPPORTED_IMAGE_EXTENSIONS', ['.jpg'])
     @patch.object(FileManager, '_get_handler')
     def test_apply_filter(self, mock_get_handler):
         """Test applying filter."""
@@ -357,7 +357,7 @@ class TestFile:
         with pytest.raises(UnsupportedFormatError):
             self.file.apply_filter('blur')
     
-    @patch('novus_pytils.api.object_oriented.SUPPORTED_IMAGE_EXTENSIONS', ['.jpg'])
+    @patch('novus_pytils.globals.SUPPORTED_IMAGE_EXTENSIONS', ['.jpg'])
     @patch.object(FileManager, '_get_handler')
     def test_create_thumbnail_image(self, mock_get_handler):
         """Test creating thumbnail from image."""
@@ -496,7 +496,7 @@ class TestFileBatch:
         
         assert result == {'file1.txt': {}, 'file2.txt': {}}
     
-    @patch('novus_pytils.api.object_oriented.SUPPORTED_TEXT_EXTENSIONS', ['.txt'])
+    @patch('novus_pytils.globals.SUPPORTED_TEXT_EXTENSIONS', ['.txt'])
     def test_filter_by_type(self):
         """Test filtering by file type."""
         result = self.batch.filter_by_type('text')
@@ -556,7 +556,7 @@ class TestMediaCollection:
         """Test MediaCollection initialization."""
         assert self.collection.manager == self.manager
     
-    @patch('novus_pytils.api.object_oriented.SUPPORTED_TEXT_EXTENSIONS', ['.txt'])
+    @patch('novus_pytils.globals.SUPPORTED_TEXT_EXTENSIONS', ['.txt'])
     def test_text_single_file(self):
         """Test getting single text file."""
         result = self.collection.text('test.txt')
@@ -580,7 +580,7 @@ class TestMediaCollection:
         assert isinstance(result, FileBatch)
         mock_filter.assert_called_once_with('text')
     
-    @patch('novus_pytils.api.object_oriented.SUPPORTED_IMAGE_EXTENSIONS', ['.jpg'])
+    @patch('novus_pytils.globals.SUPPORTED_IMAGE_EXTENSIONS', ['.jpg'])
     def test_image_single_file(self):
         """Test getting single image file."""
         result = self.collection.image('test.jpg')
@@ -589,7 +589,7 @@ class TestMediaCollection:
         assert result.path == 'test.jpg'
         assert result.file_type == 'image'
     
-    @patch('novus_pytils.api.object_oriented.SUPPORTED_AUDIO_EXTENSIONS', ['.mp3'])
+    @patch('novus_pytils.globals.SUPPORTED_AUDIO_EXTENSIONS', ['.mp3'])
     def test_audio_single_file(self):
         """Test getting single audio file."""
         result = self.collection.audio('test.mp3')
@@ -598,7 +598,7 @@ class TestMediaCollection:
         assert result.path == 'test.mp3'
         assert result.file_type == 'audio'
     
-    @patch('novus_pytils.api.object_oriented.SUPPORTED_VIDEO_EXTENSIONS', ['.mp4'])
+    @patch('novus_pytils.globals.SUPPORTED_VIDEO_EXTENSIONS', ['.mp4'])
     def test_video_single_file(self):
         """Test getting single video file."""
         result = self.collection.video('test.mp4')
