@@ -34,7 +34,7 @@ class TestLoadConfig:
         with pytest.raises(FileNotFoundError):
             load_config('nonexistent.yaml')
     
-    @patch('novus_pytils.yaml.file_exists')
+    @patch('novus_pytils.utils.yaml.file_exists')
     @patch('builtins.open', new_callable=mock_open)
     @patch('yaml.safe_load')
     def test_load_config_yaml_error(self, mock_yaml_load, mock_file, mock_file_exists):
