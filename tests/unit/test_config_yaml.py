@@ -12,16 +12,18 @@ from novus_pytils.yaml import (
 class TestLoadConfig:
     """Test load_config function."""
     
+    @patch('novus_pytils.yaml.file_exists')
     @patch('builtins.open', new_callable=mock_open, read_data='key: value\nnum: 42')
     @patch('yaml.safe_load')
-    def test_load_config_success(self, mock_yaml_load, mock_file):
+    def test_load_config_success(self, mock_yaml_load, mock_file, mock_file_exists):
         """Test successful config loading."""
+        mock_file_exists.return_value = True
         mock_yaml_load.return_value = {'key': 'value', 'num': 42}
         
         result = load_config('config.yaml')
         
         assert result == {'key': 'value', 'num': 42}
-        mock_file.assert_called_once_with('config.yaml', 'r', encoding='utf-8')
+        mock_file.assert_called_once_with('config.yaml', 'r')
         mock_yaml_load.assert_called_once()
     
     @patch('os.path.exists')
@@ -32,10 +34,12 @@ class TestLoadConfig:
         with pytest.raises(FileNotFoundError):
             load_config('nonexistent.yaml')
     
+    @patch('novus_pytils.yaml.file_exists')
     @patch('builtins.open', new_callable=mock_open)
     @patch('yaml.safe_load')
-    def test_load_config_yaml_error(self, mock_yaml_load, mock_file):
+    def test_load_config_yaml_error(self, mock_yaml_load, mock_file, mock_file_exists):
         """Test config loading with YAML error."""
+        mock_file_exists.return_value = True
         mock_yaml_load.side_effect = yaml.YAMLError("Invalid YAML")
         
         with pytest.raises(yaml.YAMLError):
@@ -53,7 +57,7 @@ class TestSaveConfig:
         
         save_config(config_data, 'config.yaml')
         
-        mock_file.assert_called_once_with('config.yaml', 'w', encoding='utf-8')
+        mock_file.assert_called_once_with('config.yaml', 'w')
         mock_yaml_dump.assert_called_once()
     
     @patch('builtins.open', new_callable=mock_open)
