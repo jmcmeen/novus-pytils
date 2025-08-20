@@ -10,7 +10,7 @@ from novus_pytils.core.functions import (
     split_file, create_thumbnail, apply_filter, extract_audio_from_video,
     extract_frames_from_video, normalize_audio, change_audio_volume
 )
-from novus_pytils.utils.exceptions import UnsupportedFormatError
+from novus_pytils.core.exceptions import UnsupportedFormatError
 
 
 class TestGetHandler:

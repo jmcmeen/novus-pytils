@@ -23,9 +23,9 @@ from novus_pytils.core.functions import (
     extract_frames_from_video, normalize_audio, change_audio_volume
 )
 
-from novus_pytils.core.object_oriented import FileManager, File, FileBatch, MediaCollection
+from novus_pytils.core.models import FileManager, File, FileBatch, MediaCollection
 
-from novus_pytils.utils.exceptions import (
+from novus_pytils.core.exceptions import (
     FileHandlerError, UnsupportedFormatError, ConversionError
 )
 

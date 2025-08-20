@@ -7,7 +7,7 @@ import os
 import wave
 from typing import Any, Dict, List, Union
 from novus_pytils.core.models import BaseFileHandler, FileManagerMixin
-from novus_pytils.utils.exceptions import ConversionError
+from novus_pytils.core.exceptions import ConversionError
 from novus_pytils.globals import SUPPORTED_AUDIO_EXTENSIONS, AUDIO_CONVERSION_MAP
 
 
