@@ -6,7 +6,7 @@ from unittest.mock import patch, MagicMock
 import requests
 
 from novus_pytils.directories import (
-    download_file, extract_zip, get_files_by_extension, get_file_name,
+    download_file, get_files_by_extension, get_file_name,
     get_file_extension, get_file_size, file_exists, create_directory,
     copy_file, move_file, delete_file, delete_directory, get_directory_size,
     count_files_in_directory, get_subdirectories, create_file_from_content,
@@ -43,33 +43,6 @@ class TestDownloadFile:
         save_path = temp_dir / "downloaded_file.txt"
         with pytest.raises(requests.RequestException):
             download_file("http://example.com/file.txt", str(save_path))
-
-
-class TestExtractZip:
-    """Test extract_zip function."""
-    
-    def test_extract_zip_success(self, temp_dir):
-        """Test successful ZIP extraction."""
-        import zipfile
-        
-        # Create a test zip file
-        zip_path = temp_dir / "test.zip"
-        with zipfile.ZipFile(zip_path, 'w') as zf:
-            zf.writestr("file1.txt", "content1")
-            zf.writestr("dir/file2.txt", "content2")
-        
-        extract_dir = temp_dir / "extracted"
-        extract_zip(str(zip_path), str(extract_dir))
-        
-        assert (extract_dir / "file1.txt").exists()
-        assert (extract_dir / "dir" / "file2.txt").exists()
-        assert (extract_dir / "file1.txt").read_text() == "content1"
-    
-    def test_extract_zip_nonexistent_file(self, temp_dir):
-        """Test extraction of non-existent ZIP file."""
-        with pytest.raises(FileNotFoundError):
-            extract_zip(str(temp_dir / "nonexistent.zip"), str(temp_dir))
-
 
 class TestFileQueries:
     """Test file query functions."""

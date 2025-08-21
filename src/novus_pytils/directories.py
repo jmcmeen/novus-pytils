@@ -6,7 +6,7 @@ downloading, extracting, searching, copying, moving, and managing files and dire
 import os
 import shutil
 import requests
-import zipfile
+
 from datetime import datetime
 from typing import List
 
@@ -23,19 +23,7 @@ def download_file(url: str, save_to: str):
     with open(save_to, 'wb') as f:
         f.write(response.content)
 
-def extract_zip_file(zip_file: str, extract_to: str):
-    """
-    Extracts the contents of a ZIP file to a specified directory.
 
-    Args:
-        zip_file (str): The path to the ZIP file to be extracted.
-        extract_to (str): The directory where the contents will be extracted. 
-                          If the directory does not exist, it will be created.
-    """
-
-    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
-        os.makedirs(extract_to, exist_ok=True)
-        zip_ref.extractall(extract_to)
 
 def get_file_list(directory):
     """
@@ -421,9 +409,6 @@ def copy_directory(src_dir, dest_dir):
     """
     
     shutil.copytree(src_dir, dest_dir)
-
-# Alias for backward compatibility
-extract_zip = extract_zip_file
 
 def get_file_size(file_path: str) -> int:
     """
