@@ -5,6 +5,9 @@ This module provides functions for loading and working with YAML configuration f
 import yaml
 from typing import Any, Dict
 from novus_pytils.directories import file_exists, get_files_by_extension
+from novus_pytils.globals import YAML_EXTENSIONS
+
+# TODO remove redundant methods and update tests
 
 def load_yaml(filepath : str) -> dict:
     """
@@ -32,7 +35,7 @@ def get_yaml_files(dir_path : str) -> list:
     Returns:
         list: A list of paths to yaml files in the directory.
     """
-    return get_files_by_extension(dir_path, [".yaml", ".yml"])
+    return get_files_by_extension(dir_path, YAML_EXTENSIONS)
 
 def load_config(filepath: str) -> Dict[str, Any]:
     """
