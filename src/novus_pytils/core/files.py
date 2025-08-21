@@ -5,10 +5,10 @@ across different media types including text, images, audio, and video.
 """
 import os
 from typing import Any, Dict, List
-from novus_pytils.handlers.text_handler import TextHandler
-from novus_pytils.handlers.image_handler import ImageHandler
-from novus_pytils.handlers.audio_handler import AudioHandler
-from novus_pytils.handlers.video_handler import VideoHandler
+from novus_pytils.core.handlers.text_handler import TextHandler
+from novus_pytils.core.handlers.image_handler import ImageHandler
+from novus_pytils.core.handlers.audio_handler import AudioHandler
+from novus_pytils.core.handlers.video_handler import VideoHandler
 from novus_pytils.models.exceptions import UnsupportedFormatError
 from novus_pytils.globals import (
     SUPPORTED_TEXT_EXTENSIONS, SUPPORTED_IMAGE_EXTENSIONS,

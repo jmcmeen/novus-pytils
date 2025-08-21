@@ -1,15 +1,10 @@
-"""Object-oriented API for file operations.
-
-This module provides an object-oriented interface for file management operations
-with support for chaining and context management.
-"""
 import os
 from abc import ABC, abstractmethod
 from pathlib import Path
 import shutil
 from typing import Any, Dict, List, Union
 from contextlib import contextmanager
-from novus_pytils.exceptions import FileHandlerError, UnsupportedFormatError
+from novus_pytils.models.exceptions import FileHandlerError, UnsupportedFormatError
 from novus_pytils.globals import (
     SUPPORTED_TEXT_EXTENSIONS, SUPPORTED_IMAGE_EXTENSIONS,
     SUPPORTED_AUDIO_EXTENSIONS, SUPPORTED_VIDEO_EXTENSIONS
