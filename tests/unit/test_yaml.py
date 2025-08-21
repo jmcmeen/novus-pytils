@@ -3,7 +3,7 @@ import pytest
 from unittest.mock import patch, mock_open
 import yaml
 
-from novus_pytils.utils.yaml import (
+from novus_pytils.yaml import (
     load_config, save_config, get_config_value, set_config_value,
     validate_config, merge_configs
 )
@@ -12,7 +12,7 @@ from novus_pytils.utils.yaml import (
 class TestLoadConfig:
     """Test load_config function."""
     
-    @patch('novus_pytils.utils.yaml.file_exists')
+    @patch('novus_pytils.yaml.file_exists')
     @patch('builtins.open', new_callable=mock_open, read_data='key: value\nnum: 42')
     @patch('yaml.safe_load')
     def test_load_config_success(self, mock_yaml_load, mock_file, mock_file_exists):
@@ -34,7 +34,7 @@ class TestLoadConfig:
         with pytest.raises(FileNotFoundError):
             load_config('nonexistent.yaml')
     
-    @patch('novus_pytils.utils.yaml.file_exists')
+    @patch('novus_pytils.yaml.file_exists')
     @patch('builtins.open', new_callable=mock_open)
     @patch('yaml.safe_load')
     def test_load_config_yaml_error(self, mock_yaml_load, mock_file, mock_file_exists):
