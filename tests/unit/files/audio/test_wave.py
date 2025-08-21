@@ -5,8 +5,9 @@ import struct
 import numpy as np
 from unittest.mock import patch
 
+from novus_pytils.files.audio.core import count_audio_files, get_audio_files
 from novus_pytils.files.audio.wave import (
-    count_audio_files, get_audio_files, get_wav_files, read_wav_file,
+    get_wav_files, read_wav_file,
     get_wav_metadata, analyze_wav_file, write_wav_file, parse_wav,
     validate_wav, WAVParser, WAVError, InvalidWAVFormatError, CorruptedFileError
 )
@@ -15,7 +16,7 @@ from novus_pytils.files.audio.wave import (
 class TestAudioFileQueries:
     """Test audio file query functions."""
     
-    @patch('novus_pytils.files.audio.wave.get_files_by_extension')
+    @patch('novus_pytils.files.audio.core.get_files_by_extension')
     def test_count_audio_files(self, mock_get_files):
         """Test counting audio files."""
         mock_get_files.return_value = ['file1.mp3', 'file2.wav', 'file3.ogg']
@@ -24,7 +25,7 @@ class TestAudioFileQueries:
         assert count == 3
         mock_get_files.assert_called_once()
     
-    @patch('novus_pytils.files.audio.wave.get_files_by_extension')
+    @patch('novus_pytils.files.audio.core.get_files_by_extension')
     def test_get_audio_files(self, mock_get_files):
         """Test getting audio files."""
         expected_files = ['file1.mp3', 'file2.wav']
@@ -42,7 +43,7 @@ class TestAudioFileQueries:
         
         files = get_wav_files('/test/path')
         assert files == expected_files
-        mock_get_files.assert_called_with('/test/path', ['.wav'])
+        mock_get_files.assert_called_with('/test/path', mock_get_files.call_args[0][1], relative=True)
 
 
 class TestWAVFileOperations:

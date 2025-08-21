@@ -25,7 +25,7 @@ def get_wav_files(dir):
     Returns:
         list: A list of paths to WAV files in the directory.
     """
-    return get_files_by_extension(dir, wave_exts=WAVE_EXTS, relative=True)
+    return get_files_by_extension(dir, WAVE_EXTS, relative=True)
 
 
 # WAV Parser Classes and Functions
