@@ -28,35 +28,15 @@ dependencies = [
   "pandas",
   "pydub",
   "requests",
-  "pyyaml"
+  "pyyaml",
+  "Pillow>=9.0.0"
 ]
 
 [project.optional-dependencies]
-web = [
-    "fastapi>=0.100.0",
-    "uvicorn[standard]>=0.20.0",
-    "python-multipart>=0.0.6"
-]
-image = [
-    "Pillow>=9.0.0"
-]
 dev = [
     "pytest",
     "ruff",
-    "httpx"
 ]
-all = [
-    "fastapi>=0.100.0",
-    "uvicorn[standard]>=0.20.0", 
-    "python-multipart>=0.0.6",
-    "Pillow>=9.0.0",
-    "pytest",
-    "ruff",
-    "httpx"
-]
-
-[project.scripts]
-novus-pytils = "novus_pytils.cli.commands:main"
 
 [project.urls]
 Homepage = "https://github.com/jmcmeen/novus-pytils"
