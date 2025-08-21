@@ -9,38 +9,11 @@ import numpy as np
 from typing import Dict, Optional, Union
 from dataclasses import dataclass
 from pathlib import Path
-
 from novus_pytils.files.directories import get_files_by_extension
 from novus_pytils.globals import SUPPORTED_AUDIO_EXTENSIONS
 from novus_pytils.utils.hash import get_file_md5_hash
 from novus_pytils.models.exceptions import WAVError, InvalidWAVFormatError, CorruptedFileError
-
-
-def count_audio_files(audio_folder_path):
-    """Count the number of audio files in a folder.
-
-    Args:
-        audio_folder_path (str): The path to the folder containing the audio files.
-
-    Returns:
-        int: The number of audio files in the folder.
-    """
-    files = get_files_by_extension(audio_folder_path, SUPPORTED_AUDIO_EXTENSIONS)
-    return len(files)
-
-
-def get_audio_files(audio_folder_path, file_extensions=SUPPORTED_AUDIO_EXTENSIONS):
-    """Get a list of audio files in a folder.
-
-    Args:
-        audio_folder_path (str): The path to the folder containing the audio files.
-        file_extensions (list, optional): A list of file extensions to consider as audio files.
-
-    Returns:
-        list: A list of audio file paths.
-    """
-    files = get_files_by_extension(audio_folder_path, file_extensions, relative=True)
-    return files
+from novus_pytils.globals import WAVE_EXTS
 
 
 def get_wav_files(dir):
@@ -52,7 +25,7 @@ def get_wav_files(dir):
     Returns:
         list: A list of paths to WAV files in the directory.
     """
-    return get_files_by_extension(dir, ['.wav'])
+    return get_files_by_extension(dir, wave_exts=WAVE_EXTS, relative=True)
 
 
 # WAV Parser Classes and Functions
