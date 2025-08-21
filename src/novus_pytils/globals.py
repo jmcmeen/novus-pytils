@@ -3,10 +3,15 @@
 This module defines constants used throughout the novus_pytils package.
 """
 
+YAML_EXTENSIONS = ['.yaml', '.yml']
+
+
+
+
 SUPPORTED_AUDIO_EXTENSIONS = ['.wav', '.ogg', '.flac', '.mp3', '.aac', '.wma', '.m4a']
 SUPPORTED_VIDEO_EXTENSIONS = ['.mp4', '.avi', '.mkv', '.mov', '.wmv', '.flv', '.webm', '.m4v']
 SUPPORTED_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.tif', '.webp', '.svg']
-SUPPORTED_TEXT_EXTENSIONS = ['.txt', '.md', '.csv', '.json', '.xml', '.yaml', '.yml', '.log', '.ini', '.cfg']
+SUPPORTED_TEXT_EXTENSIONS = ['.txt', '.md', '.csv', '.json', '.xml', '.log', '.ini', '.cfg'] + YAML_EXTENSIONS
 
 AUDIO_CONVERSION_MAP = {
     '.wav': ['.mp3', '.ogg', '.flac', '.aac'],
