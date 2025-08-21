@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from pathlib import Path
 import shutil
 from typing import Any, Dict, List, Union
+from enum import Enum
+
 from contextlib import contextmanager
 from novus_pytils.models.exceptions import FileHandlerError, UnsupportedFormatError
 from novus_pytils.globals import (
@@ -152,10 +154,10 @@ class FileManager:
     """Main file manager class providing unified interface for all file operations."""
     
     def __init__(self):
-        from novus_pytils.handlers.text_handler import TextHandler
-        from novus_pytils.handlers.image_handler import ImageHandler
-        from novus_pytils.handlers.audio_handler import AudioHandler
-        from novus_pytils.handlers.video_handler import VideoHandler
+        from novus_pytils.models.text import TextHandler
+        from novus_pytils.models.image import ImageHandler
+        from novus_pytils.models.audio import AudioHandler
+        from novus_pytils.models.video import VideoHandler
         
         self._handlers = {
             'text': TextHandler(),
@@ -610,3 +612,17 @@ class ValidationResult:
     
     def __str__(self):
         return f"ValidationResult(valid={self.is_valid}, message='{self.message}')"
+    
+class ColorCode(Enum):
+    """ANSI color codes for terminal output."""
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    WHITE = '\033[97m'
+    BLACK = '\033[30m'
+    RESET = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'

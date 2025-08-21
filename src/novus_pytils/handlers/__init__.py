@@ -1,1 +1,0 @@
-"""File type handlers for different media formats."""
