@@ -2,11 +2,32 @@
 import os
 import tempfile
 import shutil
+import warnings
 import pytest
 from pathlib import Path
 import wave
 import numpy as np
 from PIL import Image
+
+# Suppress specific warnings
+warnings.filterwarnings("ignore", message="'audioop' is deprecated and slated for removal in Python 3.13", category=DeprecationWarning)
+
+
+def pytest_configure(config):
+    """Configure pytest markers and warning filters."""
+    # Register custom markers to avoid unknown marker warnings
+    config.addinivalue_line("markers", "slow: marks tests as slow (deselect with '-m \"not slow\"')")
+    config.addinivalue_line("markers", "unit: marks tests as unit tests")
+    config.addinivalue_line("markers", "integration: marks tests as integration tests")
+    config.addinivalue_line("markers", "audio: marks tests as audio processing tests")
+    config.addinivalue_line("markers", "video: marks tests as video processing tests")
+    config.addinivalue_line("markers", "image: marks tests as image processing tests")
+    config.addinivalue_line("markers", "file_ops: marks tests as file operations tests")
+    config.addinivalue_line("markers", "api: marks tests as API tests")
+    config.addinivalue_line("markers", "cli: marks tests as CLI tests")
+    
+    # Add warning filters
+    config.addinivalue_line("filterwarnings", "ignore:'audioop' is deprecated and slated for removal in Python 3.13:DeprecationWarning")
 
 
 @pytest.fixture
