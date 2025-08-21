@@ -43,13 +43,6 @@ TEXT_CONVERSION_MAP = {
     '.yaml': ['.json', '.xml', '.txt']
 }
 
-# Configuration constants
-DEFAULT_QUALITY = 85
-MAX_FILE_SIZE_MB = 1000
-TEMP_DIRECTORY = '/tmp'
-API_HOST = 'localhost'
-API_PORT = 8000
-
 def get_all_supported_extensions():
     """
     Get all supported file extensions.
@@ -93,23 +86,6 @@ def get_file_type_by_extension(extension: str) -> str:
         return 'text'
     else:
         return 'unknown'
-
-def get_default_conversion_quality(file_type: str) -> int:
-    """
-    Get the default conversion quality for a file type.
-
-    Args:
-        file_type (str): The type of file ('audio', 'video', 'image').
-
-    Returns:
-        int: The default quality value.
-    """
-    quality_map = {
-        'image': DEFAULT_QUALITY,
-        'audio': 192,  # kbps
-        'video': 23    # CRF value for x264
-    }
-    return quality_map.get(file_type, DEFAULT_QUALITY)
 
 def validate_file_type(file_path: str) -> bool:
     """

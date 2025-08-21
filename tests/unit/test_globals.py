@@ -4,10 +4,8 @@ import gc
 from novus_pytils.globals import (
     SUPPORTED_TEXT_EXTENSIONS, SUPPORTED_IMAGE_EXTENSIONS,
     SUPPORTED_AUDIO_EXTENSIONS, SUPPORTED_VIDEO_EXTENSIONS,
-    DEFAULT_QUALITY, MAX_FILE_SIZE_MB, TEMP_DIRECTORY,
-    API_HOST, API_PORT, get_all_supported_extensions,
-    is_supported_extension, get_file_type_by_extension,
-    get_default_conversion_quality, validate_file_type
+    get_all_supported_extensions, is_supported_extension, 
+    get_file_type_by_extension, validate_file_type
 )
 
 
@@ -89,36 +87,6 @@ class TestSupportedExtensions:
         
         unique_extensions = set(all_extensions)
         assert len(all_extensions) == len(unique_extensions), "Found duplicate extensions"
-
-
-class TestDefaultConstants:
-    """Test default configuration constants."""
-    
-    def test_default_quality(self):
-        """Test default quality constant."""
-        assert isinstance(DEFAULT_QUALITY, int)
-        assert 1 <= DEFAULT_QUALITY <= 100
-    
-    def test_max_file_size_mb(self):
-        """Test max file size constant."""
-        assert isinstance(MAX_FILE_SIZE_MB, (int, float))
-        assert MAX_FILE_SIZE_MB > 0
-    
-    def test_temp_directory(self):
-        """Test temp directory constant."""
-        assert isinstance(TEMP_DIRECTORY, str)
-        assert len(TEMP_DIRECTORY) > 0
-    
-    def test_api_host(self):
-        """Test API host constant."""
-        assert isinstance(API_HOST, str)
-        assert len(API_HOST) > 0
-    
-    def test_api_port(self):
-        """Test API port constant."""
-        assert isinstance(API_PORT, int)
-        assert 1 <= API_PORT <= 65535
-
 
 class TestUtilityFunctions:
     """Test utility functions."""
@@ -222,30 +190,6 @@ class TestUtilityFunctions:
         assert get_file_type_by_extension('.unknown') == 'unknown'
         assert get_file_type_by_extension('') == 'unknown'
     
-    def test_get_default_conversion_quality_by_type(self):
-        """Test get_default_conversion_quality for different file types."""
-        # Test that function returns reasonable quality values
-        text_quality = get_default_conversion_quality('text')
-        assert isinstance(text_quality, int)
-        assert 1 <= text_quality <= 100
-        
-        image_quality = get_default_conversion_quality('image')
-        assert isinstance(image_quality, int)
-        assert 1 <= image_quality <= 100
-        
-        audio_quality = get_default_conversion_quality('audio')
-        assert isinstance(audio_quality, int)
-        assert audio_quality > 0  # Audio quality is in kbps, can be > 100
-        
-        video_quality = get_default_conversion_quality('video')
-        assert isinstance(video_quality, int)
-        assert 1 <= video_quality <= 100
-    
-    def test_get_default_conversion_quality_unknown_type(self):
-        """Test get_default_conversion_quality for unknown file type."""
-        default_quality = get_default_conversion_quality('unknown')
-        assert default_quality == DEFAULT_QUALITY
-    
     def test_validate_file_type_valid_types(self):
         """Test validate_file_type for valid file types."""
         assert validate_file_type('file.txt') is True
@@ -296,43 +240,6 @@ class TestExtensionMapping:
             assert get_file_type_by_extension(ext) == 'video'
 
 
-class TestConfigurationValidation:
-    """Test configuration validation."""
-    
-    def test_quality_values_in_range(self):
-        """Test that all quality values are in valid range."""
-        # Different file types have different quality ranges
-        for file_type in ['text', 'image']:
-            quality = get_default_conversion_quality(file_type)
-            assert 1 <= quality <= 100, \
-                f"Quality for {file_type} is out of range: {quality}"
-        
-        # Audio quality is in kbps, can be higher than 100
-        audio_quality = get_default_conversion_quality('audio')
-        assert audio_quality > 0, "Audio quality should be positive"
-        
-        # Video quality can be lower than 1 (CRF values)
-        video_quality = get_default_conversion_quality('video')
-        assert video_quality > 0, "Video quality should be positive"
-    
-    def test_file_size_reasonable(self):
-        """Test that max file size is reasonable."""
-        # Max file size should be at least 1MB and not more than 10GB
-        assert 1 <= MAX_FILE_SIZE_MB <= 10000
-    
-    def test_api_configuration_valid(self):
-        """Test that API configuration is valid."""
-        # Host should not be empty
-        assert len(API_HOST.strip()) > 0
-        
-        # Port should be in valid range
-        assert 1 <= API_PORT <= 65535
-        
-        # Common ports check
-        assert API_PORT not in [22, 23, 25, 53, 110, 143, 993, 995], \
-            "API port conflicts with common service ports"
-
-
 class TestMemoryEfficiency:
     """Test memory efficiency of globals."""
     
@@ -366,7 +273,6 @@ class TestMemoryEfficiency:
             get_all_supported_extensions()
             is_supported_extension('.txt')
             get_file_type_by_extension('.jpg')
-            get_default_conversion_quality('image')
         
         # Object count shouldn't grow excessively
         final_objects = len(gc.get_objects())
