@@ -4,7 +4,7 @@ from unittest.mock import patch
 from novus_pytils.console import (
     print_color, print_success, print_error, print_warning, print_info,
     print_table, print_progress_bar, confirm_action, get_user_input,
-    clear_screen, move_cursor, ColorCode, COLORS_ENABLED, _detect_color_support
+    clear_screen, move_cursor, ColorCode, _detect_color_support
 )
 
 
@@ -356,7 +356,6 @@ class TestEnvironmentDetection:
         mock_isatty.return_value = True
         mock_env_get.side_effect = lambda key, default=None: 'truecolor' if key == 'COLORTERM' else default
         
-        from novus_pytils.console import _detect_color_support
         assert _detect_color_support() is True
     
     @patch('sys.stdout.isatty')
@@ -364,5 +363,4 @@ class TestEnvironmentDetection:
         """Test color support detection without TTY."""
         mock_isatty.return_value = False
         
-        from novus_pytils.console import _detect_color_support
         assert _detect_color_support() is False

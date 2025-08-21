@@ -1,11 +1,89 @@
 from novus_pytils.zip import (
-    extract_zip_file, create_zip_file, list_zip_contents, get_zip_info,
+    get_zip_files, extract_zip_file, create_zip_file, list_zip_contents, get_zip_info,
     extract_single_file, is_valid_zip, zip_directory, add_files_to_zip,
-    remove_files_from_zip, extract_files_by_pattern, ZipFile
+    remove_files_from_zip, extract_files_by_pattern, add_directory_to_zip, ZipFile
 )
 import pytest
 import zipfile
 import os
+
+
+class TestGetZipFiles:
+    """Test get_zip_files function."""
+    
+    def test_get_zip_files_with_zip_files(self, temp_dir):
+        """Test getting zip files from directory with zip files."""
+        # Create test zip files
+        (temp_dir / "test1.zip").touch()
+        (temp_dir / "test2.zip").touch()
+        (temp_dir / "archive.7z").touch()
+        (temp_dir / "document.txt").touch()
+        
+        zip_files = get_zip_files(str(temp_dir))
+        
+        # Should find only .zip files (based on ZIP_EXTENSIONS)
+        zip_paths = [os.path.basename(path) for path in zip_files]
+        assert "test1.zip" in zip_paths
+        assert "test2.zip" in zip_paths
+        assert "archive.7z" not in zip_paths  # .7z is not in ZIP_EXTENSIONS
+        assert "document.txt" not in zip_paths
+    
+    def test_get_zip_files_empty_directory(self, temp_dir):
+        """Test getting zip files from empty directory."""
+        zip_files = get_zip_files(str(temp_dir))
+        assert zip_files == []
+    
+    def test_get_zip_files_no_zip_files(self, temp_dir):
+        """Test getting zip files from directory with no zip files."""
+        (temp_dir / "document.txt").touch()
+        (temp_dir / "image.jpg").touch()
+        
+        zip_files = get_zip_files(str(temp_dir))
+        assert zip_files == []
+
+
+class TestAddDirectoryToZip:
+    """Test add_directory_to_zip function."""
+    
+    def test_add_directory_to_zip_with_archive_dir(self, temp_dir):
+        """Test adding directory to zip with custom archive directory name."""
+        # Create test directory structure
+        test_dir = temp_dir / "source_dir"
+        test_dir.mkdir()
+        (test_dir / "file1.txt").write_text("content1")
+        (test_dir / "subdir").mkdir()
+        (test_dir / "subdir" / "file2.txt").write_text("content2")
+        
+        # Create zip and add directory
+        zip_path = temp_dir / "test.zip"
+        with zipfile.ZipFile(zip_path, 'w') as zip_ref:
+            add_directory_to_zip(zip_ref, str(test_dir), "custom_name")
+        
+        # Verify contents
+        with zipfile.ZipFile(zip_path, 'r') as zf:
+            names = zf.namelist()
+            assert "custom_name/file1.txt" in names
+            assert "custom_name/subdir/file2.txt" in names
+    
+    def test_add_directory_to_zip_without_archive_dir(self, temp_dir):
+        """Test adding directory to zip without archive directory name."""
+        # Create test directory structure
+        test_dir = temp_dir / "source_dir"
+        test_dir.mkdir()
+        (test_dir / "file1.txt").write_text("content1")
+        (test_dir / "subdir").mkdir()
+        (test_dir / "subdir" / "file2.txt").write_text("content2")
+        
+        # Create zip and add directory
+        zip_path = temp_dir / "test.zip"
+        with zipfile.ZipFile(zip_path, 'w') as zip_ref:
+            add_directory_to_zip(zip_ref, str(test_dir), "")
+        
+        # Verify contents
+        with zipfile.ZipFile(zip_path, 'r') as zf:
+            names = zf.namelist()
+            assert "file1.txt" in names
+            assert "subdir/file2.txt" in names
 
 
 class TestExtractZip:

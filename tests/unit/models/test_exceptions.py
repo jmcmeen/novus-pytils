@@ -1,7 +1,4 @@
 """Unit tests for core.base module."""
-import pytest
-from unittest.mock import patch
-import os
 
 from novus_pytils.models.exceptions import (
     FileHandlerError, UnsupportedFormatError, ConversionError,

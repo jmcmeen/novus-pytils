@@ -1,9 +1,21 @@
 import os
 import zipfile
-from pathlib import Path
 from typing import List, Optional, Union, Dict, Any
 import shutil
+from novus_pytils.globals import ZIP_EXTS
+from novus_pytils.directories import get_files_by_extension
 
+def get_zip_files(dir_path : str) -> list:
+    """
+    Get all zip files in a directory.
+
+    Args:
+        dir_path (str): The path to the directory.
+
+    Returns:
+        list: A list of paths to zip files in the directory.
+    """
+    return get_files_by_extension(dir_path, ZIP_EXTS)
 
 def extract_zip_file(zip_file: str, extract_to: str) -> None:
     """
@@ -17,7 +29,6 @@ def extract_zip_file(zip_file: str, extract_to: str) -> None:
     with zipfile.ZipFile(zip_file, 'r') as zip_ref:
         os.makedirs(extract_to, exist_ok=True)
         zip_ref.extractall(extract_to)
-
 
 def create_zip_file(zip_path: str, files: Union[List[str], Dict[str, str]], 
                    compression: int = zipfile.ZIP_DEFLATED) -> None:
@@ -46,7 +57,6 @@ def create_zip_file(zip_path: str, files: Union[List[str], Dict[str, str]],
                 elif os.path.isdir(file_path):
                     add_directory_to_zip(zip_ref, file_path, os.path.basename(file_path))
 
-
 def add_directory_to_zip(zip_ref: zipfile.ZipFile, dir_path: str, archive_dir: str = "") -> None:
     """
     Recursively adds a directory and its contents to a ZIP file.
@@ -64,7 +74,6 @@ def add_directory_to_zip(zip_ref: zipfile.ZipFile, dir_path: str, archive_dir: s
             archive_path = os.path.join(archive_dir, rel_path) if archive_dir else rel_path
             zip_ref.write(file_path, archive_path.replace(os.sep, '/'))
 
-
 def list_zip_contents(zip_path: str) -> List[str]:
     """
     Lists all files in a ZIP archive.
@@ -77,7 +86,6 @@ def list_zip_contents(zip_path: str) -> List[str]:
     """
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         return zip_ref.namelist()
-
 
 def get_zip_info(zip_path: str) -> Dict[str, Any]:
     """
@@ -114,7 +122,6 @@ def get_zip_info(zip_path: str) -> Dict[str, Any]:
             ]
         }
 
-
 def extract_single_file(zip_path: str, file_name: str, extract_to: str) -> str:
     """
     Extracts a single file from a ZIP archive.
@@ -139,7 +146,6 @@ def extract_single_file(zip_path: str, file_name: str, extract_to: str) -> str:
         zip_ref.extract(file_name, extract_to)
         return os.path.join(extract_to, file_name)
 
-
 def is_valid_zip(zip_path: str) -> bool:
     """
     Checks if a file is a valid ZIP archive.
@@ -156,7 +162,6 @@ def is_valid_zip(zip_path: str) -> bool:
         return True
     except (zipfile.BadZipFile, FileNotFoundError, OSError):
         return False
-
 
 def zip_directory(directory_path: str, zip_path: str, 
                  include_root: bool = False,
@@ -183,7 +188,6 @@ def zip_directory(directory_path: str, zip_path: str,
                     archive_path = os.path.relpath(file_path, directory_path)
                 
                 zip_ref.write(file_path, archive_path.replace(os.sep, '/'))
-
 
 def add_files_to_zip(zip_path: str, files: Union[List[str], Dict[str, str]]) -> None:
     """
@@ -216,7 +220,6 @@ def add_files_to_zip(zip_path: str, files: Union[List[str], Dict[str, str]]) -> 
     # Replace the original file
     shutil.move(temp_zip, zip_path)
 
-
 def remove_files_from_zip(zip_path: str, files_to_remove: List[str]) -> None:
     """
     Removes files from an existing ZIP archive.
@@ -235,7 +238,6 @@ def remove_files_from_zip(zip_path: str, files_to_remove: List[str]) -> None:
                     new_zip.writestr(item, data)
     
     shutil.move(temp_zip, zip_path)
-
 
 def extract_files_by_pattern(zip_path: str, pattern: str, extract_to: str) -> List[str]:
     """
@@ -262,9 +264,9 @@ def extract_files_by_pattern(zip_path: str, pattern: str, extract_to: str) -> Li
     
     return extracted_files
 
-
+# TODO Update ZipFile context manager to include more functionality to match functional api
 class ZipFile:
-    """Enhanced context manager for working with ZIP files."""
+    """Context manager for working with ZIP files."""
     
     def __init__(self, zip_path: str, mode: str = 'r', compression: int = zipfile.ZIP_DEFLATED):
         """
