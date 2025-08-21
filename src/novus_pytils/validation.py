@@ -12,7 +12,7 @@ import shutil
 from typing import List, Dict, Tuple
 from pathlib import Path
 from dataclasses import dataclass
-from novus_pytils.core.exceptions import UnsupportedFormatError, ValidationError, SecurityError
+from novus_pytils.exceptions import UnsupportedFormatError, ValidationError, SecurityError
 from novus_pytils.globals import (
     SUPPORTED_TEXT_EXTENSIONS, SUPPORTED_IMAGE_EXTENSIONS,
     SUPPORTED_AUDIO_EXTENSIONS, SUPPORTED_VIDEO_EXTENSIONS
