@@ -268,4 +268,3 @@ def move_cursor(x: int, y: int) -> None:
         y (int): Row position.
     """
     print(f"\033[{y};{x}H", end='')
-
