@@ -1,4 +1,4 @@
-from novus_pytils.files.directories import get_files_by_extension
+from novus_pytils.files.core import get_files_by_extension
 from novus_pytils.globals import XML_EXTS
 
 def get_xml_files(dir):

@@ -1,4 +1,4 @@
-from novus_pytils.files.directories import get_files_by_extension
+from novus_pytils.files.core import get_files_by_extension
 from novus_pytils.globals import WEBP_EXTS
 
 def get_webp_files(dir):

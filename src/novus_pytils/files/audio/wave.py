@@ -1,15 +1,10 @@
-"""Audio file operations and utilities.
-
-This module consolidates all audio-related file operations including counting,
-retrieving, parsing WAV files, and comprehensive audio analysis.
-"""
 import wave
 import struct
 import numpy as np
 from typing import Dict, Optional, Union
 from dataclasses import dataclass
 from pathlib import Path
-from novus_pytils.files.directories import get_files_by_extension
+from novus_pytils.files.core import get_files_by_extension
 from novus_pytils.globals import SUPPORTED_AUDIO_EXTENSIONS
 from novus_pytils.utils.hash import get_file_md5_hash
 from novus_pytils.models.exceptions import WAVError, InvalidWAVFormatError, CorruptedFileError

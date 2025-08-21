@@ -4,7 +4,8 @@ This module provides functions for loading and working with YAML configuration f
 """
 import yaml
 from typing import Any, Dict
-from novus_pytils.files.directories import file_exists, get_files_by_extension
+from novus_pytils.files.core import file_exists
+from novus_pytils.files.core import get_files_by_extension
 from novus_pytils.globals import YAML_EXTS
 
 # TODO remove redundant methods and update tests

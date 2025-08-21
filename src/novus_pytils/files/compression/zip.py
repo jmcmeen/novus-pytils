@@ -3,7 +3,7 @@ import zipfile
 from typing import List, Optional, Union, Dict, Any
 import shutil
 from novus_pytils.globals import ZIP_EXTS
-from novus_pytils.files.directories import get_files_by_extension
+from novus_pytils.files.core import get_files_by_extension
 
 def get_zip_files(dir_path : str) -> list:
     """

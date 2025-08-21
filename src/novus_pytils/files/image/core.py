@@ -1,4 +1,4 @@
-from novus_pytils.files.directories import get_files_by_extension
+from novus_pytils.files.core import get_files_by_extension
 from novus_pytils.globals import SUPPORTED_IMAGE_EXTENSIONS
 
 def count_image_files(image_folder_path):
