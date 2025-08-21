@@ -1,3 +1,6 @@
+# General file handling module for novus_pytils
+# TODO: Refactor to use a more modular approach with specific handlers for each file type
+
 import os
 from typing import Any, Dict, List
 from novus_pytils.models.text import TextHandler
