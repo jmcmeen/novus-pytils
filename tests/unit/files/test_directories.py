@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 import requests
 
-from novus_pytils.directories import (
+from novus_pytils.files.directories import (
     download_file, get_files_by_extension, get_file_name,
     get_file_extension, get_file_size, file_exists, create_directory,
     copy_file, move_file, delete_file, delete_directory, get_directory_size,
@@ -21,7 +21,7 @@ from novus_pytils.directories import (
 class TestDownloadFile:
     """Test download_file function."""
     
-    @patch('novus_pytils.directories.requests.get')
+    @patch('novus_pytils.files.directories.requests.get')
     def test_download_file_success(self, mock_get, temp_dir):
         """Test successful file download."""
         mock_response = MagicMock()
@@ -35,7 +35,7 @@ class TestDownloadFile:
         assert save_path.read_bytes() == b"test content"
         mock_get.assert_called_once_with("http://example.com/file.txt")
     
-    @patch('novus_pytils.directories.requests.get')
+    @patch('novus_pytils.files.directories.requests.get')
     def test_download_file_http_error(self, mock_get, temp_dir):
         """Test download with HTTP error."""
         mock_get.side_effect = requests.RequestException("Connection error")

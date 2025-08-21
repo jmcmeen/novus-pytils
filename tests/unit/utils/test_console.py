@@ -1,7 +1,7 @@
 """Unit tests for utils.console module."""
 from unittest.mock import patch
 
-from novus_pytils.console import (
+from novus_pytils.utils.console import (
     print_color, print_success, print_error, print_warning, print_info,
     print_table, print_progress_bar, confirm_action, get_user_input,
     clear_screen, move_cursor, ColorCode, _detect_color_support
@@ -33,7 +33,7 @@ class TestPrintColor:
     """Test print_colored function."""
     
     @patch('builtins.print')
-    @patch('novus_pytils.console.COLORS_ENABLED', True)
+    @patch('novus_pytils.utils.console.COLORS_ENABLED', True)
     def test_print_color_basic(self, mock_print):
         """Test basic color printing."""
         print_color("Test message", ColorCode.RED)
@@ -42,7 +42,7 @@ class TestPrintColor:
         mock_print.assert_called_once_with(expected)
     
     @patch('builtins.print')
-    @patch('novus_pytils.console.COLORS_ENABLED', True)
+    @patch('novus_pytils.utils.console.COLORS_ENABLED', True)
     def test_print_color_with_background(self, mock_print):
         """Test color printing with background color."""
         print_color("Test message", ColorCode.RED, ColorCode.YELLOW)
@@ -53,13 +53,13 @@ class TestPrintColor:
     @patch('builtins.print')
     def test_print_color_no_color(self, mock_print):
         """Test printing without color when disabled."""
-        with patch('novus_pytils.console.COLORS_ENABLED', False):
+        with patch('novus_pytils.utils.console.COLORS_ENABLED', False):
             print_color("Test message", ColorCode.RED)
         
         mock_print.assert_called_once_with("Test message")
     
     @patch('builtins.print')
-    @patch('novus_pytils.console.COLORS_ENABLED', True)
+    @patch('novus_pytils.utils.console.COLORS_ENABLED', True)
     def test_print_color_with_kwargs(self, mock_print):
         """Test color printing with additional print kwargs."""
         print_color("Test message", ColorCode.GREEN, end="", flush=True)
@@ -71,28 +71,28 @@ class TestPrintColor:
 class TestConveniencePrintFunctions:
     """Test convenience print functions."""
     
-    @patch('novus_pytils.console.print_color')
+    @patch('novus_pytils.utils.console.print_color')
     def test_print_success(self, mock_print_color):
         """Test print_success function."""
         print_success("Success message")
         
         mock_print_color.assert_called_once_with("✓ Success message", ColorCode.GREEN)
     
-    @patch('novus_pytils.console.print_color')
+    @patch('novus_pytils.utils.console.print_color')
     def test_print_error(self, mock_print_color):
         """Test print_error function."""
         print_error("Error message")
         
         mock_print_color.assert_called_once_with("✗ Error message", ColorCode.RED)
     
-    @patch('novus_pytils.console.print_color')
+    @patch('novus_pytils.utils.console.print_color')
     def test_print_warning(self, mock_print_color):
         """Test print_warning function."""
         print_warning("Warning message")
         
         mock_print_color.assert_called_once_with("⚠ Warning message", ColorCode.YELLOW)
     
-    @patch('novus_pytils.console.print_color')
+    @patch('novus_pytils.utils.console.print_color')
     def test_print_info(self, mock_print_color):
         """Test print_info function."""
         print_info("Info message")
@@ -344,9 +344,9 @@ class TestEnvironmentDetection:
         """Test color support detection."""
         # This test might vary based on environment
         # Just check that the detection doesn't crash
-        with patch('novus_pytils.console._detect_color_support') as mock_detect:
+        with patch('novus_pytils.utils.console._detect_color_support') as mock_detect:
             mock_detect.return_value = True
-            from novus_pytils.console import COLORS_ENABLED
+            from novus_pytils.utils.console import COLORS_ENABLED
             assert isinstance(COLORS_ENABLED, bool)
     
     @patch('sys.stdout.isatty')

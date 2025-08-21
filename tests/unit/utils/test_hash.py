@@ -3,7 +3,7 @@ import pytest
 import hashlib
 from unittest.mock import patch
 
-from novus_pytils.hash import get_file_md5_hash, get_string_md5_hash
+from novus_pytils.utils.hash import get_file_md5_hash, get_string_md5_hash
 
 
 class TestFileMD5Hash:

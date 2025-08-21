@@ -5,7 +5,7 @@ import struct
 import numpy as np
 from unittest.mock import patch
 
-from novus_pytils.wave import (
+from novus_pytils.files.audio.wave import (
     count_audio_files, get_audio_files, get_wav_files, read_wav_file,
     get_wav_metadata, analyze_wav_file, write_wav_file, parse_wav,
     validate_wav, WAVParser, WAVError, InvalidWAVFormatError, CorruptedFileError
@@ -15,7 +15,7 @@ from novus_pytils.wave import (
 class TestAudioFileQueries:
     """Test audio file query functions."""
     
-    @patch('novus_pytils.wave.get_files_by_extension')
+    @patch('novus_pytils.files.audio.wave.get_files_by_extension')
     def test_count_audio_files(self, mock_get_files):
         """Test counting audio files."""
         mock_get_files.return_value = ['file1.mp3', 'file2.wav', 'file3.ogg']
@@ -24,7 +24,7 @@ class TestAudioFileQueries:
         assert count == 3
         mock_get_files.assert_called_once()
     
-    @patch('novus_pytils.wave.get_files_by_extension')
+    @patch('novus_pytils.files.audio.wave.get_files_by_extension')
     def test_get_audio_files(self, mock_get_files):
         """Test getting audio files."""
         expected_files = ['file1.mp3', 'file2.wav']
@@ -34,7 +34,7 @@ class TestAudioFileQueries:
         assert files == expected_files
         mock_get_files.assert_called_once()
     
-    @patch('novus_pytils.wave.get_files_by_extension')
+    @patch('novus_pytils.files.audio.wave.get_files_by_extension')
     def test_get_wav_files(self, mock_get_files):
         """Test getting WAV files specifically."""
         expected_files = ['file1.wav', 'file2.wav']
@@ -286,7 +286,7 @@ class TestAudioFileAnalysisErrors:
         assert 'error_message' in analysis
         assert analysis['error_message'] != ''
     
-    @patch('novus_pytils.wave.get_file_md5_hash')
+    @patch('novus_pytils.files.audio.wave.get_file_md5_hash')
     def test_analyze_wav_file_hash_error(self, mock_hash, sample_wav_file, temp_dir):
         """Test error handling when hash calculation fails."""
         mock_hash.side_effect = Exception("Hash calculation failed")
