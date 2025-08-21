@@ -104,8 +104,6 @@ class BaseFileHandler(ABC):
         }
 
 
-
-
 class FileManagerMixin:
     """Mixin class providing common file management operations."""
     
@@ -147,6 +145,7 @@ class FileManagerMixin:
                 results[file_path] = False
         
         return results
+
 
 class FileManager:
     """Main file manager class providing unified interface for all file operations."""
