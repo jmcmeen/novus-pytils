@@ -11,30 +11,12 @@ import urllib.parse
 import shutil
 from typing import List, Dict, Tuple
 from pathlib import Path
-from dataclasses import dataclass
+from novus_pytils.models.models import ValidationResult
 from novus_pytils.models.exceptions import UnsupportedFormatError, ValidationError, SecurityError
 from novus_pytils.globals import (
     SUPPORTED_TEXT_EXTENSIONS, SUPPORTED_IMAGE_EXTENSIONS,
     SUPPORTED_AUDIO_EXTENSIONS, SUPPORTED_VIDEO_EXTENSIONS
 )
-
-
-
-
-@dataclass
-class ValidationResult:
-    """Result of a validation operation."""
-    is_valid: bool
-    message: str = ""
-    errors: List[str] = None
-    
-    def __post_init__(self):
-        if self.errors is None:
-            self.errors = []
-    
-    def __str__(self):
-        return f"ValidationResult(valid={self.is_valid}, message='{self.message}')"
-
 
 def validate_file_path(file_path: str, must_exist: bool = True, check_permissions: bool = False) -> ValidationResult:
     """Validate file path for security and existence.
@@ -502,6 +484,7 @@ def validate_batch_operation(files: List[str], operation: str, **kwargs) -> Dict
         'invalid': invalid_files
     }
 
+
 def validate_file_extension(file_path: str, allowed_extensions: List[str]) -> ValidationResult:
     """
     Validate that file has an allowed extension.
@@ -561,6 +544,7 @@ def validate_color_format(color: str) -> ValidationResult:
     
     return ValidationResult(False, f"Invalid color format: {color}")
 
+
 def validate_url(url: str) -> ValidationResult:
     """
     Validate URL format.
@@ -589,6 +573,7 @@ def validate_url(url: str) -> ValidationResult:
     except Exception as e:
         return ValidationResult(False, f"Invalid URL: {str(e)}")
 
+
 def validate_email(email: str) -> ValidationResult:
     """
     Validate email address format.
@@ -607,6 +592,7 @@ def validate_email(email: str) -> ValidationResult:
         return ValidationResult(False, "Invalid email format")
     
     return ValidationResult(True, f"Valid email: {email}")
+
 
 def validate_json_structure(data, required_fields: List[str] = None, field_types: Dict[str, type] = None) -> ValidationResult:
     """
@@ -647,6 +633,7 @@ def validate_json_structure(data, required_fields: List[str] = None, field_types
     
     return ValidationResult(True, "Valid JSON structure")
 
+
 def is_safe_path(path: str, base_path: str = None) -> bool:
     """
     Check if path is safe (no path traversal).
@@ -674,6 +661,7 @@ def is_safe_path(path: str, base_path: str = None) -> bool:
             return False
     
     return True
+
 
 def check_disk_space(path: str, required_mb: float) -> ValidationResult:
     """

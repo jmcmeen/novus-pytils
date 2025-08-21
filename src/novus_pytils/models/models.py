@@ -1,5 +1,6 @@
 import os
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from pathlib import Path
 import shutil
 from typing import Any, Dict, List, Union
@@ -594,3 +595,18 @@ class MediaCollection:
         else:
             batch = FileBatch(file_paths, self.manager)
             return batch.filter_by_type('video')
+
+
+@dataclass
+class ValidationResult:
+    """Result of a validation operation."""
+    is_valid: bool
+    message: str = ""
+    errors: List[str] = None
+    
+    def __post_init__(self):
+        if self.errors is None:
+            self.errors = []
+    
+    def __str__(self):
+        return f"ValidationResult(valid={self.is_valid}, message='{self.message}')"
