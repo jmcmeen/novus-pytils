@@ -3,7 +3,8 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 from novus_pytils.models.models import (
-    FileManager, File, FileBatch, MediaCollection, BaseFileHandler
+    FileManager, File, FileBatch, MediaCollection, BaseFileHandler,
+    FileManagerMixin, ValidationResult, ColorCode
 )
 from novus_pytils.models.exceptions import FileHandlerError, UnsupportedFormatError
 
@@ -787,3 +788,173 @@ class TestMediaCollection:
         assert isinstance(result, File)
         assert result.path == 'test.mp4'
         assert result.file_type == 'video'
+
+
+class TestFileManagerMixin:
+    """Test FileManagerMixin class."""
+    
+    def setup_method(self):
+        """Setup test handler with mixin."""
+        class TestHandlerWithMixin(BaseFileHandler, FileManagerMixin):
+            def read(self, file_path, **kwargs):
+                return "content"
+            
+            def write(self, file_path, content, **kwargs):
+                return True
+            
+            def convert(self, input_path, output_path, target_format, **kwargs):
+                return True
+        
+        self.handler = TestHandlerWithMixin()
+    
+    @patch('os.path.splitext')
+    @patch('os.path.basename')
+    @patch('os.path.join')
+    def test_batch_convert_with_output_dir(self, mock_join, mock_basename, mock_splitext):
+        """Test batch convert with output directory."""
+        mock_splitext.return_value = ('file1', '.txt')
+        mock_basename.return_value = 'file1.txt'
+        mock_join.return_value = '/output/file1.pdf'
+        
+        result = self.handler.batch_convert(['file1.txt'], '.pdf', '/output')
+        
+        assert result == {'file1.txt': True}
+    
+    @patch('os.path.splitext')
+    def test_batch_convert_without_output_dir(self, mock_splitext):
+        """Test batch convert without output directory."""
+        mock_splitext.return_value = ('file1', '.txt')
+        
+        result = self.handler.batch_convert(['file1.txt'], '.pdf')
+        
+        assert result == {'file1.txt': True}
+    
+    def test_batch_convert_with_exception(self):
+        """Test batch convert with exception."""
+        # Override convert to raise exception
+        def failing_convert(*args, **kwargs):
+            raise Exception("Conversion failed")
+        
+        self.handler.convert = failing_convert
+        
+        result = self.handler.batch_convert(['file1.txt'], '.pdf')
+        
+        assert result == {'file1.txt': False}
+    
+    def test_batch_operation_delete(self):
+        """Test batch delete operation."""
+        # Mock the delete method
+        self.handler.delete = lambda x: True
+        
+        result = self.handler.batch_operation(['file1.txt'], 'delete')
+        
+        assert result == {'file1.txt': True}
+    
+    @patch('os.path.join')
+    @patch('os.path.basename')
+    def test_batch_operation_copy(self, mock_basename, mock_join):
+        """Test batch copy operation."""
+        mock_basename.return_value = 'file1.txt'
+        mock_join.return_value = '/dest/file1.txt'
+        
+        # Mock the copy method
+        self.handler.copy = lambda src, dest: True
+        
+        result = self.handler.batch_operation(['file1.txt'], 'copy', dest_dir='/dest')
+        
+        assert result == {'file1.txt': True}
+    
+    @patch('os.path.join')
+    @patch('os.path.basename')
+    def test_batch_operation_move(self, mock_basename, mock_join):
+        """Test batch move operation."""
+        mock_basename.return_value = 'file1.txt'
+        mock_join.return_value = '/dest/file1.txt'
+        
+        # Mock the move method
+        self.handler.move = lambda src, dest: True
+        
+        result = self.handler.batch_operation(['file1.txt'], 'move', dest_dir='/dest')
+        
+        assert result == {'file1.txt': True}
+    
+    def test_batch_operation_unknown(self):
+        """Test batch operation with unknown operation."""
+        result = self.handler.batch_operation(['file1.txt'], 'unknown')
+        
+        assert result == {'file1.txt': False}
+    
+    def test_batch_operation_with_exception(self):
+        """Test batch operation with exception."""
+        # Override delete to raise exception
+        def failing_delete(*args, **kwargs):
+            raise Exception("Delete failed")
+        
+        self.handler.delete = failing_delete
+        
+        result = self.handler.batch_operation(['file1.txt'], 'delete')
+        
+        assert result == {'file1.txt': False}
+
+
+class TestValidationResult:
+    """Test ValidationResult dataclass."""
+    
+    def test_init_valid(self):
+        """Test ValidationResult initialization for valid result."""
+        result = ValidationResult(is_valid=True, message="Valid")
+        
+        assert result.is_valid is True
+        assert result.message == "Valid"
+        assert result.errors == []
+    
+    def test_init_invalid(self):
+        """Test ValidationResult initialization for invalid result."""
+        result = ValidationResult(is_valid=False, message="Invalid", errors=["Error 1"])
+        
+        assert result.is_valid is False
+        assert result.message == "Invalid"
+        assert result.errors == ["Error 1"]
+    
+    def test_init_with_none_errors(self):
+        """Test ValidationResult initialization with None errors."""
+        result = ValidationResult(is_valid=True)
+        
+        assert result.errors == []
+    
+    def test_str_representation(self):
+        """Test string representation."""
+        result = ValidationResult(is_valid=True, message="Valid")
+        
+        assert str(result) == "ValidationResult(valid=True, message='Valid')"
+
+
+class TestColorCode:
+    """Test ColorCode enum."""
+    
+    def test_color_values(self):
+        """Test color code values."""
+        assert ColorCode.RED.value == '\033[91m'
+        assert ColorCode.GREEN.value == '\033[92m'
+        assert ColorCode.YELLOW.value == '\033[93m'
+        assert ColorCode.BLUE.value == '\033[94m'
+        assert ColorCode.MAGENTA.value == '\033[95m'
+        assert ColorCode.CYAN.value == '\033[96m'
+        assert ColorCode.WHITE.value == '\033[97m'
+        assert ColorCode.BLACK.value == '\033[30m'
+        assert ColorCode.RESET.value == '\033[0m'
+        assert ColorCode.BOLD.value == '\033[1m'
+        assert ColorCode.UNDERLINE.value == '\033[4m'
+    
+    def test_enum_membership(self):
+        """Test enum membership."""
+        assert ColorCode.RED in ColorCode
+        assert ColorCode.GREEN in ColorCode
+        assert ColorCode.RESET in ColorCode
+    
+    def test_enum_iteration(self):
+        """Test enum iteration."""
+        colors = list(ColorCode)
+        assert len(colors) == 11
+        assert ColorCode.RED in colors
+        assert ColorCode.RESET in colors
