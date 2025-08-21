@@ -9,7 +9,7 @@ from pathlib import Path
 import shutil
 from typing import Any, Dict, List, Union
 from contextlib import contextmanager
-from novus_pytils.core.exceptions import FileHandlerError, UnsupportedFormatError
+from novus_pytils.exceptions import FileHandlerError, UnsupportedFormatError
 from novus_pytils.globals import (
     SUPPORTED_TEXT_EXTENSIONS, SUPPORTED_IMAGE_EXTENSIONS,
     SUPPORTED_AUDIO_EXTENSIONS, SUPPORTED_VIDEO_EXTENSIONS
@@ -157,10 +157,10 @@ class FileManager:
     """Main file manager class providing unified interface for all file operations."""
     
     def __init__(self):
-        from novus_pytils.core.handlers.text_handler import TextHandler
-        from novus_pytils.core.handlers.image_handler import ImageHandler
-        from novus_pytils.core.handlers.audio_handler import AudioHandler
-        from novus_pytils.core.handlers.video_handler import VideoHandler
+        from novus_pytils.handlers.text_handler import TextHandler
+        from novus_pytils.handlers.image_handler import ImageHandler
+        from novus_pytils.handlers.audio_handler import AudioHandler
+        from novus_pytils.handlers.video_handler import VideoHandler
         
         self._handlers = {
             'text': TextHandler(),
