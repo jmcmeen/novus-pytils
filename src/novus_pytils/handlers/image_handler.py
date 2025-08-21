@@ -6,8 +6,8 @@ and conversion between various image formats using minimal dependencies.
 import os
 import base64
 from typing import Any, Dict, List, Tuple
-from novus_pytils.core.models import BaseFileHandler, FileManagerMixin
-from novus_pytils.core.exceptions import ConversionError
+from novus_pytils.models.models import BaseFileHandler, FileManagerMixin
+from novus_pytils.exceptions import ConversionError
 from novus_pytils.globals import SUPPORTED_IMAGE_EXTENSIONS, IMAGE_CONVERSION_MAP
 
 
