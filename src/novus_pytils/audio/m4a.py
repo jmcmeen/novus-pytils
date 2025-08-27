@@ -1,3 +1,4 @@
+from pydub import AudioSegment
 from novus_pytils.files.core import get_files_by_extension
 from novus_pytils.globals import M4A_EXTS
 
@@ -56,109 +57,121 @@ def has_m4a_files(dir):
     """
     return count_m4a_files(dir) > 0
 
-def m4a_to_wav(m4a_file, wav_file):
+def m4a_to_wav(m4a_file, wav_file, bitrate=None, channels=None):
     """Convert an M4A audio file to WAV format.
 
     Args:
         m4a_file (str): The path to the M4A audio file to convert.
         wav_file (str): The path to save the converted WAV audio file.
+        bitrate (str): The bitrate for the output file (not applicable for WAV).
+        channels (int): The number of channels for the output file.
 
     Returns:
         None
     """
-    from pydub import AudioSegment
-
     audio = AudioSegment.from_file(m4a_file, format="m4a")
+    if channels:
+        audio = audio.set_channels(channels)
     audio.export(wav_file, format="wav")
     
-def m4a_to_mp3(m4a_file, mp3_file):
+def m4a_to_mp3(m4a_file, mp3_file, bitrate="192k", channels=None):
     """Convert an M4A audio file to MP3 format.
 
     Args:
         m4a_file (str): The path to the M4A audio file to convert.
         mp3_file (str): The path to save the converted MP3 audio file.
+        bitrate (str): The bitrate for the output MP3 file (default is "192k").
+        channels (int): The number of channels for the output file.
 
     Returns:
         None
     """
-    from pydub import AudioSegment
-
     audio = AudioSegment.from_file(m4a_file, format="m4a")
-    audio.export(mp3_file, format="mp3")
+    if channels:
+        audio = audio.set_channels(channels)
+    audio.export(mp3_file, format="mp3", bitrate=bitrate)
     
-def m4a_to_aac(m4a_file, aac_file):
+def m4a_to_aac(m4a_file, aac_file, bitrate="192k", channels=None):
     """Convert an M4A audio file to AAC format.
 
     Args:
         m4a_file (str): The path to the M4A audio file to convert.
         aac_file (str): The path to save the converted AAC audio file.
+        bitrate (str): The bitrate for the output AAC file (default is "192k").
+        channels (int): The number of channels for the output file.
 
     Returns:
         None
     """
-    from pydub import AudioSegment
-
     audio = AudioSegment.from_file(m4a_file, format="m4a")
-    audio.export(aac_file, format="aac")
+    if channels:
+        audio = audio.set_channels(channels)
+    audio.export(aac_file, format="aac", bitrate=bitrate)
     
-def m4a_to_flac(m4a_file, flac_file):
+def m4a_to_flac(m4a_file, flac_file, bitrate=None, channels=None):
     """Convert an M4A audio file to FLAC format.
 
     Args:
         m4a_file (str): The path to the M4A audio file to convert.
         flac_file (str): The path to save the converted FLAC audio file.
+        bitrate (str): The bitrate for the output file (not applicable for FLAC).
+        channels (int): The number of channels for the output file.
 
     Returns:
         None
     """
-    from pydub import AudioSegment
-
     audio = AudioSegment.from_file(m4a_file, format="m4a")
+    if channels:
+        audio = audio.set_channels(channels)
     audio.export(flac_file, format="flac")
     
-def m4a_to_wma(m4a_file, wma_file):
+def m4a_to_wma(m4a_file, wma_file, bitrate="192k", channels=None):
     """Convert an M4A audio file to WMA format.
 
     Args:
         m4a_file (str): The path to the M4A audio file to convert.
         wma_file (str): The path to save the converted WMA audio file.
+        bitrate (str): The bitrate for the output WMA file (default is "192k").
+        channels (int): The number of channels for the output file.
 
     Returns:
         None
     """
-    from pydub import AudioSegment
-
     audio = AudioSegment.from_file(m4a_file, format="m4a")
-    audio.export(wma_file, format="wma")
+    if channels:
+        audio = audio.set_channels(channels)
+    audio.export(wma_file, format="wma", bitrate=bitrate)
     
-def m4a_to_ogg(m4a_file, ogg_file, bitrate="192k"):
+def m4a_to_ogg(m4a_file, ogg_file, bitrate="192k", channels=None):
     """Convert an M4A audio file to OGG format.
 
     Args:
         m4a_file (str): The path to the M4A audio file to convert.
         ogg_file (str): The path to save the converted OGG audio file.
         bitrate (str): The bitrate for the output OGG file (default is "192k").
+        channels (int): The number of channels for the output file.
 
     Returns:
         None
     """
-    from pydub import AudioSegment
-
     audio = AudioSegment.from_file(m4a_file, format="m4a")
+    if channels:
+        audio = audio.set_channels(channels)
     audio.export(ogg_file, format="ogg", bitrate=bitrate)
     
-def m4a_to_w4a(m4a_file, m4a_out_file, bitrate="192k"):
+def m4a_to_m4a(m4a_file, m4a_out_file, bitrate="192k", channels=None):
     """Convert an M4A audio file to another M4A file with specified bitrate.
 
     Args:
         m4a_file (str): The path to the M4A audio file to convert.
         m4a_out_file (str): The path to save the converted M4A audio file.
         bitrate (str): The bitrate for the output M4A file (default is "192k").
+        channels (int): The number of channels for the output file.
 
     Returns:
         None
     """
-    from pydub import AudioSegment
-
     audio = AudioSegment.from_file(m4a_file, format="m4a")
+    if channels:
+        audio = audio.set_channels(channels)
     audio.export(m4a_out_file, format="ipod", bitrate=bitrate)
