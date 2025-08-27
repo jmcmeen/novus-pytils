@@ -22,7 +22,7 @@ from novus_pytils.exceptions import (
 
 from novus_pytils.utils.validation import ValidationError, SecurityError
 
-__version__ = "0.0.63"
+__version__ = "0.0.64"
 __author__ = "novus-pytils crew"
 
 __all__ = [
