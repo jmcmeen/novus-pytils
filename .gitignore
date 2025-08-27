@@ -161,4 +161,6 @@ dmypy.json
 cython_debug/
 
 dev
-.claude/settings.local.json
+.claude
+existing.txt
+.ruff_chache
