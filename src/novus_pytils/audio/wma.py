@@ -1,3 +1,4 @@
+from pydub import AudioSegment
 from novus_pytils.files.core import get_files_by_extension
 from novus_pytils.globals import WMA_EXTS
 
@@ -56,18 +57,121 @@ def has_wma_files(dir):
     """
     return count_wma_files(dir) > 0
 
-def wma_to_wav(wma_file, wav_file):
+def wma_to_wav(wma_file, wav_file, bitrate=None, channels=None):
     """Convert a WMA audio file to WAV format.
 
     Args:
         wma_file (str): The path to the input WMA audio file.
         wav_file (str): The path to the output WAV audio file.
+        bitrate (str): The bitrate for the output file (not applicable for WAV).
+        channels (int): The number of channels for the output file.
 
     Returns:
         None
     """
-    from pydub import AudioSegment
-
     audio = AudioSegment.from_file(wma_file, format="wma")
+    if channels:
+        audio = audio.set_channels(channels)
     audio.export(wav_file, format="wav")
     
+def wma_to_mp3(wma_file, mp3_file, bitrate="192k", channels=None):
+    """Convert a WMA audio file to MP3 format.
+
+    Args:
+        wma_file (str): The path to the input WMA audio file.
+        mp3_file (str): The path to the output MP3 audio file.
+        bitrate (str): The bitrate for the output MP3 file (default is "192k").
+        channels (int): The number of channels for the output file.
+
+    Returns:
+        None
+    """
+    audio = AudioSegment.from_file(wma_file, format="wma")
+    if channels:
+        audio = audio.set_channels(channels)
+    audio.export(mp3_file, format="mp3", bitrate=bitrate)
+    
+def wma_to_aac(wma_file, aac_file, bitrate="192k", channels=None):
+    """Convert a WMA audio file to AAC format.
+
+    Args:
+        wma_file (str): The path to the input WMA audio file.
+        aac_file (str): The path to the output AAC audio file.
+        bitrate (str): The bitrate for the output AAC file (default is "192k").
+        channels (int): The number of channels for the output file.
+
+    Returns:
+        None
+    """
+    audio = AudioSegment.from_file(wma_file, format="wma")
+    if channels:
+        audio = audio.set_channels(channels)
+    audio.export(aac_file, format="aac", bitrate=bitrate)
+    
+def wma_to_m4a(wma_file, m4a_file, bitrate="192k", channels=None):
+    """Convert a WMA audio file to M4A format.
+
+    Args:
+        wma_file (str): The path to the input WMA audio file.
+        m4a_file (str): The path to the output M4A audio file.
+        bitrate (str): The bitrate for the output M4A file (default is "192k").
+        channels (int): The number of channels for the output file.
+
+    Returns:
+        None
+    """
+    audio = AudioSegment.from_file(wma_file, format="wma")
+    if channels:
+        audio = audio.set_channels(channels)
+    audio.export(m4a_file, format="ipod", bitrate=bitrate)
+    
+def wma_to_flac(wma_file, flac_file, bitrate=None, channels=None):
+    """Convert a WMA audio file to FLAC format.
+
+    Args:
+        wma_file (str): The path to the input WMA audio file.
+        flac_file (str): The path to the output FLAC audio file.
+        bitrate (str): The bitrate for the output file (not applicable for FLAC).
+        channels (int): The number of channels for the output file.
+
+    Returns:
+        None
+    """
+    audio = AudioSegment.from_file(wma_file, format="wma")
+    if channels:
+        audio = audio.set_channels(channels)
+    audio.export(flac_file, format="flac")
+    
+def wma_to_ogg(wma_file, ogg_file, bitrate="192k", channels=None):
+    """Convert a WMA audio file to OGG format.
+
+    Args:
+        wma_file (str): The path to the input WMA audio file.
+        ogg_file (str): The path to the output OGG audio file.
+        bitrate (str): The bitrate for the output OGG file (default is "192k").
+        channels (int): The number of channels for the output file.
+
+    Returns:
+        None
+    """
+    audio = AudioSegment.from_file(wma_file, format="wma")
+    if channels:
+        audio = audio.set_channels(channels)
+    audio.export(ogg_file, format="ogg", bitrate=bitrate)
+    
+def wma_to_wma(wma_file, wma_out_file, bitrate="192k", channels=None):
+    """Convert a WMA audio file to another WMA file with specified bitrate.
+
+    Args:
+        wma_file (str): The path to the input WMA audio file.
+        wma_out_file (str): The path to the output WMA audio file.
+        bitrate (str): The bitrate for the output WMA file (default is "192k").
+        channels (int): The number of channels for the output file.
+
+    Returns:
+        None
+    """
+    audio = AudioSegment.from_file(wma_file, format="wma")
+    if channels:
+        audio = audio.set_channels(channels)
+    audio.export(wma_out_file, format="wma", bitrate=bitrate)
