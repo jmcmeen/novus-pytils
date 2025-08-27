@@ -9,7 +9,6 @@ from novus_pytils.exceptions import WAVError
 from novus_pytils.globals import WAVE_EXTS
 from novus_pytils.audio.wav_parser import WAVParser
 
-
 def get_wav_files(dir):
     """Get all WAV files in a directory.
 
@@ -124,3 +123,113 @@ def validate_wav(file_path: Union[str, Path]) -> bool:
         return True
     except (WAVError, FileNotFoundError, struct.error):
         return False
+    
+def wav_to_mp3(wav_file, mp3_file, bitrate="192k"):
+    """Convert a WAV audio file to MP3 format.
+
+    Args:
+        wav_file (str): The path to the input WAV audio file.
+        mp3_file (str): The path to the output MP3 audio file.
+        bitrate (str): The bitrate for the output MP3 file (default is "192k").
+
+    Returns:
+        None
+    """
+    from pydub import AudioSegment
+
+    audio = AudioSegment.from_wav(wav_file)
+    audio.export(mp3_file, format="mp3", bitrate=bitrate)
+    
+def wav_to_aac(wav_file, aac_file, bitrate="192k"):
+    """Convert a WAV audio file to AAC format.
+
+    Args:
+        wav_file (str): The path to the input WAV audio file.
+        aac_file (str): The path to the output AAC audio file.
+        bitrate (str): The bitrate for the output AAC file (default is "192k").
+
+    Returns:
+        None
+    """
+    from pydub import AudioSegment
+
+    audio = AudioSegment.from_wav(wav_file)
+    audio.export(aac_file, format="aac", bitrate=bitrate)
+    
+def wav_to_m4a(wav_file, m4a_file, bitrate="192k"):
+    """Convert a WAV audio file to M4A format.
+
+    Args:
+        wav_file (str): The path to the input WAV audio file.
+        m4a_file (str): The path to the output M4A audio file.
+        bitrate (str): The bitrate for the output M4A file (default is "192k").
+
+    Returns:
+        None
+    """
+    from pydub import AudioSegment
+
+    audio = AudioSegment.from_wav(wav_file)
+    audio.export(m4a_file, format="ipod", bitrate=bitrate)
+    
+def wav_to_flac(wav_file, flac_file):
+    """Convert a WAV audio file to FLAC format.
+
+    Args:
+        wav_file (str): The path to the input WAV audio file.
+        flac_file (str): The path to the output FLAC audio file.
+
+    Returns:
+        None
+    """
+    from pydub import AudioSegment
+
+    audio = AudioSegment.from_wav(wav_file)
+    audio.export(flac_file, format="flac")
+    
+def wav_to_ogg(wav_file, ogg_file, bitrate="192k"):
+    """Convert a WAV audio file to OGG format.
+
+    Args:
+        wav_file (str): The path to the input WAV audio file.
+        ogg_file (str): The path to the output OGG audio file.
+        bitrate (str): The bitrate for the output OGG file (default is "192k").
+
+    Returns:
+        None
+    """
+    from pydub import AudioSegment
+
+    audio = AudioSegment.from_wav(wav_file)
+    audio.export(ogg_file, format="ogg", bitrate=bitrate)
+
+def wav_to_wma(wav_file, wma_file, bitrate="192k"):
+    """Convert a WAV audio file to WMA format.
+
+    Args:
+        wav_file (str): The path to the input WAV audio file.
+        wma_file (str): The path to the output WMA audio file.
+        bitrate (str): The bitrate for the output WMA file (default is "192k").
+
+    Returns:
+        None
+    """
+    from pydub import AudioSegment
+
+    audio = AudioSegment.from_wav(wav_file)
+    audio.export(wma_file, format="wma", bitrate=bitrate)
+ 
+def wav_to_wav(wav_file, wav_file_out):
+    """Convert a WAV audio file to another WAV audio file with specified parameters.
+
+    Args:
+        wav_file (str): The path to the input WAV audio file.
+        wav_file_out (str): The path to the output WAV audio file.
+
+    Returns:
+        None
+    """
+    from pydub import AudioSegment
+
+    audio = AudioSegment.from_wav(wav_file)
+    audio.export(wav_file_out, format="wav")
