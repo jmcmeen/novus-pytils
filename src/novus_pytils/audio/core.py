@@ -13,7 +13,6 @@ def count_audio_files(audio_folder_path):
     files = get_files_by_extension(audio_folder_path, SUPPORTED_AUDIO_EXTENSIONS)
     return len(files)
 
-
 def get_audio_files(dir, file_extensions=SUPPORTED_AUDIO_EXTENSIONS):
     """Get a list of audio files in a folder.
 

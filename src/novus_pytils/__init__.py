@@ -15,7 +15,7 @@ Supported file types:
 - Video: .mp4, .avi, .mkv, .mov, .wmv, .flv, .webm
 """
 
-from novus_pytils.files.supported_files import (
+from novus_pytils.supported_files import (
     read_file, write_file, create_file, update_file, delete_file,
     copy_file, move_file, convert_file, get_file_info, get_supported_conversions,
     batch_convert, batch_operation, resize_image, crop_image, trim_audio, trim_video,
@@ -25,7 +25,7 @@ from novus_pytils.files.supported_files import (
 
 from novus_pytils.models.models import FileManager, File, FileBatch, MediaCollection
 
-from novus_pytils.models.exceptions import (
+from novus_pytils.exceptions import (
     FileHandlerError, UnsupportedFormatError, ConversionError
 )
 

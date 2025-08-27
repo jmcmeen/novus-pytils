@@ -5,8 +5,21 @@ This module provides functions for creating progress bars and other console outp
 import os
 import sys
 from typing import List, Optional
-from novus_pytils.models.models import ColorCode
+from enum import Enum
 
+class ColorCode(Enum):
+    """ANSI color codes for terminal output."""
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    WHITE = '\033[97m'
+    BLACK = '\033[30m'
+    RESET = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 def _detect_color_support() -> bool:
     """

@@ -27,7 +27,6 @@ class SecurityError(FileHandlerError):
     pass
 
 
-# WAV-specific exceptions
 class WAVError(Exception):
     """Base exception for WAV parsing errors."""
     pass

@@ -9,15 +9,30 @@ import mimetypes
 import json
 import urllib.parse
 import shutil
+from dataclasses import dataclass
 from typing import List, Dict, Tuple
 from pathlib import Path
-from novus_pytils.models.models import ValidationResult
-from novus_pytils.models.exceptions import UnsupportedFormatError, ValidationError, SecurityError
+from novus_pytils.exceptions import UnsupportedFormatError, ValidationError, SecurityError
 from novus_pytils.globals import (
     SUPPORTED_TEXT_EXTENSIONS, SUPPORTED_IMAGE_EXTENSIONS,
     SUPPORTED_AUDIO_EXTENSIONS, SUPPORTED_VIDEO_EXTENSIONS
 )
 
+
+@dataclass
+class ValidationResult:
+    """Result of a validation operation."""
+    is_valid: bool
+    message: str = ""
+    errors: List[str] = None
+    
+    def __post_init__(self):
+        if self.errors is None:
+            self.errors = []
+    
+    def __str__(self):
+        return f"ValidationResult(valid={self.is_valid}, message='{self.message}')"
+    
 def validate_file_path(file_path: str, must_exist: bool = True, check_permissions: bool = False) -> ValidationResult:
     """Validate file path for security and existence.
     
