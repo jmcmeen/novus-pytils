@@ -41,6 +41,7 @@ class TestGetImageFiles:
     """Test the get_image_files function."""
     
     @patch('novus_pytils.image.core.get_files_by_extension')
+    @patch('novus_pytils.image.core.SUPPORTED_IMAGE_EXTENSIONS', ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.tif', '.webp', '.svg'])
     def test_get_image_files_basic(self, mock_get_files):
         expected_files = ["photo.jpg", "image.png", "graphic.gif"]
         mock_get_files.return_value = expected_files
@@ -48,7 +49,7 @@ class TestGetImageFiles:
         result = get_image_files("/test/dir")
         
         assert result == expected_files
-        mock_get_files.assert_called_once_with("/test/dir", None, relative=True)
+        mock_get_files.assert_called_once_with("/test/dir", ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.tif', '.webp', '.svg'], relative=True)
     
     @patch('novus_pytils.image.core.get_files_by_extension')
     def test_get_image_files_with_custom_extensions(self, mock_get_files):

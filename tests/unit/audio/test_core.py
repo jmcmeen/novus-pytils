@@ -42,6 +42,7 @@ class TestGetAudioFiles:
     """Test the get_audio_files function."""
     
     @patch('novus_pytils.audio.core.get_files_by_extension')
+    @patch('novus_pytils.audio.core.SUPPORTED_AUDIO_EXTENSIONS', ['.wav', '.ogg', '.flac', '.mp3', '.aac', '.wma', '.m4a'])
     def test_get_audio_files_basic(self, mock_get_files):
         expected_files = ["music.mp3", "sound.wav", "audio.flac"]
         mock_get_files.return_value = expected_files
@@ -49,7 +50,7 @@ class TestGetAudioFiles:
         result = get_audio_files("/test/dir")
         
         assert result == expected_files
-        mock_get_files.assert_called_once_with("/test/dir", None, relative=True)
+        mock_get_files.assert_called_once_with("/test/dir", ['.wav', '.ogg', '.flac', '.mp3', '.aac', '.wma', '.m4a'], relative=True)
     
     @patch('novus_pytils.audio.core.get_files_by_extension')
     def test_get_audio_files_with_custom_extensions(self, mock_get_files):

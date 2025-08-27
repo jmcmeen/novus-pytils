@@ -147,8 +147,8 @@ class TestWriteCsv:
         
         assert file_path.exists()
         
-        # Read back and verify
-        result_df = pd.read_csv(file_path, index_col=0)
+        # Read back and verify (no index_col since we wrote with index=False)
+        result_df = pd.read_csv(file_path)
         pd.testing.assert_frame_equal(df, result_df)
     
     def test_write_csv_empty_dataframe(self, temp_dir):
@@ -168,7 +168,7 @@ class TestWriteCsv:
         write_csv(df, str(file_path))
         
         assert file_path.exists()
-        result_df = pd.read_csv(file_path, index_col=0)
+        result_df = pd.read_csv(file_path)
         pd.testing.assert_frame_equal(df, result_df)
     
     def test_write_csv_single_column(self, temp_dir):
@@ -178,7 +178,7 @@ class TestWriteCsv:
         write_csv(df, str(file_path))
         
         assert file_path.exists()
-        result_df = pd.read_csv(file_path, index_col=0)
+        result_df = pd.read_csv(file_path)
         pd.testing.assert_frame_equal(df, result_df)
     
     def test_write_csv_with_special_characters(self, temp_dir):
@@ -192,7 +192,7 @@ class TestWriteCsv:
         
         assert file_path.exists()
         # CSV should handle special characters properly
-        result_df = pd.read_csv(file_path, index_col=0)
+        result_df = pd.read_csv(file_path)
         pd.testing.assert_frame_equal(df, result_df)
     
     def test_write_csv_with_nan_values(self, temp_dir):
@@ -206,7 +206,7 @@ class TestWriteCsv:
         write_csv(df, str(file_path))
         
         assert file_path.exists()
-        result_df = pd.read_csv(file_path, index_col=0)
+        result_df = pd.read_csv(file_path)
         # NaN values should be preserved
         assert pd.isna(result_df.iloc[1]["name"])
         assert pd.isna(result_df.iloc[2]["age"])
@@ -246,7 +246,7 @@ class TestWriteCsv:
         write_csv(df2, str(file_path))
         
         # Verify second DataFrame was written
-        result_df = pd.read_csv(file_path, index_col=0)
+        result_df = pd.read_csv(file_path)
         pd.testing.assert_frame_equal(df2, result_df)
     
     def test_write_csv_invalid_path(self):
@@ -281,6 +281,6 @@ class TestWriteCsv:
         assert file_path.stat().st_size > 0
         
         # Verify we can read it back
-        result_df = pd.read_csv(file_path, index_col=0)
+        result_df = pd.read_csv(file_path)
         assert len(result_df) == size
         assert list(result_df.columns) == ["id", "value", "category"]
