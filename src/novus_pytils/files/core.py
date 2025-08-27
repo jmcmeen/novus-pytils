@@ -41,7 +41,6 @@ def get_file_size(file_path) -> int:
     """
     return os.path.getsize(file_path)
 
-
 def download_file(url: str, save_to: str):
     """
     Downloads a file from the specified URL and saves it to the given path.
@@ -54,7 +53,6 @@ def download_file(url: str, save_to: str):
     with open(save_to, 'wb') as f:
         f.write(response.content)
 
-
 def file_exists(file_path):
     """
     Checks if a file exists at the specified path.
@@ -66,7 +64,6 @@ def file_exists(file_path):
         bool: True if the file exists, False otherwise.
     """
     return os.path.exists(file_path) and os.path.isfile(file_path)
-
 
 def delete_file(file_path):
     """
@@ -81,7 +78,6 @@ def delete_file(file_path):
     if os.path.exists(file_path):
         os.remove(file_path)
 
-
 def get_file_extension(file_path):
     """
     Retrieves the file extension from the given file path.
@@ -93,7 +89,6 @@ def get_file_extension(file_path):
         str: The file extension, in lowercase.
     """
     return os.path.splitext(file_path)[1].lower()
-
 
 def get_file_name(file_path):
     """
@@ -107,7 +102,6 @@ def get_file_name(file_path):
     """
     return os.path.splitext(os.path.basename(file_path))[0]
 
-
 def get_file_directory(file_path):
     """
     Retrieves the directory path from the given file path.
@@ -119,7 +113,6 @@ def get_file_directory(file_path):
         str: The directory path containing the file.
     """
     return os.path.dirname(file_path)
-
 
 def copy_file(src_file_path, dest_file_path):
     """
@@ -133,7 +126,6 @@ def copy_file(src_file_path, dest_file_path):
         This function preserves the file's metadata, such as modification and access times.
     """
     shutil.copy2(src_file_path, dest_file_path)
-
 
 def copy_files(src_paths, dest_dir, enumerate_dups=True):
     """
@@ -161,7 +153,6 @@ def copy_files(src_paths, dest_dir, enumerate_dups=True):
 
         shutil.copy2(src_path, dest_path)
 
-
 def move_file(src_file_path, dest_file_path):
     """
     Moves a file from the source path to the destination path.
@@ -175,7 +166,6 @@ def move_file(src_file_path, dest_file_path):
     """
     shutil.move(src_file_path, dest_file_path)
 
-
 def create_file_from_content(file_path: str, content: str) -> None:
     """
     Create a file with the specified content.
@@ -186,7 +176,6 @@ def create_file_from_content(file_path: str, content: str) -> None:
     """
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(content)
-
 
 def read_file_content(file_path: str) -> str:
     """
@@ -201,7 +190,6 @@ def read_file_content(file_path: str) -> str:
     with open(file_path, 'r', encoding='utf-8') as f:
         return f.read()
 
-
 def append_to_file(file_path: str, content: str) -> None:
     """
     Append content to a file.
@@ -212,7 +200,6 @@ def append_to_file(file_path: str, content: str) -> None:
     """
     with open(file_path, 'a', encoding='utf-8') as f:
         f.write(content)
-
 
 def get_file_creation_time(file_path: str) -> float:
     """
@@ -226,7 +213,6 @@ def get_file_creation_time(file_path: str) -> float:
     """
     return os.path.getctime(file_path)
 
-
 def get_file_modification_time(file_path: str) -> float:
     """
     Get the modification time of a file.
@@ -239,7 +225,6 @@ def get_file_modification_time(file_path: str) -> float:
     """
     return os.path.getmtime(file_path)
 
-
 def is_file_empty(file_path: str) -> bool:
     """
     Check if a file is empty.
@@ -251,7 +236,6 @@ def is_file_empty(file_path: str) -> bool:
         bool: True if the file is empty, False otherwise.
     """
     return os.path.getsize(file_path) == 0
-
 
 def filter_files_by_size(files: List[str], min_size: int = 0, max_size: int = None) -> List[str]:
     """
@@ -272,7 +256,6 @@ def filter_files_by_size(files: List[str], min_size: int = 0, max_size: int = No
             if size >= min_size and (max_size is None or size <= max_size):
                 filtered_files.append(file_path)
     return filtered_files
-
 
 def filter_files_by_date(files: List[str], start_date: datetime = None, end_date: datetime = None, 
                         after: datetime = None, before: datetime = None) -> List[str]:
@@ -303,7 +286,6 @@ def filter_files_by_date(files: List[str], start_date: datetime = None, end_date
                 filtered_files.append(file_path)
     return filtered_files
 
-
 def rename_file(old_path: str, new_path: str) -> None:
     """
     Rename a file.
@@ -313,7 +295,6 @@ def rename_file(old_path: str, new_path: str) -> None:
         new_path (str): The new path for the file.
     """
     os.rename(old_path, new_path)
-
 
 def get_file_permissions(file_path: str) -> str:
     """
@@ -327,7 +308,6 @@ def get_file_permissions(file_path: str) -> str:
     """
     return oct(os.stat(file_path).st_mode)[-3:]
 
-
 def set_file_permissions(file_path: str, permissions: int) -> None:
     """
     Set the permissions of a file.
@@ -337,7 +317,6 @@ def set_file_permissions(file_path: str, permissions: int) -> None:
         permissions (int): The permissions to set (e.g., 0o644).
     """
     os.chmod(file_path, permissions)
-
 
 def create_backup(file_path: str, backup_location: str = None) -> str:
     """
@@ -364,7 +343,6 @@ def create_backup(file_path: str, backup_location: str = None) -> str:
     shutil.copy2(file_path, backup_path)
     return backup_path
 
-
 def restore_backup(backup_path: str, original_path: str = None) -> None:
     """
     Restore a file from its backup.
@@ -380,8 +358,6 @@ def restore_backup(backup_path: str, original_path: str = None) -> None:
             original_path = backup_path.replace('.backup', '')
     
     shutil.copy2(backup_path, original_path)
-    
-
 
 def get_file_list(directory):
     """
@@ -398,7 +374,6 @@ def get_file_list(directory):
         for file in files:
             file_list.append(os.path.join(root, file))
     return file_list
-
 
 def get_dir_list(directory, relative=False):
     """
@@ -420,7 +395,6 @@ def get_dir_list(directory, relative=False):
             else:
                 dir_list.append(os.path.join(root, dir))
     return dir_list
-
 
 def get_files_by_extension(directory, extensions, relative=False, recursive=False):
     """
@@ -466,7 +440,6 @@ def get_files_by_extension(directory, extensions, relative=False, recursive=Fals
 
     return file_list
 
-
 def get_files_containing_string(directory, string, relative=False):
     """
     Retrieves a list of files in a directory and its subdirectories that contain a specified string.
@@ -490,7 +463,6 @@ def get_files_containing_string(directory, string, relative=False):
                     file_list.append(os.path.join(root, file))
 
     return file_list
-
 
 def get_dirs_containing_string(directory, string, relative=False):
     """
@@ -516,7 +488,6 @@ def get_dirs_containing_string(directory, string, relative=False):
 
     return dir_list
 
-
 def directory_contains_directory(directory, subdirectory):
     """
     Checks if a directory contains a specified subdirectory.
@@ -533,7 +504,6 @@ def directory_contains_directory(directory, subdirectory):
             if subdirectory.casefold() in dir.casefold():
                 return True
     return False
-
 
 def directory_contains_file(directory, filename):
     """
@@ -552,7 +522,6 @@ def directory_contains_file(directory, filename):
                 return True
     return False
 
-
 def directory_contains_file_with_extension(directory, extension):
     """
     Checks if a directory contains at least one file with a specified file extension.
@@ -570,7 +539,6 @@ def directory_contains_file_with_extension(directory, extension):
                 return True
     return False
 
-
 def create_directory(directory_path):
     """
     Creates a directory at the specified path.
@@ -582,7 +550,6 @@ def create_directory(directory_path):
         If the directory already exists, this function does nothing.
     """
     os.makedirs(directory_path, exist_ok=True)
-
 
 def create_subdirectory(parent_dir, subdirectory_name):
     """
@@ -598,7 +565,6 @@ def create_subdirectory(parent_dir, subdirectory_name):
     subdirectory_path = os.path.join(parent_dir, subdirectory_name)
     os.makedirs(subdirectory_path, exist_ok=True)
 
-
 def directory_exists(directory_path):
     """
     Checks if a directory exists at the specified path.
@@ -610,7 +576,6 @@ def directory_exists(directory_path):
         bool: True if the directory exists, False otherwise.
     """
     return os.path.exists(directory_path) and os.path.isdir(directory_path)
-
 
 def delete_directory(directory_path):
     """
@@ -626,7 +591,6 @@ def delete_directory(directory_path):
         if os.path.isdir(directory_path):
             shutil.rmtree(directory_path)
 
-
 def recreate_directory(directory_path):
     """
     Deletes and then creates a directory at the specified path.
@@ -640,7 +604,6 @@ def recreate_directory(directory_path):
     delete_directory(directory_path)
     create_directory(directory_path)
 
-
 def copy_directory(src_dir, dest_dir):
     """
     Copies a directory from the source directory to the destination directory.
@@ -653,7 +616,6 @@ def copy_directory(src_dir, dest_dir):
         If the destination directory does not exist, it will be created. If it does exist, its contents will be overwritten.
     """
     shutil.copytree(src_dir, dest_dir)
-
 
 def get_directory_size(directory_path: str) -> int:
     """
@@ -672,7 +634,6 @@ def get_directory_size(directory_path: str) -> int:
             if os.path.exists(filepath):
                 total_size += os.path.getsize(filepath)
     return total_size
-
 
 def count_files_in_directory(directory_path: str, recursive: bool = False) -> int:
     """
@@ -701,7 +662,6 @@ def count_files_in_directory(directory_path: str, recursive: bool = False) -> in
                 count += 1
         return count
 
-
 def get_subdirectories(directory_path: str) -> List[str]:
     """
     Get a list of subdirectories in a directory.
@@ -718,7 +678,6 @@ def get_subdirectories(directory_path: str) -> List[str]:
         if os.path.isdir(item_path):
             subdirs.append(item_path)
     return subdirs
-
 
 def get_files_recursively(directory_path: str, extensions: List[str] = None) -> List[str]:
     """
@@ -742,7 +701,6 @@ def get_files_recursively(directory_path: str, extensions: List[str] = None) -> 
             else:
                 files.append(file_path)
     return files
-
 
 def sync_directories(src_dir: str, dest_dir: str) -> None:
     """
