@@ -1,6 +1,6 @@
-from pydub import AudioSegment
 from novus_pytils.files.core import get_files_by_extension
 from novus_pytils.globals import AAC_EXTS
+from novus_pytils.audio.wrappers import PydubWrapper
 
 def get_aac_files(dir):
     """Get a list of AAC audio files in a folder.
@@ -69,10 +69,8 @@ def aac_to_wav(aac_file, wav_file, bitrate=None, channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(aac_file, format="aac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(wav_file, format="wav")
+    wrapper = PydubWrapper(aac_file)
+    wrapper.to_wav(wav_file, channels)
     
 def aac_to_mp3(aac_file, mp3_file, bitrate="192k", channels=None):
     """Convert an AAC audio file to MP3 format.
@@ -86,10 +84,8 @@ def aac_to_mp3(aac_file, mp3_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(aac_file, format="aac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(mp3_file, format="mp3", bitrate=bitrate)
+    wrapper = PydubWrapper(aac_file)
+    wrapper.to_mp3(mp3_file, bitrate, channels)
     
 def aac_to_m4a(aac_file, m4a_file, bitrate="192k", channels=None):
     """Convert an AAC audio file to M4A format.
@@ -103,10 +99,8 @@ def aac_to_m4a(aac_file, m4a_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(aac_file, format="aac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(m4a_file, format="ipod", bitrate=bitrate)
+    wrapper = PydubWrapper(aac_file)
+    wrapper.to_m4a(m4a_file, bitrate, channels)
     
 def aac_to_flac(aac_file, flac_file, bitrate=None, channels=None):
     """Convert an AAC audio file to FLAC format.
@@ -120,10 +114,8 @@ def aac_to_flac(aac_file, flac_file, bitrate=None, channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(aac_file, format="aac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(flac_file, format="flac")
+    wrapper = PydubWrapper(aac_file)
+    wrapper.to_flac(flac_file, channels)
     
 def aac_to_wma(aac_file, wma_file, bitrate="192k", channels=None):
     """Convert an AAC audio file to WMA format.
@@ -137,10 +129,8 @@ def aac_to_wma(aac_file, wma_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(aac_file, format="aac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(wma_file, format="wma", bitrate=bitrate)
+    wrapper = PydubWrapper(aac_file)
+    wrapper.to_wma(wma_file, bitrate, channels)
     
 def aac_to_ogg(aac_file, ogg_file, bitrate="192k", channels=None):
     """Convert an AAC audio file to OGG format.
@@ -154,10 +144,8 @@ def aac_to_ogg(aac_file, ogg_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(aac_file, format="aac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(ogg_file, format="ogg", bitrate=bitrate)
+    wrapper = PydubWrapper(aac_file)
+    wrapper.to_ogg(ogg_file, bitrate, channels)
     
 def aac_to_aac(aac_file, aac_file_out, bitrate="192k", channels=None):
     """Convert an AAC audio file to another AAC audio file with specified bitrate.
@@ -171,7 +159,5 @@ def aac_to_aac(aac_file, aac_file_out, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(aac_file, format="aac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(aac_file_out, format="aac", bitrate=bitrate)
+    wrapper = PydubWrapper(aac_file)
+    wrapper.to_aac(aac_file_out, bitrate, channels)
