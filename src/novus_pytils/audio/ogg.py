@@ -1,6 +1,6 @@
-from pydub import AudioSegment
 from novus_pytils.files.core import get_files_by_extension
 from novus_pytils.globals import OGG_EXTS
+from novus_pytils.audio.wrappers import PydubWrapper
 
 def get_ogg_files(dir):
     """Get a list of OGG audio files in a folder.
@@ -68,10 +68,8 @@ def ogg_to_wav(ogg_file, wav_file, bitrate=None, channels=None):
         bitrate (str): The bitrate for the output file (not applicable for WAV).
         channels (int): The number of channels for the output file.
     """
-    audio = AudioSegment.from_ogg(ogg_file)
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(wav_file, format="wav")
+    wrapper = PydubWrapper(ogg_file)
+    wrapper.to_wav(wav_file, channels)
     
 def ogg_to_mp3(ogg_file, mp3_file, bitrate="192k", channels=None):
     """Convert an OGG audio file to MP3 format.
@@ -82,10 +80,8 @@ def ogg_to_mp3(ogg_file, mp3_file, bitrate="192k", channels=None):
         bitrate (str): The bitrate for the output MP3 file (default is "192k").
         channels (int): The number of channels for the output file.
     """
-    audio = AudioSegment.from_ogg(ogg_file)
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(mp3_file, format="mp3", bitrate=bitrate)
+    wrapper = PydubWrapper(ogg_file)
+    wrapper.to_mp3(mp3_file, bitrate, channels)
     
 def ogg_to_aac(ogg_file, aac_file, bitrate="192k", channels=None):
     """Convert an OGG audio file to AAC format.
@@ -96,10 +92,8 @@ def ogg_to_aac(ogg_file, aac_file, bitrate="192k", channels=None):
         bitrate (str): The bitrate for the output AAC file (default is "192k").
         channels (int): The number of channels for the output file.
     """
-    audio = AudioSegment.from_ogg(ogg_file)
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(aac_file, format="aac", bitrate=bitrate)
+    wrapper = PydubWrapper(ogg_file)
+    wrapper.to_aac(aac_file, bitrate, channels)
     
 def ogg_to_m4a(ogg_file, m4a_file, bitrate="192k", channels=None):
     """Convert an OGG audio file to M4A format.
@@ -110,10 +104,8 @@ def ogg_to_m4a(ogg_file, m4a_file, bitrate="192k", channels=None):
         bitrate (str): The bitrate for the output M4A file (default is "192k").
         channels (int): The number of channels for the output file.
     """
-    audio = AudioSegment.from_ogg(ogg_file)
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(m4a_file, format="ipod", bitrate=bitrate)
+    wrapper = PydubWrapper(ogg_file)
+    wrapper.to_m4a(m4a_file, bitrate, channels)
     
 def ogg_to_flac(ogg_file, flac_file, bitrate=None, channels=None):
     """Convert an OGG audio file to FLAC format.
@@ -124,10 +116,8 @@ def ogg_to_flac(ogg_file, flac_file, bitrate=None, channels=None):
         bitrate (str): The bitrate for the output file (not applicable for FLAC).
         channels (int): The number of channels for the output file.
     """
-    audio = AudioSegment.from_ogg(ogg_file)
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(flac_file, format="flac")
+    wrapper = PydubWrapper(ogg_file)
+    wrapper.to_flac(flac_file, channels)
     
 def ogg_to_wma(ogg_file, wma_file, bitrate="192k", channels=None):
     """Convert an OGG audio file to WMA format.
@@ -138,10 +128,8 @@ def ogg_to_wma(ogg_file, wma_file, bitrate="192k", channels=None):
         bitrate (str): The bitrate for the output WMA file (default is "192k").
         channels (int): The number of channels for the output file.
     """
-    audio = AudioSegment.from_ogg(ogg_file)
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(wma_file, format="wma", bitrate=bitrate)
+    wrapper = PydubWrapper(ogg_file)
+    wrapper.to_wma(wma_file, bitrate, channels)
     
 def ogg_to_ogg(ogg_file, ogg_out_file, bitrate="192k", channels=None):
     """Convert an OGG audio file to another OGG file with specified bitrate.
@@ -152,7 +140,5 @@ def ogg_to_ogg(ogg_file, ogg_out_file, bitrate="192k", channels=None):
         bitrate (str): The bitrate for the output OGG file (default is "192k").
         channels (int): The number of channels for the output file.
     """
-    audio = AudioSegment.from_ogg(ogg_file)
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(ogg_out_file, format="ogg", bitrate=bitrate)
+    wrapper = PydubWrapper(ogg_file)
+    wrapper.to_ogg(ogg_out_file, bitrate, channels)

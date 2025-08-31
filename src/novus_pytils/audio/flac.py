@@ -1,6 +1,6 @@
-from pydub import AudioSegment
 from novus_pytils.files.core import get_files_by_extension
 from novus_pytils.globals import FLAC_EXTS
+from novus_pytils.audio.wrappers import PydubWrapper
 
 def get_flac_files(dir):
     """Get a list of FLAC audio files in a folder.
@@ -70,10 +70,8 @@ def flac_to_wav(flac_file, wav_file, bitrate=None, channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(flac_file, format="flac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(wav_file, format="wav")
+    wrapper = PydubWrapper(flac_file)
+    wrapper.to_wav(wav_file, channels)
     
 def flac_to_mp3(flac_file, mp3_file, bitrate="192k", channels=None):
     """Convert a FLAC audio file to MP3 format.
@@ -87,10 +85,8 @@ def flac_to_mp3(flac_file, mp3_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(flac_file, format="flac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(mp3_file, format="mp3", bitrate=bitrate)
+    wrapper = PydubWrapper(flac_file)
+    wrapper.to_mp3(mp3_file, bitrate, channels)
     
 def flac_to_aac(flac_file, aac_file, bitrate="192k", channels=None):
     """Convert a FLAC audio file to AAC format.
@@ -104,10 +100,8 @@ def flac_to_aac(flac_file, aac_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(flac_file, format="flac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(aac_file, format="aac", bitrate=bitrate)
+    wrapper = PydubWrapper(flac_file)
+    wrapper.to_aac(aac_file, bitrate, channels)
     
 def flac_to_ogg(flac_file, ogg_file, bitrate="192k", channels=None):
     """Convert a FLAC audio file to OGG format.
@@ -121,10 +115,8 @@ def flac_to_ogg(flac_file, ogg_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(flac_file, format="flac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(ogg_file, format="ogg", bitrate=bitrate)
+    wrapper = PydubWrapper(flac_file)
+    wrapper.to_ogg(ogg_file, bitrate, channels)
     
 def flac_to_wma(flac_file, wma_file, bitrate="192k", channels=None):
     """Convert a FLAC audio file to WMA format.
@@ -138,10 +130,8 @@ def flac_to_wma(flac_file, wma_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(flac_file, format="flac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(wma_file, format="wma", bitrate=bitrate)
+    wrapper = PydubWrapper(flac_file)
+    wrapper.to_wma(wma_file, bitrate, channels)
     
 def flac_to_m4a(flac_file, m4a_file, bitrate="192k", channels=None):
     """Convert a FLAC audio file to M4A format.
@@ -155,10 +145,8 @@ def flac_to_m4a(flac_file, m4a_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(flac_file, format="flac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(m4a_file, format="ipod", bitrate=bitrate)
+    wrapper = PydubWrapper(flac_file)
+    wrapper.to_m4a(m4a_file, bitrate, channels)
     
 def flac_to_flac(flac_file, flac_out_file, bitrate=None, channels=None):
     """Convert a FLAC audio file to another FLAC file (essentially a copy).
@@ -172,7 +160,5 @@ def flac_to_flac(flac_file, flac_out_file, bitrate=None, channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(flac_file, format="flac")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(flac_out_file, format="flac")
+    wrapper = PydubWrapper(flac_file)
+    wrapper.to_flac(flac_out_file, channels)

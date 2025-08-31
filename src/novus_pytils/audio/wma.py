@@ -1,6 +1,6 @@
-from pydub import AudioSegment
 from novus_pytils.files.core import get_files_by_extension
 from novus_pytils.globals import WMA_EXTS
+from novus_pytils.audio.wrappers import PydubWrapper
 
 def get_wma_files(dir):
     """Get a list of WMA audio files in a folder.
@@ -69,10 +69,8 @@ def wma_to_wav(wma_file, wav_file, bitrate=None, channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(wma_file, format="wma")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(wav_file, format="wav")
+    wrapper = PydubWrapper(wma_file)
+    wrapper.to_wav(wav_file, channels)
     
 def wma_to_mp3(wma_file, mp3_file, bitrate="192k", channels=None):
     """Convert a WMA audio file to MP3 format.
@@ -86,10 +84,8 @@ def wma_to_mp3(wma_file, mp3_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(wma_file, format="wma")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(mp3_file, format="mp3", bitrate=bitrate)
+    wrapper = PydubWrapper(wma_file)
+    wrapper.to_mp3(mp3_file, bitrate, channels)
     
 def wma_to_aac(wma_file, aac_file, bitrate="192k", channels=None):
     """Convert a WMA audio file to AAC format.
@@ -103,10 +99,8 @@ def wma_to_aac(wma_file, aac_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(wma_file, format="wma")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(aac_file, format="aac", bitrate=bitrate)
+    wrapper = PydubWrapper(wma_file)
+    wrapper.to_aac(aac_file, bitrate, channels)
     
 def wma_to_m4a(wma_file, m4a_file, bitrate="192k", channels=None):
     """Convert a WMA audio file to M4A format.
@@ -120,10 +114,8 @@ def wma_to_m4a(wma_file, m4a_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(wma_file, format="wma")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(m4a_file, format="ipod", bitrate=bitrate)
+    wrapper = PydubWrapper(wma_file)
+    wrapper.to_m4a(m4a_file, bitrate, channels)
     
 def wma_to_flac(wma_file, flac_file, bitrate=None, channels=None):
     """Convert a WMA audio file to FLAC format.
@@ -137,10 +129,8 @@ def wma_to_flac(wma_file, flac_file, bitrate=None, channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(wma_file, format="wma")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(flac_file, format="flac")
+    wrapper = PydubWrapper(wma_file)
+    wrapper.to_flac(flac_file, channels)
     
 def wma_to_ogg(wma_file, ogg_file, bitrate="192k", channels=None):
     """Convert a WMA audio file to OGG format.
@@ -154,10 +144,8 @@ def wma_to_ogg(wma_file, ogg_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(wma_file, format="wma")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(ogg_file, format="ogg", bitrate=bitrate)
+    wrapper = PydubWrapper(wma_file)
+    wrapper.to_ogg(ogg_file, bitrate, channels)
     
 def wma_to_wma(wma_file, wma_out_file, bitrate="192k", channels=None):
     """Convert a WMA audio file to another WMA file with specified bitrate.
@@ -171,7 +159,5 @@ def wma_to_wma(wma_file, wma_out_file, bitrate="192k", channels=None):
     Returns:
         None
     """
-    audio = AudioSegment.from_file(wma_file, format="wma")
-    if channels:
-        audio = audio.set_channels(channels)
-    audio.export(wma_out_file, format="wma", bitrate=bitrate)
+    wrapper = PydubWrapper(wma_file)
+    wrapper.to_wma(wma_out_file, bitrate, channels)
