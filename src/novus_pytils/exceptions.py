@@ -1,42 +1,17 @@
-"""Exception classes for novus-pytils package."""
+"""The package's exceptions. Everything raised here derives from :class:`NovusPytilsError`."""
 
 
-# Base exception classes
-class FileHandlerError(Exception):
-    """Base exception for file handler operations."""
-    pass
+class NovusPytilsError(Exception):
+    """Base class for errors raised by novus-pytils."""
 
 
-class UnsupportedFormatError(FileHandlerError):
-    """Exception raised when attempting to work with unsupported file formats."""
-    pass
+class UnsupportedFormatError(NovusPytilsError):
+    """The file's format is not one this function can handle."""
 
 
-class ConversionError(FileHandlerError):
-    """Exception raised when file conversion fails."""
-    pass
+class ConversionError(NovusPytilsError):
+    """A format conversion failed in the backend (pydub, Pillow)."""
 
 
-class ValidationError(FileHandlerError):
-    """Exception raised when file validation fails."""
-    pass
-
-
-class SecurityError(FileHandlerError):
-    """Exception raised when security checks fail."""
-    pass
-
-
-class WAVError(Exception):
-    """Base exception for WAV parsing errors."""
-    pass
-
-
-class InvalidWAVFormatError(WAVError):
-    """Raised when WAV file format is invalid or unsupported."""
-    pass
-
-
-class CorruptedFileError(WAVError):
-    """Raised when WAV file appears to be corrupted."""
-    pass
+class MissingDependencyError(NovusPytilsError):
+    """An optional extra needed for this operation is not installed."""
