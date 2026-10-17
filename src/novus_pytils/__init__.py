@@ -1,19 +1,39 @@
-"""Novus PyTils - A comprehensive file management library.
+"""Small, dependable helpers for files, archives, config, lists, and the console.
 
-This package provides comprehensive file management capabilities including:
-- CRUD operations for text, image, audio, and video files
-- Format conversion between compatible file types
-- Batch operations and processing
-- Web API for remote file operations
-- Command-line interface for all operations
-- Object-oriented and functional APIs
+Each module is a flat collection of functions with no state. Import the one
+you need:
 
-Supported file types:
-- Text: .txt, .md, .csv, .json, .xml, .yaml, .yml
-- Images: .jpg, .jpeg, .png, .gif, .bmp, .tiff, .webp
-- Audio: .wav, .mp3, .ogg, .flac, .aac, .wma, .m4a
-- Video: .mp4, .avi, .mkv, .mov, .wmv, .flv, .webm
+    >>> from novus_pytils import files, archive, config, lists, hashing
+    >>> from novus_pytils.files import get_files_by_extension
+
+Modules:
+    files       read, write, copy, move, find, sync files and directories
+    formats     file-kind registry (audio, image, video, text, archive) and lookup
+    convert     audio and image format conversion (needs the ``audio``/``image`` extras)
+    archive     zip archives: create, list, extract, add, remove
+    config      YAML/JSON config files, dotted-key access, merging
+    lists       list helpers: flatten, chunk, group, partition, set operations
+    hashing     file and text digests
+    validation  path safety, filenames, sizes, URLs, emails, JSON shape
+    console     coloured output, tables, a progress bar, prompts
 """
 
-__version__ = "0.0.64"
-__author__ = "novus-pytils crew"
+from importlib.metadata import PackageNotFoundError, version
+
+try:
+    __version__ = version("novus-pytils")
+except PackageNotFoundError:  # running from a source tree without an install
+    __version__ = "0.0.0"
+
+__all__ = [
+    "__version__",
+    "archive",
+    "config",
+    "console",
+    "convert",
+    "files",
+    "formats",
+    "hashing",
+    "lists",
+    "validation",
+]

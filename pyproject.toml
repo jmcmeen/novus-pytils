@@ -1,42 +1,100 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
 name = "novus-pytils"
-version = "0.0.64"
+dynamic = ["version"]
 authors = [
   { name="John McMeen", email="johnmcmeen@gmail.com" },
 ]
-description = "A comprehensive file management library with CRUD operations, format conversion, and multi-API support for text, image, audio, and video files."
+description = "Small, dependable helpers for files, archives, config, lists, and the console"
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
+keywords = ["files", "utilities", "zip", "yaml", "config", "console"]
 classifiers = [
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Multimedia",
-    "Topic :: System :: Filesystems",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Filesystems",
+    "Topic :: Utilities",
 ]
 
+# The core needs only what config loading and downloads use. Format conversion
+# backends are extras so the package stays light.
 dependencies = [
-  "numpy",
-  "pandas",
-  "pydub",
-  "requests",
-  "pyyaml",
-  "Pillow>=9.0.0"
+  "pyyaml>=6.0",
+  "requests>=2.28",
 ]
 
 [project.optional-dependencies]
+audio = ["pydub>=0.25", "audioop-lts; python_version >= '3.13'"]  # audioop left the stdlib in 3.13
+image = ["Pillow>=9.0"]
+all = ["novus-pytils[audio,image]"]
 dev = [
-    "pytest",
-    "ruff",
+  "pytest>=7.0",
+  "pytest-cov",
+  "ruff>=0.17,<0.18",  # pinned: minor releases change formatting; upgrade on purpose
+  "novus-pytils[all]",
 ]
 
 [project.urls]
 Homepage = "https://github.com/jmcmeen/novus-pytils"
+Source = "https://github.com/jmcmeen/novus-pytils"
+Changelog = "https://github.com/jmcmeen/novus-pytils/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/jmcmeen/novus-pytils/issues"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/novus_pytils"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+  "--tb=short",
+  "--strict-markers",
+]
+markers = [
+  "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+  "integration: marks tests as integration tests",
+]
+
+[tool.coverage.run]
+source = ["src/novus_pytils"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+  "E",      # pycodestyle errors
+  "W",      # pycodestyle warnings
+  "F",      # Pyflakes
+  "I",      # isort
+  "B",      # flake8-bugbear
+  "C4",     # flake8-comprehensions
+  "UP",     # pyupgrade
+]
+ignore = [
+  "E501",   # line too long (handled by formatter)
+  "B008",   # do not perform function calls in argument defaults
+  "C901",   # too complex
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011", "E402"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["novus_pytils"]
