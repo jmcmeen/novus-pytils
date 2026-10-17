@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-17
+
 Versions before 0.1.0 predate this file.
 
 ### Changed
@@ -28,3 +30,4 @@ Versions before 0.1.0 predate this file.
 - `check_disk_space` compared megabytes against kilobytes; it now takes bytes.
 - `sanitize_filename` no longer lets `..` through.
 - `download_file` streams to disk and raises on HTTP errors instead of writing the error page.
+
